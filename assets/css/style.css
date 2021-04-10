@@ -1,0 +1,117 @@
+/* --------- body style -------------*/
+
+body {
+    background-color: white;
+    color: black;
+    text-align: center;
+}
+/* --------- Common style -------------*/
+.tableHeading{
+    text-align: center;
+    font-size: 35px;
+ }
+
+/* --------- Input Table Style-------*/
+#overFlow{
+    overflow-x:auto;  
+}
+
+th,td {
+    border: 1px solid black;
+  }
+
+ table{
+    width: 500px;; 
+    border-collapse:collapse;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top: 20px;
+    background-color:white;
+    border:1px solid black;
+    padding:0;
+ }
+ 
+
+table th {
+    text-align: center;
+    font-size: 1.2rem;
+    background-color:lightgrey;
+    height:auto;
+    width:auto;
+}
+.taskDescriptionBox {
+    text-align: center;
+    font-size: 15px;
+    border-color: white;
+    background-color:white;
+    width:200px;
+    margin:0;
+    padding:0;
+}
+.taskDateBox {
+    text-align: center;
+    font-size: 15px;
+    border-color: white;
+    background-color:white;
+    width:150px;
+    margin:0;
+    padding:0;
+}
+.taskDuration {
+    width:60px;
+    margin:0;
+    padding:0;
+}
+.taskDurationBox {
+    text-align: center;
+    font-size: 15px;
+    border-color: white;
+    background-color:white;
+    width:60px;
+    margin:0;
+    padding:0;
+}
+.taskDate {
+    text-align: center;
+    font-size: 15px;
+    min-width:100px;
+    padding:0;
+    margin:0;
+}
+.addBox {
+    text-align: center;
+    font-size: 15px;
+    border-color: lightgrey;
+    background-color:lightgrey;
+    width:auto;
+}
+.taskNo{
+    text-align: center;
+    font-size: 1.1rem;
+    width: 30px;
+}
+/* --------- Time Line Chart Style-------*/
+#plot2,#plot1{
+    height: 300px;
+}
+
+/* --------- Footer Style------------*/
+
+
+
+/* --------- Header Style------------*/
+
+
+/* --------- Setup & Submit Style------------*/
+.label{
+    font-weight:normal;
+}
+#simulationStart{
+    border:2px solid black;
+    margin:20px;
+    background-color:tomato;
+    width:auto;
+}
+/* --------- Output Chart Style------*/
+
+/* --------- Output Heading Style----*/
