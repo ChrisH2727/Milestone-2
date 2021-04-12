@@ -18,9 +18,8 @@
       <div class="col-md-6">
         <table id="taskTable">
           <tr>
-            <th colspan="10" class="tableHeading">Task entry</th>
+            <th colspan="9" class="tableHeading">Task entry</th>
           </tr>
-
           <tr>
             <th>Task No</th>
             <th>Task Description</th>
@@ -31,61 +30,35 @@
             <th>Best Case Finish Date</th>
             <th>Most Likely Case Finish Date</th>
             <th>Worst Case Finish Date</th>
-            <th></th>
           </tr>
           <tr>
             <td class="taskNo">1</td>
-            <td><input type="text" class="taskDescriptionBox" id="taskTable"  /></td>
-            <td><input type="date" class="taskDateBox" id="taskTable" /></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox" id="taskTable"/></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox" id="taskTable"/></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox" id="taskTable"/></td>
+            <td><input type="text" class="taskDescriptionBox taskTable"  /></td>
+            <td><input type="date" class="taskDateBox taskTable" /></td>
+            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox taskTable"/></td>
+            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox taskTable"/></td>
+            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox taskTable"/></td>
             <td class="taskDate">02/04/2021</td>
             <td class="taskDate">02/04/21</td>
             <td class="taskDate">02/04/21</td>
-            <td class="taskInputHeader"><button type="submit" class="addBox">Add</td>
-          </tr>
-          <tr>
-            <td class="taskNo">2</td>
-            <td><input type="text" class="taskDescriptionBox" id="taskTable"/></td>
-            <td><input type="date" class="taskDateBox" id="taskTable"/></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox" id="taskTable"/></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox" id="taskTable"/></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox" id="taskTable"/></td>
-            <td class="taskDate">02/04/2021</td>
-            <td class="taskDate">02/04/21</td>
-            <td class="taskDate">02/04/21</td>
-            <td class="taskInputHeader"><button type="submit" class="addBox">Add</td>
-          </tr>
-          <tr>
-            <td class="taskNo">3</td>
-            <td><input type="text" class="taskDescriptionBox" id="taskTable"/></td>
-            <td><input type="date" class="taskDateBox" id="taskTable"/></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox" id="taskTable" /></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox" id="taskTable"/></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox" id="taskTable"/></td>
-            <td class="taskDate">02/04/2021</td>
-            <td class="taskDate">02/04/21</td>
-            <td class="taskDate">02/04/21</td>
-            <td class="taskInputHeader"><button type="submit" class="addBox">Add</td>
           </tr>
         </table>
       </div>
       <div class="col-md-3">
         <h3 class="tableHeading">Select non working days:</h3>
-        <label for="nonWorkingDay1" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay1"  class="checkboxInput"
+        <label for="nonWorkingDay1" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay1" id="nonWorkingDay1" class="checkboxInput"
             value="Monday">Monday</label>
-        <label for="nonWorkingDay2" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay2" class="checkboxInput"
+        <label for="nonWorkingDay2" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay2" id="nonWorkingDay2" class="checkboxInput"
             value="Tuesday">Tuesday</label>
-        <label for="nonWorkingDay3" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay3" class="checkboxInput"
+        <label for="nonWorkingDay3" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay3" id="nonWorkingDay3" class="checkboxInput"
             value="Wednesday">Wednesday</label>
-        <label for="nonWorkingDay4" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay4" class="checkboxInput"
+        <label for="nonWorkingDay4" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay4" id="nonWorkingDay4" class="checkboxInput"
             value="Thursday">Thursday</label>
-        <label for="nonWorkingDay5" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay5" class="checkboxInput"
+        <label for="nonWorkingDay5" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay5" id="nonWorkingDay5"  class="checkboxInput"
             value="Friday">Friday</label>
-        <label for="nonWorkingDay6" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay6" class="checkboxInput"
+        <label for="nonWorkingDay6" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay6" id="nonWorkingDay6" class="checkboxInput"
             value="Saturday" checked>Saturday</label>
-        <label for="nonWorkingDay7" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay7" value="Sunday" class="checkboxInput"
+        <label for="nonWorkingDay7" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay7" id="nonWorkingDay7" value="Sunday" class="checkboxInput"
             checked>Sunday</label>
       </div>
       <div class="col-md-3">
@@ -98,21 +71,18 @@
         <button type="submit" class="addBox" id="simulationStart">Start simulation</button>
       </div>
     </div>
-
-
   </section>
 
   <section class="container-fluid">
     <div class="row">
       <div class="col-md-6">
-        <p class="tableHeading">Time Line Plot</p>
+        <h3 class="tableHeading">Time Line Plot</h3>
         <p>Best Case, Most Likey Case and Worst Case Task Finish Days </p>
         <div id="plot2"></div>
         <p> Used: Google Charts library</p>
       </div>
       <div class="col-md-6">
-        <p class="tableHeading">Probability Plot</p>
-        
+        <h3 class="tableHeading">Probability Plot</h3>
         <div id="plot1"></div>
         <p> Used: Google Charts Library</p>
       </div>
@@ -122,7 +92,7 @@
   <script src="https://unpkg.com/mathjs@9.3.0/lib/browser/math.js"></script>
   <script src="https://cdn.plot.ly/plotly-1.35.2.min.js"></script>
   <script src="https://unpkg.com/@stdlib/stdlib/dist/stdlib-flat.min.js"></script>
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script src="assets/js/script.js"></script>
 </body>
 
