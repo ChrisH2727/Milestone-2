@@ -1,7 +1,7 @@
 
 
-google.charts.load('current', { 'packages': ['corechart'] });
-google.charts.setOnLoadCallback(drawProbabilityChart);
+//google.charts.load('current', { 'packages': ['corechart'] });
+//google.charts.setOnLoadCallback(drawProbabilityChart);
 
 class Task {
   constructor(taskNo, taskDescription, taskSucessor, startDate, bestCaseEstimate, mostLikelyCaseEstimate,
@@ -34,10 +34,9 @@ function taskUpdate() {
     // start date in first row of task table is input box, subsequent rows are just table cells so reference differently 
     if (i === 2) {
       var startDate = new Date(tableRef.rows[i].cells[2].children[0].value);
-      //alert("start date first line" + startDate);
       } else if (i > 2) {
-      var startDate = new Date(Date.parse(tableRef.rows[i].cells[2].innerHTML));
-      alert("start date subsequent" + startDate);
+      //var sDate =tableRef.rows[i].cells[2].textContent ;
+      var startDate = new Date(revDateStr(tableRef.rows[i].cells[2].textContent));
     }
     
 
@@ -45,27 +44,26 @@ function taskUpdate() {
     if (!(startDate)) {
       errorHandler(0);
     }
-    var bcDuration = parseInt(tableRef.rows[i].cells[3].children[0].value);
-    //alert("best case D: " + bcDuration);
-    //alert("start date");
+    let bcDuration = parseInt(tableRef.rows[i].cells[3].children[0].value);
     if (bcDuration) {
       let bcDate = calcWorkingDays(startDate, bcDuration).toLocaleDateString();
       tableRef.rows[i].cells[6].innerText = bcDate;
-      //alert("best case Duration: " + bcDuration + " start date: " + startDate + " best case date: " + bcDate);
+      if(tableRef.rows.length>3){
+        // update the row start date and display start date in the task table field
+        tableRef.rows[tableRef.rows.length - 1].cells[2].innerHTML = tableRef.rows[tableRef.rows.length - 2].cells[6].innerHTML;
+      }  
+      
+    
     }
     let mlDuration = parseInt(tableRef.rows[i].cells[4].children[0].value);
-    //alert("ml case D: " + mlDuration);
     if (mlDuration){
       let mlDate = calcWorkingDays(startDate, mlDuration).toLocaleDateString();
       tableRef.rows[i].cells[7].innerHTML = mlDate;
-      //alert("ml case: " + mlDate);
     }
     let wcDuration = parseInt(tableRef.rows[i].cells[5].children[0].value);
-    //alert("wc case D: " + wcDuration);
     if (wcDuration){
       let wcDate = calcWorkingDays(startDate, wcDuration).toLocaleDateString();
       tableRef.rows[i].cells[8].innerHTML = wcDate;
-      //alert("wc case: " + wcDate);
     }
   }
   if (document.readyState === "complete") { //wait for the DOM to load
@@ -76,17 +74,12 @@ function taskUpdate() {
     }
   }
 }
-function newUYDate(pDate) {
-  let dd = pDate.split("/")[0].padStart(2, "0");
-  let mm = pDate.split("/")[1].padStart(2, "0");
-  let yyyy = pDate.split("/")[2].split(" ")[0];
-  let hh = pDate.split("/")[2].split(" ")[1].split(":")[0].padStart(2, "0");
-  let mi = pDate.split("/")[2].split(" ")[1].split(":")[1].padStart(2, "0");
-  let secs = pDate.split("/")[2].split(" ")[1].split(":")[2].padStart(2, "0");
-
-  mm = (parseInt(mm) - 1).toString(); // January is 0
-
-  return new Date(yyyy, mm, dd, hh, mi, secs);
+function revDateStr(Sdate) {
+  //re formats input string from dd/mm/yyyy to yyyy-mm-dd
+  let sYear = Sdate.slice(6,10);
+  let sMonth = Sdate.slice(3,5);
+  let sDay = Sdate.slice(0,2);
+  return Sdate = sYear.concat("-",sMonth,"-",sDay);
 }
 
 function calcWorkingDays(fromDate, days) {
@@ -160,8 +153,8 @@ function updateTaskList(taskList) {
 
 function monteCarlo(taskList) {
   //runs the Monte Carlo simulation //
-  google.charts.load("current", { packages: ["timeline"] });
-  google.charts.setOnLoadCallback(drawTimeLine);
+  //google.charts.load("current", { packages: ["timeline"] });
+  //google.charts.setOnLoadCallback(drawTimeLine);
 
 }
 
