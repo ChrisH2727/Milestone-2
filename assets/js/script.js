@@ -28,55 +28,65 @@ var taskList = []; //array of objects with class Task
 function taskUpdate() {
 
   //Event handler called whenever there is a change to the task table
-  let tableRef = document.getElementById("taskEntryTable");
-
-  let rowCnt = tableRef.rows.length - 1;
-
-  //initialise task start date for first task
-  var startDate = new Date(tableRef.rows[2].cells[2].children[0].value);
-
-  // if no task start date error out else recalculate best case, most likely case and worst case finish dates
-  if (!Date.parse(startDate)) {
-    errorHandler(0);
-
-  } else {
-    for (let i = 2; i < tableRef.rows.length; i++) {
-      alert(i);
-      //let rowCnt = tableRef.rows.length -1;
-      if (parseInt(tableRef.rows[i].cells[3].children[0].value)) {
-        //calculate best case finish date from start date and best case duration  
-        tableRef.rows[i].cells[6].innerHTML = calcWorkingDays(new Date(tableRef.rows[i].cells[2].children[0].value), 
-          parseInt(tableRef.rows[i].cells[3].children[0].value)).toLocaleDateString();
-      }
-
-      if (parseInt(tableRef.rows[i].cells[4].children[0].value)) {
-        //calculate most likely case finish date from start date and most likely case duration  
-        tableRef.rows[i].cells[7].innerHTML = calcWorkingDays(new Date(tableRef.rows[i].cells[2].children[0].value),
-         parseInt(tableRef.rows[i].cells[4].children[0].value)).toLocaleDateString();
-      }
-
-      if (parseInt(tableRef.rows[i].cells[5].children[0].value)) {
-        //calculate worst case finish date from start date and worst case duration  
-        tableRef.rows[i].cells[8].innerHTML = calcWorkingDays(new Date(tableRef.rows[i].cells[2].children[0].value), 
-          parseInt(tableRef.rows[i].cells[5].children[0].value)).toLocaleDateString();
-      }
-      //if worst case finish date has been calculated and it is the last row then generate a new task table row
-
-    }
-    if (document.readyState === "complete") { //wait for the DOM to load
+  var tableRef = document.getElementById("taskEntryTable");
+  for (var i = 2; i < tableRef.rows.length; i++) {
     
-      //alert((Date.parse(tableRef.rows[tableRef.rows.length - 1].cells[8].innerHTML)));
-
-      if (tableRef.rows[tableRef.rows.length - 1].cells[8].innerText != "") {
-
-        addTableRow();
-        // update the row start date and display start date in the task table field
-        tableRef.rows[tableRef.rows.length - 1].cells[2].innerHTML = tableRef.rows[tableRef.rows.length - 2].cells[6].innerHTML;
-        //startDate = tableRef.rows[i].cells[6].innerHTML;
-      }
+    // start date in first row of task table is input box, subsequent rows are just table cells so reference differently 
+    if (i === 2) {
+      var startDate = new Date(tableRef.rows[i].cells[2].children[0].value);
+      //alert("start date first line" + startDate);
+      } else if (i > 2) {
+      var startDate = new Date(Date.parse(tableRef.rows[i].cells[2].innerHTML));
+      alert("start date subsequent" + startDate);
     }
+    
 
+    // if no task start date error out
+    if (!(startDate)) {
+      errorHandler(0);
+    }
+    var bcDuration = parseInt(tableRef.rows[i].cells[3].children[0].value);
+    //alert("best case D: " + bcDuration);
+    //alert("start date");
+    if (bcDuration) {
+      let bcDate = calcWorkingDays(startDate, bcDuration).toLocaleDateString();
+      tableRef.rows[i].cells[6].innerText = bcDate;
+      //alert("best case Duration: " + bcDuration + " start date: " + startDate + " best case date: " + bcDate);
+    }
+    let mlDuration = parseInt(tableRef.rows[i].cells[4].children[0].value);
+    //alert("ml case D: " + mlDuration);
+    if (mlDuration){
+      let mlDate = calcWorkingDays(startDate, mlDuration).toLocaleDateString();
+      tableRef.rows[i].cells[7].innerHTML = mlDate;
+      //alert("ml case: " + mlDate);
+    }
+    let wcDuration = parseInt(tableRef.rows[i].cells[5].children[0].value);
+    //alert("wc case D: " + wcDuration);
+    if (wcDuration){
+      let wcDate = calcWorkingDays(startDate, wcDuration).toLocaleDateString();
+      tableRef.rows[i].cells[8].innerHTML = wcDate;
+      //alert("wc case: " + wcDate);
+    }
   }
+  if (document.readyState === "complete") { //wait for the DOM to load
+    if (tableRef.rows[tableRef.rows.length - 1].cells[8].innerText != "") {
+      addTableRow();
+      // update the row start date and display start date in the task table field
+      tableRef.rows[tableRef.rows.length - 1].cells[2].innerHTML = tableRef.rows[tableRef.rows.length - 2].cells[6].innerHTML;
+    }
+  }
+}
+function newUYDate(pDate) {
+  let dd = pDate.split("/")[0].padStart(2, "0");
+  let mm = pDate.split("/")[1].padStart(2, "0");
+  let yyyy = pDate.split("/")[2].split(" ")[0];
+  let hh = pDate.split("/")[2].split(" ")[1].split(":")[0].padStart(2, "0");
+  let mi = pDate.split("/")[2].split(" ")[1].split(":")[1].padStart(2, "0");
+  let secs = pDate.split("/")[2].split(" ")[1].split(":")[2].padStart(2, "0");
+
+  mm = (parseInt(mm) - 1).toString(); // January is 0
+
+  return new Date(yyyy, mm, dd, hh, mi, secs);
 }
 
 function calcWorkingDays(fromDate, days) {
@@ -152,7 +162,7 @@ function monteCarlo(taskList) {
   //runs the Monte Carlo simulation //
   google.charts.load("current", { packages: ["timeline"] });
   google.charts.setOnLoadCallback(drawTimeLine);
-  
+
 }
 
 function daysToMilliseconds(days) {
@@ -193,16 +203,24 @@ function drawTimeLine() {
   dataTable.addColumn({ type: 'string', id: 'Name' });
   dataTable.addColumn({ type: 'date', id: 'Start' });
   dataTable.addColumn({ type: 'date', id: 'End' });
-  
+
   let tableRef = document.getElementById("taskEntryTable");
+  let dataTableLength = tableRef.rows.length - 2;
+  dataTable.addTableRow(dataTableLength);
+  dataTable.setCell(0, 0, tableRef.rows[2].cells[1].innerHTML);
+  dataTable.setCell(0, 1, "Best Case");
+  dataTable.setCell(0, 2, new Date(tableRef.rows[2].cells[2].children[0].value));
+  dataTable.setCell(0, 3, new Date(tableRef.rows[2].cells[6].children[0].value));
 
-  dataTable[0].Position = tableRef.rows[2].cells[1].innerHTML;
-  dataTable[0].Name = "Best Case";
-  dataTable[0].Start = new Date(tableRef.rows[2].cells[2].children[0].value);
-  dataTable[0].End = new Date(tableRef.rows[2].cells[6].children[0].value);
 
-  alert(dataTable[0]);
-  
+  //dataTable[0].Position = tableRef.rows[2].cells[1].innerHTML;
+  //dataTable[0].Name = "Best Case";
+  //dataTable[0].Start = new Date(tableRef.rows[2].cells[2].children[0].value);
+  //dataTable[0].End = new Date(tableRef.rows[2].cells[6].children[0].value);
+
+
+  alert(dataTable);
+
   //dataTable.addRows([
   //  ['Task1', 'BC', new Date(2021, 4, 8), new Date(2021, 4, 13)],
   //  ['Task1', 'MLC', new Date(2021, 4, 13), new Date(2021, 4, 20)],
