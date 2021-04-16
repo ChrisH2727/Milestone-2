@@ -1,7 +1,8 @@
 
 
-//google.charts.load('current', { 'packages': ['corechart'] });
-//google.charts.setOnLoadCallback(drawProbabilityChart);
+google.charts.load('current', { 'packages': ['corechart'] });
+google.charts.setOnLoadCallback(drawProbabilityChart);
+
 
 class Task {
   constructor(taskNo, taskDescription, taskSucessor, startDate, bestCaseEstimate, mostLikelyCaseEstimate,
@@ -22,23 +23,25 @@ class Task {
 // Adds a row into the task table
 var taskList = []; //array of objects with class Task
 
-//addTableRow();
-//addTableRow();
+
 
 function taskUpdate() {
 
   //Event handler called whenever there is a change to the task table
   var tableRef = document.getElementById("taskEntryTable");
+
+  //start at i = 2 because the first two rows of the HTML task table have no task data
+
   for (var i = 2; i < tableRef.rows.length; i++) {
-    
+
     // start date in first row of task table is input box, subsequent rows are just table cells so reference differently 
     if (i === 2) {
       var startDate = new Date(tableRef.rows[i].cells[2].children[0].value);
-      } else if (i > 2) {
+    } else if (i > 2) {
       //var sDate =tableRef.rows[i].cells[2].textContent ;
       var startDate = new Date(revDateStr(tableRef.rows[i].cells[2].textContent));
     }
-    
+
 
     // if no task start date error out
     if (!(startDate)) {
@@ -48,20 +51,20 @@ function taskUpdate() {
     if (bcDuration) {
       let bcDate = calcWorkingDays(startDate, bcDuration).toLocaleDateString();
       tableRef.rows[i].cells[6].innerText = bcDate;
-      if(tableRef.rows.length>3){
+      if (tableRef.rows.length > 3) {
         // update the row start date and display start date in the task table field
         tableRef.rows[tableRef.rows.length - 1].cells[2].innerHTML = tableRef.rows[tableRef.rows.length - 2].cells[6].innerHTML;
-      }  
-      
-    
+      }
+
+
     }
     let mlDuration = parseInt(tableRef.rows[i].cells[4].children[0].value);
-    if (mlDuration){
+    if (mlDuration) {
       let mlDate = calcWorkingDays(startDate, mlDuration).toLocaleDateString();
       tableRef.rows[i].cells[7].innerHTML = mlDate;
     }
     let wcDuration = parseInt(tableRef.rows[i].cells[5].children[0].value);
-    if (wcDuration){
+    if (wcDuration) {
       let wcDate = calcWorkingDays(startDate, wcDuration).toLocaleDateString();
       tableRef.rows[i].cells[8].innerHTML = wcDate;
     }
@@ -76,10 +79,10 @@ function taskUpdate() {
 }
 function revDateStr(Sdate) {
   //re formats input string from dd/mm/yyyy to yyyy-mm-dd
-  let sYear = Sdate.slice(6,10);
-  let sMonth = Sdate.slice(3,5);
-  let sDay = Sdate.slice(0,2);
-  return Sdate = sYear.concat("-",sMonth,"-",sDay);
+  let sYear = Sdate.slice(6, 10);
+  let sMonth = Sdate.slice(3, 5);
+  let sDay = Sdate.slice(0, 2);
+  return Sdate = sYear.concat("-", sMonth, "-", sDay);
 }
 
 function calcWorkingDays(fromDate, days) {
@@ -152,9 +155,10 @@ function updateTaskList(taskList) {
 }
 
 function monteCarlo(taskList) {
-  //runs the Monte Carlo simulation //
-  //google.charts.load("current", { packages: ["timeline"] });
-  //google.charts.setOnLoadCallback(drawTimeLine);
+  //runs the Monte Carlo simulation
+  alert("simulation start");
+  google.charts.load("current", { packages: ["timeline"] });
+  google.charts.setOnLoadCallback(drawTimeLine);
 
 }
 
@@ -185,48 +189,67 @@ function drawProbabilityChart() {
 
 
 function drawTimeLine() {
+  //plots the time lines from the HTML task entry table
+
   var container = document.getElementById('plot2');
   var chart = new google.visualization.Timeline(container);
-  var dataTable = new google.visualization.DataTable();
+  var plotTable = new google.visualization.DataTable();
+  let tableRef = document.getElementById("taskEntryTable");
+
+  // define columns in the plot data table 
+  plotTable.addColumn({ type: 'string', id: 'Position' });
+  plotTable.addColumn({ type: 'string', id: 'Name' });
+  plotTable.addColumn({ type: 'date', id: 'Start' });
+  plotTable.addColumn({ type: 'date', id: 'End' });
+
+  // -3 becuase first two rows of the task table have no data and the last row will always be empty
+  let dataTableLength = tableRef.rows.length - 3;
+
+  alert("data table length = " + (tableRef.rows.length - 3));
+
+  //set number of rows in the the plot data table from the HTML task table * 3 for Best Case, Most Likely Case and Worst Case dates
+  //each task table row maps onto 3 plot table rows
+  plotTable.addRows(dataTableLength * 2);
+  
+  alert ("plot table length " + plotTable.addRows(dataTableLength * 2) );
+
+  //populate the plot data table by row and column
+  //note that the 3 of the columns in each of the 3 plot table rows requires different data so further "for" loops not practical  
+  for (let plotTableRow = 0; plotTableRow < dataTableLength; plotTableRow++) {
+    plotTable.setCell(plotTableRow, 0, (tableRef.rows[plotTableRow + 2].cells[1].children[0].value));
+    plotTable.setCell(plotTableRow, 1, "Best Case");
+    
+    // start date in first row of task table is input box, subsequent rows are just table cells so reference differently 
+    if (plotTableRow === 0) {
+        plotTable.setCell(plotTableRow, 2, new Date(tableRef.rows[plotTableRow + 2].cells[2].children[0].value));
+    } else if (plotTableRow > 0){
+        plotTable.setCell(plotTableRow, 2,  new Date(revDateStr(tableRef.rows[plotTableRow + 2].cells[2].textContent)));
+    }
+    
+    plotTable.setCell(plotTableRow, 3, new Date(revDateStr(tableRef.rows[plotTableRow +2].cells[6].textContent)));
+
+    plotTable.setCell(plotTableRow + 1, 0, (tableRef.rows[plotTableRow + 2].cells[1].children[0].value));
+    plotTable.setCell(plotTableRow + 1, 1, "Most Likely Case");
+    plotTable.setCell(plotTableRow + 1, 2, new Date(revDateStr(tableRef.rows[plotTableRow +2].cells[6].textContent)));
+    plotTable.setCell(plotTableRow + 1, 3, new Date(revDateStr(tableRef.rows[plotTableRow +2].cells[7].textContent)));
+
+    plotTable.setCell(plotTableRow + 2, 0, (tableRef.rows[plotTableRow + 2].cells[1].children[0].value));
+    plotTable.setCell(plotTableRow + 2, 1, "Worst Case");
+    plotTable.setCell(plotTableRow + 2, 2, new Date(revDateStr(tableRef.rows[plotTableRow +2].cells[7].textContent)));
+    plotTable.setCell(plotTableRow + 2, 3, new Date(revDateStr(tableRef.rows[plotTableRow +2].cells[8].textContent)));
+  }
+
   var options = {
     timeline: { groupByRowLabel: true }
   };
+  chart.draw(plotTable, options);
 
-  dataTable.addColumn({ type: 'string', id: 'Position' });
-  dataTable.addColumn({ type: 'string', id: 'Name' });
-  dataTable.addColumn({ type: 'date', id: 'Start' });
-  dataTable.addColumn({ type: 'date', id: 'End' });
+  // Credit: this function was inspired by the code examples provided at: https://developers.google.com/chart/interactive/docs/gallery/timeline
 
-  let tableRef = document.getElementById("taskEntryTable");
-  let dataTableLength = tableRef.rows.length - 2;
-  dataTable.addTableRow(dataTableLength);
-  dataTable.setCell(0, 0, tableRef.rows[2].cells[1].innerHTML);
-  dataTable.setCell(0, 1, "Best Case");
-  dataTable.setCell(0, 2, new Date(tableRef.rows[2].cells[2].children[0].value));
-  dataTable.setCell(0, 3, new Date(tableRef.rows[2].cells[6].children[0].value));
+  //alert("Task name = " + tableRef.rows[2].cells[1].textContent);
+  //alert("start date = " + new Date((tableRef.rows[2].cells[2].children[0].value)));
+  //alert("finish date = " + new Date(revDateStr(tableRef.rows[2].cells[6].innerText)));
 
-
-  //dataTable[0].Position = tableRef.rows[2].cells[1].innerHTML;
-  //dataTable[0].Name = "Best Case";
-  //dataTable[0].Start = new Date(tableRef.rows[2].cells[2].children[0].value);
-  //dataTable[0].End = new Date(tableRef.rows[2].cells[6].children[0].value);
-
-
-  alert(dataTable);
-
-  //dataTable.addRows([
-  //  ['Task1', 'BC', new Date(2021, 4, 8), new Date(2021, 4, 13)],
-  //  ['Task1', 'MLC', new Date(2021, 4, 13), new Date(2021, 4, 20)],
-  //  ['Task1', 'WC', new Date(2021, 4, 20), new Date(2021, 4, 27)],
-  //  ['Task2', 'BC', new Date(2021, 4, 14), new Date(2021, 4, 23)],
-  //  ['Task2', 'MLC', new Date(2021, 4, 23), new Date(2021, 4, 29)],
-  //  ['Task2', 'WC', new Date(2021, 4, 29), new Date(2021, 5, 6)],
-  //  ['Task3', 'BC', new Date(2021, 4, 24), new Date(2021, 4, 31)],
-  //  ['Task3', 'MLC', new Date(2021, 4, 31), new Date(2021, 5, 7)],
-  //  ['Task3', 'WC', new Date(2021, 5, 7), new Date(2021, 5, 10)]
-  //]);
-
-  chart.draw(dataTable, options);
 }
 
 
