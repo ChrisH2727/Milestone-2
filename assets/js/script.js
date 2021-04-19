@@ -284,26 +284,22 @@ function resultProc(numbers) {
 function drawProbabilityChart(resultsArray) {
   var chart = new google.visualization.ScatterChart(document.getElementById('plot1'));
 
-  var data = google.visualization.arrayToDataTable([
-    ['Date', '% Probability'],
-    [(resultsArray[0].projectDate), resultsArray[0].percentage * 100],
-    [(resultsArray[1].projectDate), resultsArray[1].percentage * 100],
-    [(resultsArray[2].projectDate), resultsArray[2].percentage * 100],
-    [(resultsArray[3].projectDate), resultsArray[3].percentage * 100],
-    [(resultsArray[4].projectDate), resultsArray[4].percentage * 100],
-    [(resultsArray[5].projectDate), resultsArray[5].percentage * 100],
-    [(resultsArray[6].projectDate), resultsArray[6].percentage * 100],
-    [(resultsArray[7].projectDate), resultsArray[7].percentage * 100],
-    [(resultsArray[8].projectDate), resultsArray[8].percentage * 100],
-    [(resultsArray[9].projectDate), resultsArray[9].percentage * 100],
-  ]);
+  //construct data array for plotting in the scatter plot
+  var dataArray = [['Date', '% Probability']];
+  for (i = 0; i<10; i++){
+    dataArray.push([(resultsArray[i].projectDate), resultsArray[i].percentage * 100]);
+  }
+  var data = google.visualization.arrayToDataTable(dataArray);
 
+  //add plot options
   var options = {
     title: 'Probability of Completing The Project',
     hAxis: { title: 'Date', minValue: resultsArray[0].projectDate,maxValue: resultsArray[9].projectDate },
     vAxis: { title: '% Probability', minValue: 0, maxValue: 100 },
     legend: 'none'
   };
+
+  //generate chart
   chart.draw(data, options);
 }
 
