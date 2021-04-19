@@ -1,7 +1,5 @@
 
 
-google.charts.load('current', { 'packages': ['corechart'] });
-google.charts.setOnLoadCallback(drawProbabilityChart);
 
 
 class Task {
@@ -31,7 +29,6 @@ function taskUpdate() {
   var tableRef = document.getElementById("taskEntryTable");
 
   //start at i = 2 because the first two rows of the HTML task table have no task data
-
   for (var i = 2; i < tableRef.rows.length; i++) {
 
     // start date in first row of task table is input box, subsequent rows are just table cells so reference differently 
@@ -41,7 +38,6 @@ function taskUpdate() {
       //var sDate =tableRef.rows[i].cells[2].textContent ;
       var startDate = new Date(revDateStr(tableRef.rows[i].cells[2].textContent));
     }
-
 
     // if no task start date error out
     if (!(startDate)) {
@@ -55,8 +51,6 @@ function taskUpdate() {
         // update the row start date and display start date in the task table field
         tableRef.rows[tableRef.rows.length - 1].cells[2].innerHTML = tableRef.rows[tableRef.rows.length - 2].cells[6].innerHTML;
       }
-
-
     }
     let mlDuration = parseInt(tableRef.rows[i].cells[4].children[0].value);
     if (mlDuration) {
@@ -113,8 +107,7 @@ function workingDayUpdate(ele) {
 
 
 function addTableRow() {
-
-
+  //function adds a new row into the task entry table
   let tableRef = document.getElementById("taskEntryTable");
   var newTaskRow = tableRef.insertRow(tableRef.rows.length);
   var cell1 = newTaskRow.insertCell(0);
@@ -147,41 +140,173 @@ function addTableRow() {
   cell8.innerText = "";
   cell9.classList.add("taskDate");
   cell9.innerText = "";
-
 }
 
-function updateTaskList(taskList) {
-  // updates the task list taskList (array of objects of call task)// 
-}
 
 function monteCarlo(taskList) {
   //runs the Monte Carlo simulation
-  alert("simulation start");
-  google.charts.load("current", { packages: ["timeline"] });
-  google.charts.setOnLoadCallback(drawTimeLine);
+  //google.charts.load("current", { packages: ["timeline"] });
+  //google.charts.setOnLoadCallback(drawTimeLine);
+  var tableRef = document.getElementById("taskEntryTable");
+  var simRunsArray = [];
+
+  //let simRuns =  document.getElementById("simulationRuns").value;
+  var simRuns = 100;
+  var runDuration = 0;  // initialise the sum of random variates for each simulation run
+  // last HTML task entry table row is always blank
+  var dataTableEnd = tableRef.rows.length - 1;
+  for (let i = 0; i < simRuns; i++) {
+    for (let j = 2; j < dataTableEnd; j++) {
+      let bestCaseDuration = parseInt(tableRef.rows[j].cells[3].children[0].value);
+      let mostLikelyCaseDuration = parseInt(tableRef.rows[j].cells[4].children[0].value);
+      let worstCaseDuration = parseInt(tableRef.rows[j].cells[5].children[0].value);
+      // cumulative addition of task random variats is ok because all tasks have a finish to start date relationship
+      let variat = randomVariat(bestCaseDuration, mostLikelyCaseDuration, worstCaseDuration);
+      runDuration = runDuration + variat;
+    }
+    simRunsArray[i] = runDuration;
+    runDuration = 0; //reset the sum of random variates after each run
+  }
+
+  let results = resultProc(simRunsArray);
+  
+  let resultsProj = addProjectDates(results);
+
+  google.charts.load('current', { 'packages': ['corechart'] });
+  google.charts.setOnLoadCallback(drawProbabilityChart(resultsProj));
+}
+
+function addProjectDates(resultsArray) {
+  let tableRef = document.getElementById("taskEntryTable");
+  let startDate = new Date(tableRef.rows[2].cells[2].children[0].value);
+  for (i = 0; i < 10; i++) {
+    resultsArray[i].projectDate = (calcWorkingDays(startDate, resultsArray[i].projectDays)).toString();
+  }
+  return resultsArray;
+}
+
+
+function resultProc(numbers) {
+  var histoArray = [
+    {
+      "percentage": 0.1,
+      "yAxis": "10%",
+      "freqCount": 0,
+      "projectDays": 0,
+      "projectDate": ""
+    },
+    {
+      "percentage": 0.2,
+      "yAxis": "20%",
+      "freqCount": 0,
+      "projectDays": 0,
+      "projectDate": ""
+    },
+    {
+      "percentage": 0.2,
+      "yAxis": "30%",
+      "freqCount": 0,
+      "projectDays": 0,
+      "projectDate": ""
+    },
+    {
+      "percentage": 0.4,
+      "yAxis": "40%",
+      "freqCount": 0,
+      "projectDays": 0,
+      "projectDate": ""
+    },
+    {
+      "percentage": 0.5,
+      "yAxis": "50%",
+      "freqCount": 0,
+      "projectDays": 0,
+      "projectDate": ""
+    },
+    {
+      "percentage": 0.6,
+      "yAxis": "60%",
+      "freqCount": 0,
+      "projectDays": 0,
+      "projectDate": ""
+    },
+    {
+      "percentage": 0.7,
+      "yAxis": "70%",
+      "freqCount": 0,
+      "projectDays": 0,
+      "projectDate": "",
+    },
+    {
+      "percentage": 0.8,
+      "yAxis": "80%",
+      "freqCount": 0,
+      "projectDays": 0,
+      "projectDate": "",
+    },
+    {
+      "percentage": 0.9,
+      "yAxis": "90%",
+      "freqCount": 0,
+      "projectDays": 0,
+      "projectDate": "",
+    },
+    {
+      "percentage": 1,
+      "yAxis": "100%",
+      "freqCount": 0,
+      "projectDays": 0,
+      "projectDate": "",
+    }
+  ]
+  
+
+
+  var freqbucket =  Math.ceil((Math.max.apply(null, numbers) - Math.min.apply(null, numbers)) / 10);
+  var fCount = 0;
+  var popSize = numbers.length;
+  for (j = 1; j < 10; j++) {
+    for (let i = 0; i < popSize; i++) {
+      //alert("number i = " + numbers[i]);
+      if (numbers[i] < Math.ceil(Math.min.apply(null, numbers) + (freqbucket * j))) {
+        fCount = fCount + 1;
+      }
+    }
+    histoArray[j - 1].freqCount = fCount;
+    histoArray[j - 1].percentage = fCount / popSize;
+    histoArray[j - 1].projectDays = freqbucket * j;
+    fCount = 0;
+  }
+  // hard code the 100% entry to include the entire population 
+  histoArray[9].freqCount = popSize;
+  histoArray[9].percentage = 1;
+  histoArray[9].projectDays = Math.max.apply(null, numbers);
+
+  return histoArray;
 
 }
 
-function daysToMilliseconds(days) {
-  return days * 24 * 60 * 60 * 1000;
-}
-
-function drawProbabilityChart() {
+function drawProbabilityChart(resultsArray) {
   var chart = new google.visualization.ScatterChart(document.getElementById('plot1'));
+
   var data = google.visualization.arrayToDataTable([
     ['Date', '% Probability'],
-    [new Date(2021, 5, 10), 100],
-    [new Date(2021, 5, 9), 90],
-    [new Date(2021, 5, 8), 80],
-    [new Date(2021, 5, 5), 70],
-    [new Date(2021, 5, 3), 60],
-    [new Date(2021, 4, 31), 50],
+    [(resultsArray[0].projectDate), resultsArray[0].percentage * 100],
+    [(resultsArray[1].projectDate), resultsArray[1].percentage * 100],
+    [(resultsArray[2].projectDate), resultsArray[2].percentage * 100],
+    [(resultsArray[3].projectDate), resultsArray[3].percentage * 100],
+    [(resultsArray[4].projectDate), resultsArray[4].percentage * 100],
+    [(resultsArray[5].projectDate), resultsArray[5].percentage * 100],
+    [(resultsArray[6].projectDate), resultsArray[6].percentage * 100],
+    [(resultsArray[7].projectDate), resultsArray[7].percentage * 100],
+    [(resultsArray[8].projectDate), resultsArray[8].percentage * 100],
+    [(resultsArray[9].projectDate), resultsArray[9].percentage * 100],
   ]);
 
   var options = {
     title: 'Probability of Completing The Project',
-    hAxis: { title: 'Date', minValue: new Date(2021, 4, 30), maxValue: new Date(2021, 5, 15) },
-    vAxis: { title: '% Probability', minValue: 50, maxValue: 100 },
+    hAxis: { title: 'Date', minValue: resultsArray[0].projectDate,maxValue: resultsArray[9].projectDate },
+    vAxis: { title: '% Probability', minValue: 0, maxValue: 100 },
     legend: 'none'
   };
   chart.draw(data, options);
@@ -205,38 +330,36 @@ function drawTimeLine() {
   // -3 becuase first two rows of the task table have no data and the last row will always be empty
   let dataTableLength = tableRef.rows.length - 3;
 
-  alert("data table length = " + (tableRef.rows.length - 3));
-
   //set number of rows in the the plot data table from the HTML task table * 3 for Best Case, Most Likely Case and Worst Case dates
   //each task table row maps onto 3 plot table rows
-  plotTable.addRows(dataTableLength * 2);
-  
-  alert ("plot table length " + plotTable.addRows(dataTableLength * 2) );
+  plotTable.addRows((dataTableLength * 2) + 1);
+
+  alert("plot table length " + plotTable.addRows(dataTableLength * 3));
 
   //populate the plot data table by row and column
   //note that the 3 of the columns in each of the 3 plot table rows requires different data so further "for" loops not practical  
   for (let plotTableRow = 0; plotTableRow < dataTableLength; plotTableRow++) {
     plotTable.setCell(plotTableRow, 0, (tableRef.rows[plotTableRow + 2].cells[1].children[0].value));
     plotTable.setCell(plotTableRow, 1, "Best Case");
-    
+
     // start date in first row of task table is input box, subsequent rows are just table cells so reference differently 
     if (plotTableRow === 0) {
-        plotTable.setCell(plotTableRow, 2, new Date(tableRef.rows[plotTableRow + 2].cells[2].children[0].value));
-    } else if (plotTableRow > 0){
-        plotTable.setCell(plotTableRow, 2,  new Date(revDateStr(tableRef.rows[plotTableRow + 2].cells[2].textContent)));
+      plotTable.setCell(plotTableRow, 2, new Date(tableRef.rows[plotTableRow + 2].cells[2].children[0].value));
+    } else if (plotTableRow > 0) {
+      plotTable.setCell(plotTableRow, 2, new Date(revDateStr(tableRef.rows[plotTableRow + 2].cells[2].textContent)));
     }
-    
-    plotTable.setCell(plotTableRow, 3, new Date(revDateStr(tableRef.rows[plotTableRow +2].cells[6].textContent)));
+
+    plotTable.setCell(plotTableRow, 3, new Date(revDateStr(tableRef.rows[plotTableRow + 2].cells[6].textContent)));
 
     plotTable.setCell(plotTableRow + 1, 0, (tableRef.rows[plotTableRow + 2].cells[1].children[0].value));
     plotTable.setCell(plotTableRow + 1, 1, "Most Likely Case");
-    plotTable.setCell(plotTableRow + 1, 2, new Date(revDateStr(tableRef.rows[plotTableRow +2].cells[6].textContent)));
-    plotTable.setCell(plotTableRow + 1, 3, new Date(revDateStr(tableRef.rows[plotTableRow +2].cells[7].textContent)));
+    plotTable.setCell(plotTableRow + 1, 2, new Date(revDateStr(tableRef.rows[plotTableRow + 2].cells[6].textContent)));
+    plotTable.setCell(plotTableRow + 1, 3, new Date(revDateStr(tableRef.rows[plotTableRow + 2].cells[7].textContent)));
 
     plotTable.setCell(plotTableRow + 2, 0, (tableRef.rows[plotTableRow + 2].cells[1].children[0].value));
     plotTable.setCell(plotTableRow + 2, 1, "Worst Case");
-    plotTable.setCell(plotTableRow + 2, 2, new Date(revDateStr(tableRef.rows[plotTableRow +2].cells[7].textContent)));
-    plotTable.setCell(plotTableRow + 2, 3, new Date(revDateStr(tableRef.rows[plotTableRow +2].cells[8].textContent)));
+    plotTable.setCell(plotTableRow + 2, 2, new Date(revDateStr(tableRef.rows[plotTableRow + 2].cells[7].textContent)));
+    plotTable.setCell(plotTableRow + 2, 3, new Date(revDateStr(tableRef.rows[plotTableRow + 2].cells[8].textContent)));
   }
 
   var options = {
@@ -246,10 +369,6 @@ function drawTimeLine() {
 
   // Credit: this function was inspired by the code examples provided at: https://developers.google.com/chart/interactive/docs/gallery/timeline
 
-  //alert("Task name = " + tableRef.rows[2].cells[1].textContent);
-  //alert("start date = " + new Date((tableRef.rows[2].cells[2].children[0].value)));
-  //alert("finish date = " + new Date(revDateStr(tableRef.rows[2].cells[6].innerText)));
-
 }
 
 
@@ -257,7 +376,7 @@ function drawTimeLine() {
 function randomVariat(bestCase, mostLikelyCase, worstCase) {
   // This function returns a triangular distributed random variat from the Best Case, Most Likely Case and Worst Case
   // estimates passed to it. 
-  var sample = Math.random();
+  let sample = Math.random();
   if (sample < ((mostLikelyCase - bestCase) / (worstCase - bestCase))) {
     return (bestCase + Math.sqrt((worstCase - bestCase) * (mostLikelyCase - bestCase) * sample));
   } else if (sample >= ((mostLikelyCase - bestCase) / (worstCase - bestCase))) {
