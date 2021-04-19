@@ -1,7 +1,4 @@
 
-
-
-
 class Task {
   constructor(taskNo, taskDescription, taskSucessor, startDate, bestCaseEstimate, mostLikelyCaseEstimate,
     worstCaseEstimate, bestCaseCompletion, mostLikelyCaseCompletion, worstCaseCompletion, randomDuration) {
@@ -22,10 +19,9 @@ class Task {
 var taskList = []; //array of objects with class Task
 
 
-
+//Event handler called whenever there is a change to the task table
 function taskUpdate() {
 
-  //Event handler called whenever there is a change to the task table
   var tableRef = document.getElementById("taskEntryTable");
 
   //start at i = 2 because the first two rows of the HTML task table have no task data
@@ -145,13 +141,12 @@ function addTableRow() {
 
 function monteCarlo(taskList) {
   //runs the Monte Carlo simulation
-  //google.charts.load("current", { packages: ["timeline"] });
-  //google.charts.setOnLoadCallback(drawTimeLine);
+  google.charts.load("current", { packages: ["timeline"] });
+  google.charts.setOnLoadCallback(drawTimeLine);
   var tableRef = document.getElementById("taskEntryTable");
   var simRunsArray = [];
 
-  //let simRuns =  document.getElementById("simulationRuns").value;
-  var simRuns = 100;
+  let simRuns =  document.getElementById("simulationRuns").value;
   var runDuration = 0;  // initialise the sum of random variates for each simulation run
   // last HTML task entry table row is always blank
   var dataTableEnd = tableRef.rows.length - 1;
@@ -327,41 +322,43 @@ function drawTimeLine() {
   plotTable.addColumn({ type: 'date', id: 'Start' });
   plotTable.addColumn({ type: 'date', id: 'End' });
 
-  // -3 becuase first two rows of the task table have no data and the last row will always be empty
-  let dataTableLength = tableRef.rows.length - 3;
+  
+  //let noTasks = tableRef.rows.length -3;      // -3 becuase first two rows of the task table have no data and the last row will always be empty                 
+  let dataTableLength = (((tableRef.rows.length - 3) * 3)); // the length of the plot table
 
   //set number of rows in the the plot data table from the HTML task table * 3 for Best Case, Most Likely Case and Worst Case dates
   //each task table row maps onto 3 plot table rows
-  plotTable.addRows((dataTableLength * 2) + 1);
-
-  alert("plot table length " + plotTable.addRows(dataTableLength * 3));
-
+  plotTable.addRows(dataTableLength ); 
+  
   //populate the plot data table by row and column
-  //note that the 3 of the columns in each of the 3 plot table rows requires different data so further "for" loops not practical  
-  for (let plotTableRow = 0; plotTableRow < dataTableLength; plotTableRow++) {
-    plotTable.setCell(plotTableRow, 0, (tableRef.rows[plotTableRow + 2].cells[1].children[0].value));
-    plotTable.setCell(plotTableRow, 1, "Best Case");
+  
+  let taskTableCtr = 2; //indexes through the task table rows
+  //note that the 4 of the columns in each of theplot table rows requires different data so further "for" loops not practical 
+  for (let plotTableRow = 0; plotTableRow < dataTableLength ; plotTableRow+=3) {
 
-    // start date in first row of task table is input box, subsequent rows are just table cells so reference differently 
-    if (plotTableRow === 0) {
-      plotTable.setCell(plotTableRow, 2, new Date(tableRef.rows[plotTableRow + 2].cells[2].children[0].value));
-    } else if (plotTableRow > 0) {
-      plotTable.setCell(plotTableRow, 2, new Date(revDateStr(tableRef.rows[plotTableRow + 2].cells[2].textContent)));
-    }
-
-    plotTable.setCell(plotTableRow, 3, new Date(revDateStr(tableRef.rows[plotTableRow + 2].cells[6].textContent)));
-
-    plotTable.setCell(plotTableRow + 1, 0, (tableRef.rows[plotTableRow + 2].cells[1].children[0].value));
-    plotTable.setCell(plotTableRow + 1, 1, "Most Likely Case");
-    plotTable.setCell(plotTableRow + 1, 2, new Date(revDateStr(tableRef.rows[plotTableRow + 2].cells[6].textContent)));
-    plotTable.setCell(plotTableRow + 1, 3, new Date(revDateStr(tableRef.rows[plotTableRow + 2].cells[7].textContent)));
-
-    plotTable.setCell(plotTableRow + 2, 0, (tableRef.rows[plotTableRow + 2].cells[1].children[0].value));
-    plotTable.setCell(plotTableRow + 2, 1, "Worst Case");
-    plotTable.setCell(plotTableRow + 2, 2, new Date(revDateStr(tableRef.rows[plotTableRow + 2].cells[7].textContent)));
-    plotTable.setCell(plotTableRow + 2, 3, new Date(revDateStr(tableRef.rows[plotTableRow + 2].cells[8].textContent)));
+        plotTable.setCell(plotTableRow, 0, (tableRef.rows[taskTableCtr].cells[1].children[0].value));
+        plotTable.setCell(plotTableRow, 1, "Best Case");
+    
+        // start date in first row of task table is input box, subsequent rows are just table cells so reference differently 
+        if (plotTableRow === 0) {
+          plotTable.setCell(plotTableRow, 2, new Date(tableRef.rows[taskTableCtr].cells[2].children[0].value));
+        } else if (plotTableRow > 0) {
+          plotTable.setCell(plotTableRow, 2, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[2].textContent)));
+        } 
+        plotTable.setCell(plotTableRow, 3, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[6].textContent)));
+    
+        plotTable.setCell(plotTableRow + 1, 0, (tableRef.rows[taskTableCtr].cells[1].children[0].value));
+        plotTable.setCell(plotTableRow + 1, 1, "Most Likely Case");
+        plotTable.setCell(plotTableRow + 1, 2, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[6].textContent)));
+        plotTable.setCell(plotTableRow + 1, 3, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[7].textContent)));
+    
+        plotTable.setCell(plotTableRow + 2, 0, (tableRef.rows[taskTableCtr].cells[1].children[0].value));
+        plotTable.setCell(plotTableRow + 2, 1, "Worst Case");
+        plotTable.setCell(plotTableRow + 2, 2, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[7].textContent)));
+        plotTable.setCell(plotTableRow + 2, 3, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[8].textContent)));
+      taskTableCtr++;
   }
-
+  
   var options = {
     timeline: { groupByRowLabel: true }
   };
