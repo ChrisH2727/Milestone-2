@@ -10,13 +10,14 @@
   <link rel="stylesheet" href="assets/css/style.css" type="text/css" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
     type="text/css" />
+  
 </head>
 
 <body>
   <section class="container-fluid">
     <div class="row">
       <div class="col-md-6">
-        <table id="taskTable">
+        <table id="taskEntryTable">
           <tr>
             <th colspan="9" class="tableHeading">Task entry</th>
           </tr>
@@ -33,32 +34,33 @@
           </tr>
           <tr>
             <td class="taskNo">1</td>
-            <td><input type="text" class="taskDescriptionBox taskTable"  /></td>
-            <td><input type="date" class="taskDateBox taskTable" /></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox taskTable"/></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox taskTable"/></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox taskTable"/></td>
-            <td class="taskDate">02/04/2021</td>
-            <td class="taskDate">02/04/21</td>
-            <td class="taskDate">02/04/21</td>
+            <td><input type="text" class="taskDescriptionBox" /></td>
+            <td><input type="date" class="taskDateBox" /></td>
+            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox"/></td>
+            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox"/></td>
+            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox"/></td>
+            <td class="taskDate"></td>
+            <td class="taskDate"></td>
+            <td class="taskDate"></td>
           </tr>
         </table>
+  
       </div>
       <div class="col-md-3">
         <h3 class="tableHeading">Select non working days:</h3>
-        <label for="nonWorkingDay1" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay1" id="nonWorkingDay1" class="checkboxInput"
-            value="Monday">Monday</label>
-        <label for="nonWorkingDay2" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay2" id="nonWorkingDay2" class="checkboxInput"
-            value="Tuesday">Tuesday</label>
-        <label for="nonWorkingDay3" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay3" id="nonWorkingDay3" class="checkboxInput"
-            value="Wednesday">Wednesday</label>
-        <label for="nonWorkingDay4" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay4" id="nonWorkingDay4" class="checkboxInput"
-            value="Thursday">Thursday</label>
-        <label for="nonWorkingDay5" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay5" id="nonWorkingDay5"  class="checkboxInput"
-            value="Friday">Friday</label>
-        <label for="nonWorkingDay6" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay6" id="nonWorkingDay6" class="checkboxInput"
-            value="Saturday" checked>Saturday</label>
-        <label for="nonWorkingDay7" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay7" id="nonWorkingDay7" value="Sunday" class="checkboxInput"
+        <label for="nonWorkingDay1" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay1" id="nonWorkingDay" class="checkboxInput"
+            value="0">Monday</label>
+        <label for="nonWorkingDay2" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay2" id="nonWorkingDay" class="checkboxInput"
+            value="1">Tuesday</label>
+        <label for="nonWorkingDay3" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay3" id="nonWorkingDay" class="checkboxInput"
+            value="2">Wednesday</label>
+        <label for="nonWorkingDay4" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay4" id="nonWorkingDay" class="checkboxInput"
+            value="3">Thursday</label>
+        <label for="nonWorkingDay5" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay5" id="nonWorkingDay"  class="checkboxInput"
+            value="4">Friday</label>
+        <label for="nonWorkingDay6" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay6" id="nonWorkingDay" class="checkboxInput"
+            value="5" checked>Saturday</label>
+        <label for="nonWorkingDay7" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay7" id="nonWorkingDay" value="6" class="checkboxInput"
             checked>Sunday</label>
       </div>
       <div class="col-md-3">
@@ -89,11 +91,22 @@
     </div>
   </section>
 
+<section>
+<div id="alert">
+  <p>Click to close the alert message.</p> 
+</div>
+</section>
+
+  
+
   <script src="https://unpkg.com/mathjs@9.3.0/lib/browser/math.js"></script>
-  <script src="https://cdn.plot.ly/plotly-1.35.2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
   <script src="https://unpkg.com/@stdlib/stdlib/dist/stdlib-flat.min.js"></script>
   <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="assets/js/jquery-3.6.0.js" ></script>
+  <script src="assets/js/jquery-ui.js" ></script>
   <script src="assets/js/script.js"></script>
+
 </body>
 
 </html>
