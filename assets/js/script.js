@@ -1,23 +1,4 @@
 
-class Task {
-  constructor(taskNo, taskDescription, taskSucessor, startDate, bestCaseEstimate, mostLikelyCaseEstimate,
-    worstCaseEstimate, bestCaseCompletion, mostLikelyCaseCompletion, worstCaseCompletion, randomDuration) {
-    this.taskNo = taskNo;
-    this.taskDescription = taskDescription;
-    this.taskSucessor = taskSucessor;
-    this.startDate = startDate;
-    this.bestCaseEstimate = bestCaseEstimate;
-    this.mostLikelyCaseEstimate = mostLikelyCaseEstimate;
-    this.worstCaseEstimate = worstCaseEstimate;
-    this.bestCaseCompletion = bestCaseCompletion;
-    this.mostLikelyCaseCompletion = mostLikelyCaseCompletion;
-    this.worstCaseCompletion = worstCaseCompletion;
-    this.randomDuration = randomDuration;
-  }
-};
-// Adds a row into the task table
-var taskList = []; //array of objects with class Task
-
 
 //Event handler called whenever there is a change to the task table
 function taskUpdate() {
@@ -36,7 +17,8 @@ function taskUpdate() {
     }
 
     // if no task start date error out
-    if (!(startDate)) {
+    if (!Date.parse(startDate)) {
+      alert("error");
       errorHandler(0);
     }
     let bcDuration = parseInt(tableRef.rows[i].cells[3].children[0].value);
@@ -58,15 +40,17 @@ function taskUpdate() {
       let wcDate = calcWorkingDays(startDate, wcDuration).toLocaleDateString();
       tableRef.rows[i].cells[8].innerHTML = wcDate;
     }
+      if ((bcDuration > mlDuration) || (mlDuration > wcDuration) || (bcDuration > wcDuration)) {
+        errorHandler(2);
+      }
   }
-  if (document.readyState === "complete") { //wait for the DOM to load
-    if (tableRef.rows[tableRef.rows.length - 1].cells[8].innerText != "") {
-      addTableRow();
-      // update the row start date and display start date in the task table field
-      tableRef.rows[tableRef.rows.length - 1].cells[2].innerHTML = tableRef.rows[tableRef.rows.length - 2].cells[6].innerHTML;
-    }
+  if (tableRef.rows[tableRef.rows.length - 1].cells[8].innerText != "") {
+    addTableRow();
+    // update the row start date and display start date in the task table field
+    tableRef.rows[tableRef.rows.length - 1].cells[2].innerHTML = tableRef.rows[tableRef.rows.length - 2].cells[6].innerHTML;
   }
 }
+
 function revDateStr(Sdate) {
   //re formats input string from dd/mm/yyyy to yyyy-mm-dd
   let sYear = Sdate.slice(6, 10);
@@ -95,9 +79,13 @@ function checkTaskEntry(taskTablelength) {
 }
 
 
-function workingDayUpdate(ele) {
+function workingDayUpdate() {
+
   //Event handler called whenever there is a change to the non working day checkbox array//
+  var NonWorkingDay = [7];
+
   alert(ele.target.value);
+  alert("got here 5");
 }
 
 
@@ -146,7 +134,7 @@ function monteCarlo(taskList) {
   var tableRef = document.getElementById("taskEntryTable");
   var simRunsArray = [];
 
-  let simRuns =  document.getElementById("simulationRuns").value;
+  let simRuns = document.getElementById("simulationRuns").value;
   var runDuration = 0;  // initialise the sum of random variates for each simulation run
   // last HTML task entry table row is always blank
   var dataTableEnd = tableRef.rows.length - 1;
@@ -164,7 +152,7 @@ function monteCarlo(taskList) {
   }
 
   let results = resultProc(simRunsArray);
-  
+
   let resultsProj = addProjectDates(results);
 
   google.charts.load('current', { 'packages': ['corechart'] });
@@ -181,112 +169,52 @@ function addProjectDates(resultsArray) {
 }
 
 
+
+
 function resultProc(numbers) {
-  var histoArray = [
-    {
-      "percentage": 0.1,
-      "yAxis": "10%",
-      "freqCount": 0,
-      "projectDays": 0,
-      "projectDate": ""
-    },
-    {
-      "percentage": 0.2,
-      "yAxis": "20%",
-      "freqCount": 0,
-      "projectDays": 0,
-      "projectDate": ""
-    },
-    {
-      "percentage": 0.2,
-      "yAxis": "30%",
-      "freqCount": 0,
-      "projectDays": 0,
-      "projectDate": ""
-    },
-    {
-      "percentage": 0.4,
-      "yAxis": "40%",
-      "freqCount": 0,
-      "projectDays": 0,
-      "projectDate": ""
-    },
-    {
-      "percentage": 0.5,
-      "yAxis": "50%",
-      "freqCount": 0,
-      "projectDays": 0,
-      "projectDate": ""
-    },
-    {
-      "percentage": 0.6,
-      "yAxis": "60%",
-      "freqCount": 0,
-      "projectDays": 0,
-      "projectDate": ""
-    },
-    {
-      "percentage": 0.7,
-      "yAxis": "70%",
-      "freqCount": 0,
-      "projectDays": 0,
-      "projectDate": "",
-    },
-    {
-      "percentage": 0.8,
-      "yAxis": "80%",
-      "freqCount": 0,
-      "projectDays": 0,
-      "projectDate": "",
-    },
-    {
-      "percentage": 0.9,
-      "yAxis": "90%",
-      "freqCount": 0,
-      "projectDays": 0,
-      "projectDate": "",
-    },
-    {
-      "percentage": 1,
-      "yAxis": "100%",
-      "freqCount": 0,
-      "projectDays": 0,
-      "projectDate": "",
+  //this function inputs the Monte Carlo simulation results and processes the results into percentage frequency bins.
+  //the output is stored in the form of a array of objects of class Results
+  class Results {
+    constructor(percentage, yAxis, freqCount, projectDays, projectDate) {
+      this.percentage = percentage;
+      this.yAxis = yAxis;
+      this.freqCount = freqCount;
+      this.projectDays = projectDays;
+      this.projectDate = projectDate;
     }
-  ]
-  
-
-
-  var freqbucket =  Math.ceil((Math.max.apply(null, numbers) - Math.min.apply(null, numbers)) / 10);
+  };
+  var freqbucket = Math.ceil((Math.max.apply(null, numbers) - Math.min.apply(null, numbers)) / 10);
   var fCount = 0;
   var popSize = numbers.length;
+  var histoArray = [];
+
   for (j = 1; j < 10; j++) {
     for (let i = 0; i < popSize; i++) {
-      //alert("number i = " + numbers[i]);
       if (numbers[i] < Math.ceil(Math.min.apply(null, numbers) + (freqbucket * j))) {
         fCount = fCount + 1;
       }
     }
+    histoArray.push(new Results());
     histoArray[j - 1].freqCount = fCount;
     histoArray[j - 1].percentage = fCount / popSize;
     histoArray[j - 1].projectDays = freqbucket * j;
     fCount = 0;
   }
-  // hard code the 100% entry to include the entire population 
+  // hard code the 100% entry to include the entire population
+  histoArray.push(new Results());
   histoArray[9].freqCount = popSize;
-  histoArray[9].percentage = 1;
+  histoArray[9].percentage = 1; //100% expressed as a decimal
   histoArray[9].projectDays = Math.max.apply(null, numbers);
 
   return histoArray;
-
 }
 
 function drawProbabilityChart(resultsArray) {
   var chart = new google.visualization.ScatterChart(document.getElementById('plot1'));
-
+  alert("got here 1");
   //construct data array for plotting in the scatter plot
   var dataArray = [['Date', '% Probability']];
-  for (i = 0; i<10; i++){
+  for (i = 0; i < 10; i++) {
     dataArray.push([(resultsArray[i].projectDate), resultsArray[i].percentage * 100]);
   }
   var data = google.visualization.arrayToDataTable(dataArray);
@@ -294,7 +222,7 @@ function drawProbabilityChart(resultsArray) {
   //add plot options
   var options = {
     title: 'Probability of Completing The Project',
-    hAxis: { title: 'Date', minValue: resultsArray[0].projectDate,maxValue: resultsArray[9].projectDate },
+    hAxis: { title: 'Date', minValue: resultsArray[0].projectDate, maxValue: resultsArray[9].projectDate },
     vAxis: { title: '% Probability', minValue: 0, maxValue: 100 },
     legend: 'none'
   };
@@ -318,43 +246,43 @@ function drawTimeLine() {
   plotTable.addColumn({ type: 'date', id: 'Start' });
   plotTable.addColumn({ type: 'date', id: 'End' });
 
-  
+
   //let noTasks = tableRef.rows.length -3;      // -3 becuase first two rows of the task table have no data and the last row will always be empty                 
   let dataTableLength = (((tableRef.rows.length - 3) * 3)); // the length of the plot table
 
   //set number of rows in the the plot data table from the HTML task table * 3 for Best Case, Most Likely Case and Worst Case dates
   //each task table row maps onto 3 plot table rows
-  plotTable.addRows(dataTableLength ); 
-  
+  plotTable.addRows(dataTableLength);
+
   //populate the plot data table by row and column
-  
+
   let taskTableCtr = 2; //indexes through the task table rows
   //note that the 4 of the columns in each of theplot table rows requires different data so further "for" loops not practical 
-  for (let plotTableRow = 0; plotTableRow < dataTableLength ; plotTableRow+=3) {
+  for (let plotTableRow = 0; plotTableRow < dataTableLength; plotTableRow += 3) {
 
-        plotTable.setCell(plotTableRow, 0, (tableRef.rows[taskTableCtr].cells[1].children[0].value));
-        plotTable.setCell(plotTableRow, 1, "Best Case");
-    
-        // start date in first row of task table is input box, subsequent rows are just table cells so reference differently 
-        if (plotTableRow === 0) {
-          plotTable.setCell(plotTableRow, 2, new Date(tableRef.rows[taskTableCtr].cells[2].children[0].value));
-        } else if (plotTableRow > 0) {
-          plotTable.setCell(plotTableRow, 2, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[2].textContent)));
-        } 
-        plotTable.setCell(plotTableRow, 3, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[6].textContent)));
-    
-        plotTable.setCell(plotTableRow + 1, 0, (tableRef.rows[taskTableCtr].cells[1].children[0].value));
-        plotTable.setCell(plotTableRow + 1, 1, "Most Likely Case");
-        plotTable.setCell(plotTableRow + 1, 2, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[6].textContent)));
-        plotTable.setCell(plotTableRow + 1, 3, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[7].textContent)));
-    
-        plotTable.setCell(plotTableRow + 2, 0, (tableRef.rows[taskTableCtr].cells[1].children[0].value));
-        plotTable.setCell(plotTableRow + 2, 1, "Worst Case");
-        plotTable.setCell(plotTableRow + 2, 2, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[7].textContent)));
-        plotTable.setCell(plotTableRow + 2, 3, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[8].textContent)));
-      taskTableCtr++;
+    plotTable.setCell(plotTableRow, 0, (tableRef.rows[taskTableCtr].cells[1].children[0].value));
+    plotTable.setCell(plotTableRow, 1, "Best Case");
+
+    // start date in first row of task table is input box, subsequent rows are just table cells so reference differently 
+    if (plotTableRow === 0) {
+      plotTable.setCell(plotTableRow, 2, new Date(tableRef.rows[taskTableCtr].cells[2].children[0].value));
+    } else if (plotTableRow > 0) {
+      plotTable.setCell(plotTableRow, 2, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[2].textContent)));
+    }
+    plotTable.setCell(plotTableRow, 3, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[6].textContent)));
+
+    plotTable.setCell(plotTableRow + 1, 0, (tableRef.rows[taskTableCtr].cells[1].children[0].value));
+    plotTable.setCell(plotTableRow + 1, 1, "Most Likely Case");
+    plotTable.setCell(plotTableRow + 1, 2, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[6].textContent)));
+    plotTable.setCell(plotTableRow + 1, 3, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[7].textContent)));
+
+    plotTable.setCell(plotTableRow + 2, 0, (tableRef.rows[taskTableCtr].cells[1].children[0].value));
+    plotTable.setCell(plotTableRow + 2, 1, "Worst Case");
+    plotTable.setCell(plotTableRow + 2, 2, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[7].textContent)));
+    plotTable.setCell(plotTableRow + 2, 3, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[8].textContent)));
+    taskTableCtr++;
   }
-  
+
   var options = {
     timeline: { groupByRowLabel: true }
   };
@@ -381,27 +309,41 @@ function randomVariat(bestCase, mostLikelyCase, worstCase) {
 
 
 function errorHandler(errorCode) {
+  document.getElementById("alert").style.display = "block";
   switch (errorCode) {
     case 0:
-      alert('No start date entered: error code 0');
+      document.getElementById("alert").innerText = 'No start date entered: error code 0';
       break;
     case (1):
-      alert('Out of range Gantt or Triangular distributed variat : error code ${errorCode}');
+      document.getElementById("alert").innerText = 'Out of range Gantt or Triangular distributed variat : error code 1';
+      break;
+    case (2):
+      document.getElementById("alert").innerText = ' Best case duration musts be less that most likely case duration and most likely case duration must be less than worst case duration : error code 2';
       break;
     default:
-      alert("Unknown error code reported");
+      document.getElementById("alert").innerText = 'Unkown error code';
   }
+  document.getElementById("alert").addEventListener("click", hideAlert);
 }
+
+function hideAlert() {
+  document.getElementById("alert").style.display = "none";
+}
+
 // Event listeners 
 // Sets up event listener for changes to the task table
 document.getElementById("taskEntryTable").addEventListener("change", taskUpdate);
 
+document.getElementById("nonWorkingDay").addEventListener("CheckboxStateChange", workingDayUpdate, false);
+
 // Sets up event listener for changes to the working day checkbox array 
 // acknowledgement https://stackoverflow.com/questions/44988614/pass-this-to-addeventlistener-as-parameter
-var workingDays = document.getElementsByClassName('checkboxInput');
-Array.from(workingDays).forEach(function () {
-  this.addEventListener("change", workingDayUpdate, false);
-});
+//var workingDays = document.getElementsByClassName('checkboxInput');
+//Array.from(workingDays).forEach(function () {
+//  this.addEventListener("change", workingDayUpdate, false);
+//});
 
 //Sets up event listener for "Start Simulation" button
 document.getElementById("simulationStart").addEventListener("click", monteCarlo);
+
+
