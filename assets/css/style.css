@@ -115,3 +115,13 @@ table th {
 /* --------- Output Chart Style------*/
 
 /* --------- Output Heading Style----*/
+
+/*-----------Alert Window------------*/
+
+#alert {
+    padding: 20px;
+    background-color:orange;
+    color: white;
+    display:none;
+  }
+  
