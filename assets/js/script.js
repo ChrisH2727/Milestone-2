@@ -152,33 +152,35 @@ function runSimulation(){
    return simRunsArray;
 }
 
-function monteCarlo(taskList) {
+function monteCarlo() {
+  var dataPoints = 40; //number of data points for plotting probability chart
   //this is the callback function called when the simulation start button is clecked
   document.getElementById("simulationStart").style.backgroundColor="red"; //turn button red for the duration of the simulation
-
+  document.getElementById("plotPanel").style.display = "block";
   google.charts.load("current", { packages: ["timeline"] });
   google.charts.setOnLoadCallback(drawTimeLine); //plot timeline on call back
-
   let simRunsArray = runSimulation(); //run core simulation
-  let results = resultProc(simRunsArray); // process simulation runs into frequency buckets and determine project durations 
-  let resultsProj = addProjectDates(results); // assign dates to project duration dates 
 
+  let results = resultProc(simRunsArray,dataPoints); // process simulation runs into frequency buckets and determine project durations 
+  
+  let resultsProj = addProjectDates(results,dataPoints); // assign dates to project duration dates 
+  
   google.charts.load('current', { 'packages': ['corechart'] });
-  google.charts.setOnLoadCallback(drawProbabilityChart(resultsProj)); //plot probability chart
+  google.charts.setOnLoadCallback(drawProbabilityChart(resultsProj,dataPoints)); //plot probability chart
   document.getElementById("simulationStart").style.backgroundColor = "green"; // turn button green when simulation complete
 }
 
-function addProjectDates(resultsArray) {
+function addProjectDates(resultsArray,dataPoints) {
   //uses the calcWorkingDays function to determine the probable project dates and stores these in resultsArray (array of objects class Results) 
   let tableRef = document.getElementById("taskEntryTable");
   let startDate = new Date(tableRef.rows[2].cells[2].children[0].value);
-  for (i = 0; i < 10; i++) {
+  for (i = 0; i < dataPoints; i++) {
     resultsArray[i].projectDate = (calcWorkingDays(startDate, resultsArray[i].projectDays)).toString();
   }
   return resultsArray;
 }
 
-function resultProc(numbers) {
+function resultProc(numbers, dataSamples) {
   //this function inputs the Monte Carlo simulation results and processes the results into percentage frequency bins.
   //the output is stored in the form of a array of objects of class Results
   class Results {
@@ -190,12 +192,12 @@ function resultProc(numbers) {
       this.projectDate = projectDate;
     }
   };
-  var freqbucket = Math.ceil((Math.max.apply(null, numbers) - Math.min.apply(null, numbers)) / 10);
+  var freqbucket = Math.ceil((Math.max.apply(null, numbers) - Math.min.apply(null, numbers)) / dataSamples);
   var fCount = 0;
   var popSize = numbers.length;
   var histoArray = [];
 
-  for (j = 1; j < 10; j++) {
+  for (j = 1; j < dataSamples; j++) {
     for (let i = 0; i < popSize; i++) {
       if (numbers[i] < Math.ceil(Math.min.apply(null, numbers) + (freqbucket * j))) {
         fCount = fCount + 1;
@@ -209,19 +211,19 @@ function resultProc(numbers) {
   }
   // hard code the 100% entry to include the entire population
   histoArray.push(new Results());
-  histoArray[9].freqCount = popSize;
-  histoArray[9].percentage = 1; //100% expressed as a decimal
-  histoArray[9].projectDays = Math.max.apply(null, numbers);
+  histoArray[dataSamples -1].freqCount = popSize;
+  histoArray[dataSamples -1].percentage = 1; //100% expressed as a decimal
+  histoArray[dataSamples -1].projectDays = Math.max.apply(null, numbers);
 
   return histoArray;
 }
 
-function drawProbabilityChart(resultsArray) {
+function drawProbabilityChart(resultsArray, dataPoints) {
   var chart = new google.visualization.ScatterChart(document.getElementById('plot1'));
-  alert("got here 1");
+
   //construct data array for plotting in the scatter plot
   var dataArray = [['Date', '% Probability']];
-  for (i = 0; i < 10; i++) {
+  for (i = 0; i < dataPoints; i++) {
     dataArray.push([(resultsArray[i].projectDate), resultsArray[i].percentage * 100]);
   }
   var data = google.visualization.arrayToDataTable(dataArray);
@@ -295,8 +297,6 @@ function drawTimeLine() {
   // Credit: this function was inspired by the code examples provided at: https://developers.google.com/chart/interactive/docs/gallery/timeline
 
 }
-
-
 
 function randomVariat(bestCase, mostLikelyCase, worstCase) {
   // This function returns a triangular distributed random variat from the Best Case, Most Likely Case and Worst Case
