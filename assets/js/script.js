@@ -63,32 +63,33 @@ function calcWorkingDays(fromDate, days) {
   // This function returns a completion date based on a Start Date and an array holding days of the week deemed
   // working and non working.
   // The function also catches the condition where the Start Date is a non working day and calculates the next working day.
-
+  
+  //read the non working days selected by the checkboxes into the array nonWorkingdays
+  var nonWorkingDays = [];
   var workingDay = 0;
+  var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+  for (var nonWorkingDay of checkboxes) {
+     nonWorkingDays.push(nonWorkingDay.value);
+  }  
+  if(nonWorkingDays.includes("0") && nonWorkingDays.includes("1") && nonWorkingDays.includes("2") && nonWorkingDays.includes("3") &&
+     nonWorkingDays.includes("4") && nonWorkingDays.includes("5") && nonWorkingDays.includes("6")){ //detect error condition where all week days selected as non working
+    errorHandler(3);
+    nonWorkingDays = ["0","2","3","4","5","6"];
+  }
+
   while (workingDay < days) {
     fromDate.setDate(fromDate.getDate() + 1);
-    if (fromDate.getDay() != 0 && fromDate.getDay() != 6) // Skip weekends
-      workingDay++;
+    if (!(nonWorkingDays.includes(fromDate.getDay().toString()))) {
+       workingDay++;
+    }
   }
   return fromDate;
 }
 
-
-function checkTaskEntry(taskTablelength) {
-
-}
-
-
 function workingDayUpdate() {
-
-  //Event handler called whenever there is a change to the non working day checkbox array//
-  var NonWorkingDay = [7];
-
-  alert(ele.target.value);
-  alert("got here 5");
+  //Event handler called whenever there is a change to the non working day checkbox array
+  taskUpdate(); // call the task update function to revise dates
 }
-
-
 
 function addTableRow() {
   //function adds a new row into the task entry table
@@ -126,40 +127,49 @@ function addTableRow() {
   cell9.innerText = "";
 }
 
+function runSimulation(){
+ //runs the Monte Carlo simulation
+ 
+ var tableRef = document.getElementById("taskEntryTable");
+ var simRunsArray = [];
+
+ let simRuns = document.getElementById("simulationRuns").value;
+ var runDuration = 0;  // initialise the sum of random variates for each simulation run
+ // last HTML task entry table row is always blank
+ var dataTableEnd = tableRef.rows.length - 1;
+ for (let i = 0; i < simRuns; i++) {
+   for (let j = 2; j < dataTableEnd; j++) {
+     let bestCaseDuration = parseInt(tableRef.rows[j].cells[3].children[0].value);
+     let mostLikelyCaseDuration = parseInt(tableRef.rows[j].cells[4].children[0].value);
+     let worstCaseDuration = parseInt(tableRef.rows[j].cells[5].children[0].value);
+     // cumulative addition of task random variats is ok because all tasks have a finish to start date relationship
+     let variat = randomVariat(bestCaseDuration, mostLikelyCaseDuration, worstCaseDuration);
+     runDuration = runDuration + variat;
+   }
+   simRunsArray[i] = runDuration;
+   runDuration = 0; //reset the sum of random variates after each run
+ }
+   return simRunsArray;
+}
 
 function monteCarlo(taskList) {
-  //runs the Monte Carlo simulation
+  //this is the callback function called when the simulation start button is clecked
+  document.getElementById("simulationStart").style.backgroundColor="red"; //turn button red for the duration of the simulation
+
   google.charts.load("current", { packages: ["timeline"] });
-  google.charts.setOnLoadCallback(drawTimeLine);
-  var tableRef = document.getElementById("taskEntryTable");
-  var simRunsArray = [];
+  google.charts.setOnLoadCallback(drawTimeLine); //plot timeline on call back
 
-  let simRuns = document.getElementById("simulationRuns").value;
-  var runDuration = 0;  // initialise the sum of random variates for each simulation run
-  // last HTML task entry table row is always blank
-  var dataTableEnd = tableRef.rows.length - 1;
-  for (let i = 0; i < simRuns; i++) {
-    for (let j = 2; j < dataTableEnd; j++) {
-      let bestCaseDuration = parseInt(tableRef.rows[j].cells[3].children[0].value);
-      let mostLikelyCaseDuration = parseInt(tableRef.rows[j].cells[4].children[0].value);
-      let worstCaseDuration = parseInt(tableRef.rows[j].cells[5].children[0].value);
-      // cumulative addition of task random variats is ok because all tasks have a finish to start date relationship
-      let variat = randomVariat(bestCaseDuration, mostLikelyCaseDuration, worstCaseDuration);
-      runDuration = runDuration + variat;
-    }
-    simRunsArray[i] = runDuration;
-    runDuration = 0; //reset the sum of random variates after each run
-  }
-
-  let results = resultProc(simRunsArray);
-
-  let resultsProj = addProjectDates(results);
+  let simRunsArray = runSimulation(); //run core simulation
+  let results = resultProc(simRunsArray); // process simulation runs into frequency buckets and determine project durations 
+  let resultsProj = addProjectDates(results); // assign dates to project duration dates 
 
   google.charts.load('current', { 'packages': ['corechart'] });
-  google.charts.setOnLoadCallback(drawProbabilityChart(resultsProj));
+  google.charts.setOnLoadCallback(drawProbabilityChart(resultsProj)); //plot probability chart
+  document.getElementById("simulationStart").style.backgroundColor = "green"; // turn button green when simulation complete
 }
 
 function addProjectDates(resultsArray) {
+  //uses the calcWorkingDays function to determine the probable project dates and stores these in resultsArray (array of objects class Results) 
   let tableRef = document.getElementById("taskEntryTable");
   let startDate = new Date(tableRef.rows[2].cells[2].children[0].value);
   for (i = 0; i < 10; i++) {
@@ -167,9 +177,6 @@ function addProjectDates(resultsArray) {
   }
   return resultsArray;
 }
-
-
-
 
 function resultProc(numbers) {
   //this function inputs the Monte Carlo simulation results and processes the results into percentage frequency bins.
@@ -226,9 +233,7 @@ function drawProbabilityChart(resultsArray) {
     vAxis: { title: '% Probability', minValue: 0, maxValue: 100 },
     legend: 'none'
   };
-
-  //generate chart
-  chart.draw(data, options);
+  chart.draw(data, options); //generate chart
 }
 
 
@@ -259,7 +264,6 @@ function drawTimeLine() {
   let taskTableCtr = 2; //indexes through the task table rows
   //note that the 4 of the columns in each of theplot table rows requires different data so further "for" loops not practical 
   for (let plotTableRow = 0; plotTableRow < dataTableLength; plotTableRow += 3) {
-
     plotTable.setCell(plotTableRow, 0, (tableRef.rows[taskTableCtr].cells[1].children[0].value));
     plotTable.setCell(plotTableRow, 1, "Best Case");
 
@@ -318,7 +322,10 @@ function errorHandler(errorCode) {
       document.getElementById("alert").innerText = 'Out of range Gantt or Triangular distributed variat : error code 1';
       break;
     case (2):
-      document.getElementById("alert").innerText = ' Best case duration musts be less that most likely case duration and most likely case duration must be less than worst case duration : error code 2';
+      document.getElementById("alert").innerText = 'Best case duration musts be less that most likely case duration and most likely case duration must be less than worst case duration : error code 2';
+      break;
+    case (3):
+      document.getElementById("alert").innerText = 'You must include at least 1 working day: error code 3';
       break;
     default:
       document.getElementById("alert").innerText = 'Unkown error code';
@@ -334,14 +341,12 @@ function hideAlert() {
 // Sets up event listener for changes to the task table
 document.getElementById("taskEntryTable").addEventListener("change", taskUpdate);
 
-document.getElementById("nonWorkingDay").addEventListener("CheckboxStateChange", workingDayUpdate, false);
-
 // Sets up event listener for changes to the working day checkbox array 
-// acknowledgement https://stackoverflow.com/questions/44988614/pass-this-to-addeventlistener-as-parameter
-//var workingDays = document.getElementsByClassName('checkboxInput');
-//Array.from(workingDays).forEach(function () {
-//  this.addEventListener("change", workingDayUpdate, false);
-//});
+// credit: https://stackoverflow.com/questions/44988614/pass-this-to-addeventlistener-as-parameter
+var workingDays = document.getElementsByClassName('checkboxInput');
+Array.from(workingDays).forEach(function () {
+ this.addEventListener("change", workingDayUpdate, false);
+});
 
 //Sets up event listener for "Start Simulation" button
 document.getElementById("simulationStart").addEventListener("click", monteCarlo);
