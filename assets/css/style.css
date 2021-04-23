@@ -12,6 +12,9 @@ body {
  }
 
 /* --------- Input Table Style-------*/
+.taskPanel {
+    background-color:rgb(220, 235, 245);
+}
 #overFlow{
     overflow-x:auto;  
 }
@@ -26,6 +29,7 @@ th,td {
     margin-left:auto;
     margin-right:auto;
     margin-top: 20px;
+    margin-bottom: 20px;
     background-color:white;
     border:1px solid black;
     padding:0;
@@ -51,11 +55,14 @@ table th {
 .taskDateBox {
     text-align: center;
     font-size: 15px;
-    border-color: white;
-    background-color:white;
+    border-color: black;
+    background-color:yellow;
     width:150px;
     margin:0;
     padding:0;
+}
+.sDate{
+    background-color:yellow;  
 }
 .taskDuration {
     width:60px;
@@ -65,7 +72,7 @@ table th {
 .taskDurationBox {
     text-align: center;
     font-size: 15px;
-    border-color: white;
+    border-color:black;
     background-color:white;
     width:60px;
     margin:0;
@@ -89,10 +96,29 @@ table th {
     text-align: center;
     font-size: 1.1rem;
     width: 30px;
+    background-color:thistle;
+}
+.bCase{
+    background-color:lightgreen;
+}
+.mlCase{
+    background-color: orange;
+}
+.wCase{
+    background-color:orangered;
+}
+.taskDes{
+    background-color:cornflowerblue;
 }
 /* --------- Time Line Chart Style-------*/
 #plot2,#plot1{
     height: 300px;
+}
+#plotPanel{
+    display:none;
+}
+.tLine{
+    background-color: rgb(223, 236, 245);
 }
 
 /* --------- Footer Style------------*/
@@ -100,7 +126,19 @@ table th {
 
 
 /* --------- Header Style------------*/
+.header{
+    background-color:cornflowerblue;
+    height:100px;
+    width:100%;
+    border:1px solid darkblue;
+    margin: 15px;
+    text-align:center;
+}
 
+.headerText{
+    font-weight: bold;
+    
+}
 
 /* --------- Setup & Submit Style------------*/
 .label{
@@ -109,9 +147,25 @@ table th {
 #simulationStart{
     border:2px solid black;
     margin:20px;
-    background-color:tomato;
+    background-color:green;
+    color:white;
     width:auto;
 }
+
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .closebtn:hover {
+    color: black;
+  }
 /* --------- Output Chart Style------*/
 
 /* --------- Output Heading Style----*/
@@ -120,8 +174,10 @@ table th {
 
 #alert {
     padding: 20px;
-    background-color:orange;
-    color: white;
+    background-color:white;
+    color: black;
     display:none;
+    border-color: red;
+    border-width:2px;
   }
   
