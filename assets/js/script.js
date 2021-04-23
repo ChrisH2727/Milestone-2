@@ -295,8 +295,10 @@ function drawTimeLine() {
   }
 
   var options = {
-    timeline: { groupByRowLabel: true }
-  };
+    timeline: { groupByRowLabel: true },
+    colors:["#90ee90","#ffa500","#ff4500"],
+    timeline: { colorByRowLabel: false },
+     }
   chart.draw(plotTable, options);
 
   // Credit: this function was inspired by the code examples provided at: https://developers.google.com/chart/interactive/docs/gallery/timeline
