@@ -12,13 +12,11 @@ function taskUpdate() {
     if (i === 2) {
       var startDate = new Date(tableRef.rows[i].cells[2].children[0].value);
     } else if (i > 2) {
-      //var sDate =tableRef.rows[i].cells[2].textContent ;
       var startDate = new Date(revDateStr(tableRef.rows[i].cells[2].textContent));
     }
 
     // if no task start date error out
     if (!Date.parse(startDate)) {
-      alert("error");
       errorHandler(0);
     }
     let bcDuration = parseInt(tableRef.rows[i].cells[3].children[0].value);
@@ -153,7 +151,7 @@ function runSimulation(){
 }
 
 function monteCarlo() {
-  var dataPoints = 40; //number of data points for plotting probability chart
+  var dataPoints = 10; //number of data points for plotting probability chart
   //this is the callback function called when the simulation start button is clecked
   document.getElementById("simulationStart").style.backgroundColor="red"; //turn button red for the duration of the simulation
   document.getElementById("plotPanel").style.display = "block";
@@ -172,10 +170,11 @@ function monteCarlo() {
 
 function addProjectDates(resultsArray,dataPoints) {
   //uses the calcWorkingDays function to determine the probable project dates and stores these in resultsArray (array of objects class Results) 
-  let tableRef = document.getElementById("taskEntryTable");
-  let startDate = new Date(tableRef.rows[2].cells[2].children[0].value);
   for (i = 0; i < dataPoints; i++) {
-    resultsArray[i].projectDate = (calcWorkingDays(startDate, resultsArray[i].projectDays)).toString();
+    let tableRef = document.getElementById("taskEntryTable");
+    let startDate = new Date(tableRef.rows[2].cells[2].children[0].value);
+    let finishDate = calcWorkingDays(startDate, resultsArray[i].projectDays);
+    resultsArray[i].projectDate = finishDate.toString();
   }
   return resultsArray;
 }
@@ -192,28 +191,32 @@ function resultProc(numbers, dataSamples) {
       this.projectDate = projectDate;
     }
   };
-  var freqbucket = Math.ceil((Math.max.apply(null, numbers) - Math.min.apply(null, numbers)) / dataSamples);
+  
   var fCount = 0;
   var popSize = numbers.length;
   var histoArray = [];
-
+  var maxDuration = Math.max.apply(null, numbers);
+  //alert("max days = "+ maxDuration);
+  var minDuration = Math.min.apply(null, numbers);
+  //alert("min days = "+ minDuration);
+  var binWidth = ((maxDuration - minDuration) / dataSamples);
   for (j = 1; j < dataSamples; j++) {
     for (let i = 0; i < popSize; i++) {
-      if (numbers[i] < Math.ceil(Math.min.apply(null, numbers) + (freqbucket * j))) {
+      if (numbers[i] < ((binWidth * j))) {
         fCount = fCount + 1;
       }
     }
     histoArray.push(new Results());
     histoArray[j - 1].freqCount = fCount;
     histoArray[j - 1].percentage = fCount / popSize;
-    histoArray[j - 1].projectDays = freqbucket * j;
+    histoArray[j - 1].projectDays = Math.round(minDuration + (binWidth * j)); //integer number of project days only
     fCount = 0;
   }
   // hard code the 100% entry to include the entire population
   histoArray.push(new Results());
   histoArray[dataSamples -1].freqCount = popSize;
   histoArray[dataSamples -1].percentage = 1; //100% expressed as a decimal
-  histoArray[dataSamples -1].projectDays = Math.max.apply(null, numbers);
+  histoArray[dataSamples -1].projectDays = maxDuration;
 
   return histoArray;
 }
@@ -225,6 +228,8 @@ function drawProbabilityChart(resultsArray, dataPoints) {
   var dataArray = [['Date', '% Probability']];
   for (i = 0; i < dataPoints; i++) {
     dataArray.push([(resultsArray[i].projectDate), resultsArray[i].percentage * 100]);
+    //alert("date = "+ resultsArray[i].projectDate + " "+ "percent = "+ resultsArray[i].percentage);
+    if (resultsArray[i].percentage === 1) { break; }  // break out of the loop early if 100% reached
   }
   var data = google.visualization.arrayToDataTable(dataArray);
 
@@ -300,12 +305,13 @@ function drawTimeLine() {
 
 function randomVariat(bestCase, mostLikelyCase, worstCase) {
   // This function returns a triangular distributed random variat from the Best Case, Most Likely Case and Worst Case
-  // estimates passed to it. 
+  // estimates passed to it.
+  // Returns integer values only 
   let sample = Math.random();
-  if (sample < ((mostLikelyCase - bestCase) / (worstCase - bestCase))) {
-    return (bestCase + Math.sqrt((worstCase - bestCase) * (mostLikelyCase - bestCase) * sample));
-  } else if (sample >= ((mostLikelyCase - bestCase) / (worstCase - bestCase))) {
-    return (worstCase - Math.sqrt((worstCase - bestCase) * (worstCase - mostLikelyCase) * (sample)));
+  if (sample <= ((mostLikelyCase - bestCase) / (worstCase - bestCase))) {
+    return math.round(bestCase + Math.sqrt((worstCase - bestCase) * (mostLikelyCase - bestCase) * sample));
+  } else if (sample > ((mostLikelyCase - bestCase) / (worstCase - bestCase))) {
+    return math.round(worstCase - Math.sqrt((worstCase - bestCase) * (worstCase - mostLikelyCase) * (1-sample)));
   } else {
     errorHandler(1);
   }
