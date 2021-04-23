@@ -14,34 +14,41 @@
 </head>
 
 <body>
+  <header>
+    <div class="row">
+      <div class="header col-md-6">
+        <h1 class="headerText"> Rapid Project Scheduler</h1>
+      </div>
+    </div>
+  </header>
   <section class="container-fluid">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-6 taskPanel">
         <table id="taskEntryTable">
           <tr>
             <th colspan="9" class="tableHeading">Task entry</th>
           </tr>
           <tr>
-            <th>Task No</th>
-            <th>Task Description</th>
-            <th>Start Date</th>
-            <th>Best Case Duration</th>
-            <th>Most Likely Duration</th>
-            <th>Worst Case Duration</th>
-            <th>Best Case Finish Date</th>
-            <th>Most Likely Case Finish Date</th>
-            <th>Worst Case Finish Date</th>
+            <th class="taskNo">Task No</th>
+            <th class="taskDes">Task Description</th>
+            <th class="sDate">Start Date</th>
+            <th class="bCase">Best Case Duration</th>
+            <th class="mlCase">Most Likely Duration</th>
+            <th class="wCase">Worst Case Duration</th>
+            <th class="bCase">Best Case Finish Date</th>
+            <th class="mlCase">Most Likely Case Finish Date</th>
+            <th class="wCase">Worst Case Finish Date</th>
           </tr>
           <tr>
             <td class="taskNo">1</td>
-            <td><input type="text" class="taskDescriptionBox" /></td>
-            <td><input type="date" class="taskDateBox" /></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox"/></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox"/></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox"/></td>
-            <td class="taskDate"></td>
-            <td class="taskDate"></td>
-            <td class="taskDate"></td>
+            <td><input type="text" class="taskDescriptionBox taskDes" /></td>
+            <td><input type="date" class="taskDateBox sDate" /></td>
+            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox bCase"/></td>
+            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox mlCase"/></td>
+            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox wCase"/></td>
+            <td class="taskDate bCase"></td>
+            <td class="taskDate mlCase"></td>
+            <td class="taskDate wCase"></td>
           </tr>
         </table>
   
@@ -49,18 +56,18 @@
       <div class="col-md-3">
         <h3 class="tableHeading">Select non working days:</h3>
         <label for="nonWorkingDay1" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay1" id="nonWorkingDay" class="checkboxInput"
-            value="0">Monday</label>
+            value="1">Monday</label>
         <label for="nonWorkingDay2" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay2" id="nonWorkingDay" class="checkboxInput"
-            value="1">Tuesday</label>
+            value="2">Tuesday</label>
         <label for="nonWorkingDay3" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay3" id="nonWorkingDay" class="checkboxInput"
-            value="2">Wednesday</label>
+            value="3">Wednesday</label>
         <label for="nonWorkingDay4" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay4" id="nonWorkingDay" class="checkboxInput"
-            value="3">Thursday</label>
+            value="4">Thursday</label>
         <label for="nonWorkingDay5" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay5" id="nonWorkingDay"  class="checkboxInput"
-            value="4">Friday</label>
+            value="5">Friday</label>
         <label for="nonWorkingDay6" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay6" id="nonWorkingDay" class="checkboxInput"
-            value="5" checked>Saturday</label>
-        <label for="nonWorkingDay7" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay7" id="nonWorkingDay" value="6" class="checkboxInput"
+            value="6" checked>Saturday</label>
+        <label for="nonWorkingDay7" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay7" id="nonWorkingDay" value="0" class="checkboxInput"
             checked>Sunday</label>
       </div>
       <div class="col-md-3">
@@ -76,14 +83,14 @@
   </section>
 
   <section class="container-fluid">
-    <div class="row">
-      <div class="col-md-6">
+    <div class="row" id="plotPanel">
+      <div class="col-md-6 tLine" >
         <h3 class="tableHeading">Time Line Plot</h3>
         <p>Best Case, Most Likey Case and Worst Case Task Finish Days </p>
         <div id="plot2"></div>
         <p> Used: Google Charts library</p>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6 probPlot">
         <h3 class="tableHeading">Probability Plot</h3>
         <div id="plot1"></div>
         <p> Used: Google Charts Library</p>
@@ -93,7 +100,9 @@
 
 <section>
 <div id="alert">
-  <p>Click to close the alert message.</p> 
+  <p>Click to close the alert message.</p>
+  <!--https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_alert-->
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
 </div>
 </section>
 
