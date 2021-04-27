@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="assets/css/style.css" type="text/css" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
     type="text/css" />
-  
+
 </head>
 
 <body>
@@ -43,38 +43,43 @@
             <td class="taskNo">1</td>
             <td><input type="text" class="taskDescriptionBox taskDes" /></td>
             <td><input type="date" class="taskDateBox sDate" /></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox bCase"/></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox mlCase"/></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox wCase"/></td>
+            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox bCase" /></td>
+            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox mlCase" /></td>
+            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox wCase" /></td>
             <td class="taskDate bCase"></td>
             <td class="taskDate mlCase"></td>
             <td class="taskDate wCase"></td>
           </tr>
         </table>
-  
+
       </div>
-      <div class="col-md-3">
-        <h3 class="tableHeading">Select non working days:</h3>
-        <label for="nonWorkingDay1" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay1" id="nonWorkingDay" class="checkboxInput"
-            value="1">Monday</label>
-        <label for="nonWorkingDay2" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay2" id="nonWorkingDay" class="checkboxInput"
-            value="2">Tuesday</label>
-        <label for="nonWorkingDay3" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay3" id="nonWorkingDay" class="checkboxInput"
-            value="3">Wednesday</label>
-        <label for="nonWorkingDay4" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay4" id="nonWorkingDay" class="checkboxInput"
-            value="4">Thursday</label>
-        <label for="nonWorkingDay5" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay5" id="nonWorkingDay"  class="checkboxInput"
-            value="5">Friday</label>
-        <label for="nonWorkingDay6" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay6" id="nonWorkingDay" class="checkboxInput"
-            value="6" checked>Saturday</label>
-        <label for="nonWorkingDay7" class="checkbox-inline"> <input type="checkbox" name="nonWorkingDay7" id="nonWorkingDay" value="0" class="checkboxInput"
-            checked>Sunday</label>
-      </div>
-      <div class="col-md-3">
-        <h3 class="tableHeading">Select number of simulation runs:</h3>
-        <input type="number" name="monteCarloRuns" value="1000" id="simulationRuns">
+      <div class="row">
+        <div class="col-md-3">
+          <h3 class="tableHeading">Non working days:</h3>
+          <div class="workDayBt">
+            <button id="monDay">Monday</button>
+            <button id="tuesDay">Tuesday</button>
+            <button id="wednesDay">Wednesday</button>
+            <button id="thursDay">Thursday</button>
+            <button id="friDay">Friday</button>
+            <button id="saturDay">Saturday</button>
+            <button id="sunDay">Sunday</button>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <h3 class="tableHeading">Simulation runs:</h3>
+          <div class="workDayBt">
+            <button id="oneT">1000</button>
+            <button id="twoT">2000</button>
+            <button id="threeT">3000</button>
+            <button id="fourT">4000</button>
+            <button id="fiveT">5000</button>
+          </div>
+        </div>
       </div>
     </div>
+
     <div class="row">
       <div class="col-md-6">
         <button type="submit" class="addBox" id="simulationStart">Start simulation</button>
@@ -84,7 +89,7 @@
 
   <section class="container-fluid">
     <div class="row" id="plotPanel">
-      <div class="col-md-6 tLine" >
+      <div class="col-md-6 tLine">
         <h3 class="tableHeading">Time Line Plot</h3>
         <p>Best Case, Most Likey Case and Worst Case Task Finish Days </p>
         <div id="plot2"></div>
@@ -98,22 +103,23 @@
     </div>
   </section>
 
-<section>
-<div id="alert">
-  <p>Click to close the alert message.</p>
-  <!--https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_alert-->
-  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
-</div>
-</section>
+  <section>
+    <div id="alert">
+      <p>Click to close the alert message.</p>
+      <!--https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_alert-->
+      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    </div>
+  </section>
 
-  
+
 
   <script src="https://unpkg.com/mathjs@9.3.0/lib/browser/math.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
   <script src="https://unpkg.com/@stdlib/stdlib/dist/stdlib-flat.min.js"></script>
   <script src="https://www.gstatic.com/charts/loader.js"></script>
-  <script src="assets/js/jquery-3.6.0.js" ></script>
-  <script src="assets/js/jquery-ui.js" ></script>
+  <script src="assets/js/jquery-3.6.0.js"></script>
+  <script src="assets/js/jquery-ui.js"></script>
+  <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
   <script src="assets/js/script.js"></script>
 
 </body>
