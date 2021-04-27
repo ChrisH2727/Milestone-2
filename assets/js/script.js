@@ -3,15 +3,47 @@ $(document).ready(function () {
   initSimulationRuns(); //initialise simulation runs buttons
   setNonWorkingDays();
   setSimulationRuns();
+  disStart();
+  enReset();
 })
 function initNonWorkingDays(){
-  $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").css("background-color", "rgb(0,128,0)").data('clicked', false); //initialise buttons to green
+  $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").css("background-color", "rgb(0, 128, 0)").data('clicked', false); //initialise buttons to green
   $("#saturDay,#sunDay").css("background-color", "rgb(220, 20, 60)").data('clicked', true); //initialise buttons to red
+}
+
+function disNonWorkingDays(){
+  $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").css("background-color", "rgb(211, 211, 211)").attr("disabled", true);//grey buttons and disable
+}
+
+function enNonWorkingDays(){
+  $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").removeAttr("disabled"); //re-enable non working day buttons
 }
 
 function initSimulationRuns(){
   $("#twoT,#threeT,#fourT,#fiveT").css("background-color", "rgb(0, 128, 0)").data('clicked', false); //button green
   $("#oneT").css("background-color", "rgb(220, 20, 60)").data('clicked', true); //button red
+}
+
+function disSimulationRuns(){
+  $("#oneT,#twoT,#threeT,#fourT,#fiveT").css("background-color", "rgb(211, 211, 211)").attr("disabled", true); //grey buttons and disable
+
+}
+
+function enSimulationRuns(){
+  $("#oneT,#twoT,#threeT,#fourT,#fiveT").removeAttr("disabled"); //re-enable buttons
+
+}
+
+function disStart(){
+  $("#simulationStart").attr("disabled", true)
+}
+
+function enStart(){
+  $("#simulationStart").css("background-color", "rgb(0, 128, 0)").removeAttr("disabled");
+}
+
+function enReset(){
+  $("#restartPage").css("background-color", "rgb(0, 128, 0)")
 }
 
 function setNonWorkingDays(){
@@ -54,8 +86,6 @@ function setSimulationRuns(){
     }
   });
 }
-
-
 
 //Event handler called whenever there is a change to the task table
 function taskUpdate() {
@@ -100,7 +130,8 @@ function taskUpdate() {
     }
   }
   if (tableRef.rows[tableRef.rows.length - 1].cells[8].innerText != "") {
-    addTableRow();
+    addTableRow(); // add a task table row
+    enStart(); //enable the simualtion start button
     // update the row start date and display start date in the task table field
     tableRef.rows[tableRef.rows.length - 1].cells[2].innerHTML = tableRef.rows[tableRef.rows.length - 2].cells[6].innerHTML;
   }
@@ -196,8 +227,10 @@ function runSimulation() {
   if ($("#threeT").data("clicked")) { simRuns =3000; }
   if ($("#fourT").data("clicked")) { simRuns =4000; }
   if ($("#fiveT").data("clicked")) { simRuns =5000; }
-
   
+  disSimulationRuns(); //disable simulation runs buttons
+  disNonWorkingDays(); // disable non working days buttons
+
   // last HTML task entry table row is always blank
   var dataTableEnd = tableRef.rows.length - 1;
   for (let i = 0; i < simRuns; i++) {
@@ -211,21 +244,27 @@ function runSimulation() {
     }
     simRunsArray[i] = runDuration;
     runDuration = 0; //reset the sum of random variates after each run
+    enSimulationRuns(); //enable simulation runs buttons
+    initSimulationRuns(); // re initialise simulation runs buttons
+    enNonWorkingDays(); // enable non working days buttons
+    initNonWorkingDays(); // re initialise non working days buttons
   }
   return simRunsArray;
 }
 function reLoad(){
   //restarts everything!
+
   window.location.reload();
 }
 
-
-
 function monteCarlo() {
+  //This is the core simulation function and is called when the "start" button is clicked
+
   var dataPoints = 10; //number of data points for plotting probability chart
   //this is the callback function called when the simulation start button is clecked
   document.getElementById("simulationStart").style.backgroundColor = "red"; //turn button red for the duration of the simulation
   document.getElementById("plotPanel").style.display = "block";
+
   google.charts.load("current", { packages: ["timeline"] });
   google.charts.setOnLoadCallback(drawTimeLine); //plot timeline on call back
   let simRunsArray = runSimulation(); //run core simulation
@@ -237,10 +276,12 @@ function monteCarlo() {
   google.charts.load('current', { 'packages': ['corechart'] });
   google.charts.setOnLoadCallback(drawProbabilityChart(resultsProj, dataPoints)); //plot probability chart
   document.getElementById("simulationStart").style.backgroundColor = "green"; // turn button green when simulation complete
+
 }
 
 function addProjectDates(resultsArray, dataPoints) {
   //uses the calcWorkingDays function to determine the probable project dates and stores these in resultsArray (array of objects class Results) 
+  
   for (i = 0; i < dataPoints; i++) {
     let tableRef = document.getElementById("taskEntryTable");
     let startDate = new Date(tableRef.rows[2].cells[2].children[0].value);
@@ -328,9 +369,7 @@ function drawTimeLine() {
   plotTable.addColumn({ type: 'string', id: 'Name' });
   plotTable.addColumn({ type: 'date', id: 'Start' });
   plotTable.addColumn({ type: 'date', id: 'End' });
-
-
-  //let noTasks = tableRef.rows.length -3;      // -3 becuase first two rows of the task table have no data and the last row will always be empty                 
+                 
   let dataTableLength = (((tableRef.rows.length - 3) * 3)); // the length of the plot table
 
   //set number of rows in the the plot data table from the HTML task table * 3 for Best Case, Most Likely Case and Worst Case dates
@@ -393,6 +432,7 @@ function randomVariat(bestCase, mostLikelyCase, worstCase) {
 
 function errorHandler(errorCode) {
   document.getElementById("alert").style.display = "block";
+  document.getElementById("alert").classList.add("alertbox")
   switch (errorCode) {
     case 0:
       document.getElementById("alert").innerText = 'No start date entered: error code 0';
