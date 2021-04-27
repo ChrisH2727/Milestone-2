@@ -1,4 +1,43 @@
+$(document).ready(function () {
+  $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").css("background-color", "rgb(0,128,0)").data('clicked', false); //initialise buttons to green
+  $("#saturDay,#sunDay").css("background-color", "rgb(220, 20, 60)").data('clicked', true); //initialise buttons to red
+  $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").on({
+    click: function () {
+      if ($(this).css("background-color") == "rgb(220, 20, 60)") {
+        $(this).css("background-color", "rgb(0, 128, 0)").data('clicked', false);
+      } else {
+        $(this).css("background-color", "rgb(220, 20, 60)").data('clicked', true);
+      }
+    }
+  });
+  $("#twoT,#threeT,#fourT,#fiveT").css("background-color", "rgb(0, 128, 0)").data('clicked', false); //button green
+  $("#oneT").css("background-color", "rgb(220, 20, 60)").data('clicked', true); //button red
 
+  $("#oneT,#twoT,#threeT,#fourT,#fiveT").on({
+    click: function () {
+      if ($(this).css("background-color") == "rgb(0, 128, 0)") { //if button 1000 green
+        $("#twoT, #threeT, #fourT, #fiveT").css("background-color", "rgb(0, 128, 0)").data("clicked", false); //turn green
+        $("#oneT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
+      } 
+      if ($(this).css("background-color") == "rgb(0, 128, 0)") { //if button 2000 green
+        $("#oneT, #threeT, #fourT, #fiveT").css("background-color", "rgb(0, 128, 0)").data("clicked", false); //turn green
+        $("#twoT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
+      } 
+      if ($(this).css("background-color") == "rgb(0, 128, 0)") { //if button 3000 green
+        $("#oneT, #twoT, #fourT, #fiveT").css("background-color", "rgb(0, 128, 0)").data("clicked", false); //turn green
+        $("#threeT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
+      } 
+      if ($(this).css("background-color") == "rgb(0, 128, 0)") { //if button 4000 green
+        $("#oneT, #twoT, #threeT, #fiveT").css("background-color", "rgb(0, 128, 0)").data("clicked", false); //turn green
+        $("#fourT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
+      } 
+      if ($(this).css("background-color") == "rgb(0, 128, 0)") { //if button 5000 green
+        $("#oneT, #twoT, #threeT, #fourT").css("background-color", "rgb(0, 128, 0)").data("clicked", false); //turn green
+        $("#fiveT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
+      }
+    }
+  });
+})
 
 //Event handler called whenever there is a change to the task table
 function taskUpdate() {
@@ -38,9 +77,9 @@ function taskUpdate() {
       let wcDate = calcWorkingDays(startDate, wcDuration).toLocaleDateString();
       tableRef.rows[i].cells[8].innerHTML = wcDate;
     }
-      if ((bcDuration > mlDuration) || (mlDuration > wcDuration) || (bcDuration > wcDuration)) {
-        errorHandler(2);
-      }
+    if ((bcDuration > mlDuration) || (mlDuration > wcDuration) || (bcDuration > wcDuration)) {
+      errorHandler(2);
+    }
   }
   if (tableRef.rows[tableRef.rows.length - 1].cells[8].innerText != "") {
     addTableRow();
@@ -61,24 +100,30 @@ function calcWorkingDays(fromDate, days) {
   // This function returns a completion date based on a Start Date and an array holding days of the week deemed
   // working and non working.
   // The function also catches the condition where the Start Date is a non working day and calculates the next working day.
-  
+
+
   //read the non working days selected by the checkboxes into the array nonWorkingdays
   var nonWorkingDays = [];
   var workingDay = 0;
-  var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-  for (var nonWorkingDay of checkboxes) {
-     nonWorkingDays.push(nonWorkingDay.value);
-  }  
-  if(nonWorkingDays.includes("0") && nonWorkingDays.includes("1") && nonWorkingDays.includes("2") && nonWorkingDays.includes("3") &&
-     nonWorkingDays.includes("4") && nonWorkingDays.includes("5") && nonWorkingDays.includes("6")){ //detect error condition where all week days selected as non working
+
+  if ($("#monDay").data("clicked")) { nonWorkingDays.push("1"); }
+  if ($("#tuesDay").data("clicked")) { nonWorkingDays.push("2"); }
+  if ($("#wednesDay").data("clicked")) { nonWorkingDays.push("3"); }
+  if ($("#thursDay").data("clicked")) { nonWorkingDays.push("4"); }
+  if ($("#friDay").data("clicked")) { nonWorkingDays.push("5"); }
+  if ($("#saturDay").data("clicked")) { nonWorkingDays.push("6"); }
+  if ($("#sunDay").data("clicked")) { nonWorkingDays.push("0"); }
+
+  if (nonWorkingDays.includes("0") && nonWorkingDays.includes("1") && nonWorkingDays.includes("2") && nonWorkingDays.includes("3") &&
+    nonWorkingDays.includes("4") && nonWorkingDays.includes("5") && nonWorkingDays.includes("6")) { //detect error condition where all week days selected as non working
     errorHandler(3);
-    nonWorkingDays = ["0","2","3","4","5","6"];
+    nonWorkingDays = ["0", "2", "3", "4", "5", "6"];
   }
 
   while (workingDay < days) {
     fromDate.setDate(fromDate.getDate() + 1);
     if (!(nonWorkingDays.includes(fromDate.getDay().toString()))) {
-       workingDay++;
+      workingDay++;
     }
   }
   return fromDate;
@@ -110,7 +155,6 @@ function addTableRow() {
   cell2.classList.add("taskDescriptionBox");
   cell2.innerHTML = '<input type="text" class="taskDescriptionBox" />';
   cell3.classList.add("taskDateBox");
-  cell3.innerText = "";
   cell4.classList.add("taskDuration");
   cell4.innerHTML = '<input type= "number" min="0" class="taskDurationBox"/>';
   cell5.classList.add("taskDuration");
@@ -118,57 +162,61 @@ function addTableRow() {
   cell6.classList.add("taskDuration");
   cell6.innerHTML = '<input type= "number" min="0" class="taskDurationBox"/>';
   cell7.classList.add("taskDate");
-  cell7.innerText = "";
   cell8.classList.add("taskDate");
-  cell8.innerText = "";
   cell9.classList.add("taskDate");
-  cell9.innerText = "";
 }
 
-function runSimulation(){
- //runs the Monte Carlo simulation
- 
- var tableRef = document.getElementById("taskEntryTable");
- var simRunsArray = [];
+function runSimulation() {
+  //runs the Monte Carlo simulation
 
- let simRuns = document.getElementById("simulationRuns").value;
- var runDuration = 0;  // initialise the sum of random variates for each simulation run
- // last HTML task entry table row is always blank
- var dataTableEnd = tableRef.rows.length - 1;
- for (let i = 0; i < simRuns; i++) {
-   for (let j = 2; j < dataTableEnd; j++) {
-     let bestCaseDuration = parseInt(tableRef.rows[j].cells[3].children[0].value);
-     let mostLikelyCaseDuration = parseInt(tableRef.rows[j].cells[4].children[0].value);
-     let worstCaseDuration = parseInt(tableRef.rows[j].cells[5].children[0].value);
-     // cumulative addition of task random variats is ok because all tasks have a finish to start date relationship
-     let variat = randomVariat(bestCaseDuration, mostLikelyCaseDuration, worstCaseDuration);
-     runDuration = runDuration + variat;
-   }
-   simRunsArray[i] = runDuration;
-   runDuration = 0; //reset the sum of random variates after each run
- }
-   return simRunsArray;
+  var tableRef = document.getElementById("taskEntryTable");
+  var simRunsArray = [];
+  var runDuration = 0;  // initialise the sum of random variates for each simulation run
+
+// get the number of simulation runs from the DOM 
+  if ($("#oneT").data("clicked")) { simRuns =1000; }
+  if ($("#twoT").data("clicked")) { simRuns =2000; }
+  if ($("#threeT").data("clicked")) { simRuns =3000; }
+  if ($("#fourT").data("clicked")) { simRuns =4000; }
+  if ($("#fiveT").data("clicked")) { simRuns =5000; }
+
+  
+  // last HTML task entry table row is always blank
+  var dataTableEnd = tableRef.rows.length - 1;
+  for (let i = 0; i < simRuns; i++) {
+    for (let j = 2; j < dataTableEnd; j++) {
+      let bestCaseDuration = parseInt(tableRef.rows[j].cells[3].children[0].value);
+      let mostLikelyCaseDuration = parseInt(tableRef.rows[j].cells[4].children[0].value);
+      let worstCaseDuration = parseInt(tableRef.rows[j].cells[5].children[0].value);
+      // cumulative addition of task random variats is ok because all tasks have a finish to start date relationship
+      let variat = randomVariat(bestCaseDuration, mostLikelyCaseDuration, worstCaseDuration);
+      runDuration = runDuration + variat;
+    }
+    simRunsArray[i] = runDuration;
+    runDuration = 0; //reset the sum of random variates after each run
+  }
+  return simRunsArray;
 }
 
 function monteCarlo() {
   var dataPoints = 10; //number of data points for plotting probability chart
   //this is the callback function called when the simulation start button is clecked
-  document.getElementById("simulationStart").style.backgroundColor="red"; //turn button red for the duration of the simulation
+  document.getElementById("simulationStart").style.backgroundColor = "red"; //turn button red for the duration of the simulation
   document.getElementById("plotPanel").style.display = "block";
   google.charts.load("current", { packages: ["timeline"] });
   google.charts.setOnLoadCallback(drawTimeLine); //plot timeline on call back
   let simRunsArray = runSimulation(); //run core simulation
 
-  let results = resultProc(simRunsArray,dataPoints); // process simulation runs into frequency buckets and determine project durations 
-  
-  let resultsProj = addProjectDates(results,dataPoints); // assign dates to project duration dates 
-  
+  let results = resultProc(simRunsArray, dataPoints); // process simulation runs into frequency buckets and determine project durations 
+
+  let resultsProj = addProjectDates(results, dataPoints); // assign dates to project duration dates 
+
   google.charts.load('current', { 'packages': ['corechart'] });
-  google.charts.setOnLoadCallback(drawProbabilityChart(resultsProj,dataPoints)); //plot probability chart
+  google.charts.setOnLoadCallback(drawProbabilityChart(resultsProj, dataPoints)); //plot probability chart
   document.getElementById("simulationStart").style.backgroundColor = "green"; // turn button green when simulation complete
 }
 
-function addProjectDates(resultsArray,dataPoints) {
+function addProjectDates(resultsArray, dataPoints) {
   //uses the calcWorkingDays function to determine the probable project dates and stores these in resultsArray (array of objects class Results) 
   for (i = 0; i < dataPoints; i++) {
     let tableRef = document.getElementById("taskEntryTable");
@@ -191,7 +239,7 @@ function resultProc(numbers, dataSamples) {
       this.projectDate = projectDate;
     }
   };
-  
+
   var fCount = 0;
   var popSize = numbers.length;
   var histoArray = [];
@@ -214,9 +262,9 @@ function resultProc(numbers, dataSamples) {
   }
   // hard code the 100% entry to include the entire population
   histoArray.push(new Results());
-  histoArray[dataSamples -1].freqCount = popSize;
-  histoArray[dataSamples -1].percentage = 1; //100% expressed as a decimal
-  histoArray[dataSamples -1].projectDays = maxDuration;
+  histoArray[dataSamples - 1].freqCount = popSize;
+  histoArray[dataSamples - 1].percentage = 1; //100% expressed as a decimal
+  histoArray[dataSamples - 1].projectDays = maxDuration;
 
   return histoArray;
 }
@@ -296,9 +344,9 @@ function drawTimeLine() {
 
   var options = {
     timeline: { groupByRowLabel: true },
-    colors:["#90ee90","#ffa500","#ff4500"],
+    colors: ["#90ee90", "#ffa500", "#ff4500"],
     timeline: { colorByRowLabel: false },
-     }
+  }
   chart.draw(plotTable, options);
 
   // Credit: this function was inspired by the code examples provided at: https://developers.google.com/chart/interactive/docs/gallery/timeline
@@ -313,7 +361,7 @@ function randomVariat(bestCase, mostLikelyCase, worstCase) {
   if (sample <= ((mostLikelyCase - bestCase) / (worstCase - bestCase))) {
     return math.round(bestCase + Math.sqrt((worstCase - bestCase) * (mostLikelyCase - bestCase) * sample));
   } else if (sample > ((mostLikelyCase - bestCase) / (worstCase - bestCase))) {
-    return math.round(worstCase - Math.sqrt((worstCase - bestCase) * (worstCase - mostLikelyCase) * (1-sample)));
+    return math.round(worstCase - Math.sqrt((worstCase - bestCase) * (worstCase - mostLikelyCase) * (1 - sample)));
   } else {
     errorHandler(1);
   }
@@ -345,6 +393,8 @@ function hideAlert() {
   document.getElementById("alert").style.display = "none";
 }
 
+
+
 // Event listeners 
 // Sets up event listener for changes to the task table
 document.getElementById("taskEntryTable").addEventListener("change", taskUpdate);
@@ -353,7 +403,7 @@ document.getElementById("taskEntryTable").addEventListener("change", taskUpdate)
 // credit: https://stackoverflow.com/questions/44988614/pass-this-to-addeventlistener-as-parameter
 var workingDays = document.getElementsByClassName('checkboxInput');
 Array.from(workingDays).forEach(function () {
- this.addEventListener("change", workingDayUpdate, false);
+  this.addEventListener("change", workingDayUpdate, false);
 });
 
 //Sets up event listener for "Start Simulation" button
