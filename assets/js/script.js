@@ -1,10 +1,10 @@
 $(document).ready(function () {
   initNonWorkingDays(); //initialise non working days buttons
   initSimulationRuns(); //initialise simulation runs buttons
-  setNonWorkingDays();
-  setSimulationRuns();
-  disStart();
-  enReset();
+  setNonWorkingDays(); // called when non working day button clicked 
+  setSimulationRuns(); //called when simulation runs button clicked
+  disStart(); // disable simuation start button
+  enReset(); // enable reset button
 })
 function initNonWorkingDays(){
   $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").css("background-color", "rgb(0, 128, 0)").data('clicked', false); //initialise buttons to green
@@ -26,12 +26,10 @@ function initSimulationRuns(){
 
 function disSimulationRuns(){
   $("#oneT,#twoT,#threeT,#fourT,#fiveT").css("background-color", "rgb(211, 211, 211)").attr("disabled", true); //grey buttons and disable
-
 }
 
 function enSimulationRuns(){
   $("#oneT,#twoT,#threeT,#fourT,#fiveT").removeAttr("disabled"); //re-enable buttons
-
 }
 
 function disStart(){
@@ -184,34 +182,22 @@ function calcWorkingDays(fromDate, days) {
 function addTableRow() {
   //function adds a new row into the task entry table
   let tableRef = document.getElementById("taskEntryTable");
-  var newTaskRow = tableRef.insertRow(tableRef.rows.length);
-  var cell1 = newTaskRow.insertCell(0);
-  var cell2 = newTaskRow.insertCell(1);
-  var cell3 = newTaskRow.insertCell(2);
-  var cell4 = newTaskRow.insertCell(3);
-  var cell5 = newTaskRow.insertCell(4);
-  var cell6 = newTaskRow.insertCell(5);
-  var cell7 = newTaskRow.insertCell(6);
-  var cell8 = newTaskRow.insertCell(7);
-  var cell9 = newTaskRow.insertCell(8);
+  let newTaskRow = tableRef.insertRow(tableRef.rows.length);
 
-  var inputBox = document.createElement("input");
-
-  cell1.classList.add("taskNo");
-  cell1.innerText = tableRef.rows.length - 2;
-  
-  cell2.classList.add("taskDes");
-  cell2.innerHTML = '<input type="text" class="taskDescriptionBox taskDes" />';
-  cell3.classList.add("sDate");
-  cell4.classList.add("taskDuration","bCase");
-  cell4.innerHTML = '<input type= "number" min="0" class="taskDurationBox bCase"/>';
-  cell5.classList.add("taskDuration", "mlCase");
-  cell5.innerHTML = '<input type= "number" min="0" class="taskDurationBox mlCase"/>';
-  cell6.classList.add("taskDuration", "wCase");
-  cell6.innerHTML = '<input type= "number" min="0" class="taskDurationBox wCase"/>';
-  cell7.classList.add("taskDate", "bCase");
-  cell8.classList.add("taskDate", "mlCase");
-  cell9.classList.add("taskDate", "wCase");
+  newTaskRow.insertCell(0).classList.add("taskNo");
+  newTaskRow.insertCell(0).innerText = tableRef.rows.length - 2;
+  newTaskRow.insertCell(1).classList.add("taskDes");
+  newTaskRow.insertCell(1).innerHTML = '<input type="text" class="taskDescriptionBox taskDes" />';
+  newTaskRow.insertCell(2).classList.add("sDate");
+  newTaskRow.insertCell(3).classList.add("taskDuration","bCase");
+  newTaskRow.insertCell(3).innerHTML = '<input type= "number" min="0" class="taskDurationBox bCase"/>';
+  newTaskRow.insertCell(4).classList.add("taskDuration", "mlCase");
+  newTaskRow.insertCell(4).innerHTML = '<input type= "number" min="0" class="taskDurationBox mlCase"/>';
+  newTaskRow.insertCell(5).classList.add("taskDuration", "wCase");
+  newTaskRow.insertCell(5).innerHTML = '<input type= "number" min="0" class="taskDurationBox wCase"/>';
+  newTaskRow.insertCell(6).classList.add("taskDate", "bCase");
+  newTaskRow.insertCell(7).classList.add("taskDate", "mlCase");
+  newTaskRow.insertCell(8).classList.add("taskDate", "wCase");
 }
 
 function runSimulation() {
