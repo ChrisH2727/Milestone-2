@@ -1,6 +1,20 @@
 $(document).ready(function () {
+  initNonWorkingDays(); //initialise non working days buttons
+  initSimulationRuns(); //initialise simulation runs buttons
+  setNonWorkingDays();
+  setSimulationRuns();
+})
+function initNonWorkingDays(){
   $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").css("background-color", "rgb(0,128,0)").data('clicked', false); //initialise buttons to green
   $("#saturDay,#sunDay").css("background-color", "rgb(220, 20, 60)").data('clicked', true); //initialise buttons to red
+}
+
+function initSimulationRuns(){
+  $("#twoT,#threeT,#fourT,#fiveT").css("background-color", "rgb(0, 128, 0)").data('clicked', false); //button green
+  $("#oneT").css("background-color", "rgb(220, 20, 60)").data('clicked', true); //button red
+}
+
+function setNonWorkingDays(){
   $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").on({
     click: function () {
       if ($(this).css("background-color") == "rgb(220, 20, 60)") {
@@ -8,11 +22,13 @@ $(document).ready(function () {
       } else {
         $(this).css("background-color", "rgb(220, 20, 60)").data('clicked', true);
       }
+      taskUpdate(); //update the task table with new non working days
     }
   });
-  $("#twoT,#threeT,#fourT,#fiveT").css("background-color", "rgb(0, 128, 0)").data('clicked', false); //button green
-  $("#oneT").css("background-color", "rgb(220, 20, 60)").data('clicked', true); //button red
+  
+}
 
+function setSimulationRuns(){
   $("#oneT,#twoT,#threeT,#fourT,#fiveT").on({
     click: function () {
       if ($(this).css("background-color") == "rgb(0, 128, 0)") { //if button 1000 green
@@ -37,7 +53,9 @@ $(document).ready(function () {
       }
     }
   });
-})
+}
+
+
 
 //Event handler called whenever there is a change to the task table
 function taskUpdate() {
@@ -100,8 +118,6 @@ function calcWorkingDays(fromDate, days) {
   // This function returns a completion date based on a Start Date and an array holding days of the week deemed
   // working and non working.
   // The function also catches the condition where the Start Date is a non working day and calculates the next working day.
-
-
   //read the non working days selected by the checkboxes into the array nonWorkingdays
   var nonWorkingDays = [];
   var workingDay = 0;
@@ -129,10 +145,10 @@ function calcWorkingDays(fromDate, days) {
   return fromDate;
 }
 
-function workingDayUpdate() {
+//function workingDayUpdate() {
   //Event handler called whenever there is a change to the non working day checkbox array
-  taskUpdate(); // call the task update function to revise dates
-}
+//  taskUpdate(); // call the task update function to revise dates
+//}
 
 function addTableRow() {
   //function adds a new row into the task entry table
@@ -152,18 +168,19 @@ function addTableRow() {
 
   cell1.classList.add("taskNo");
   cell1.innerText = tableRef.rows.length - 2;
-  cell2.classList.add("taskDescriptionBox");
-  cell2.innerHTML = '<input type="text" class="taskDescriptionBox" />';
-  cell3.classList.add("taskDateBox");
-  cell4.classList.add("taskDuration");
-  cell4.innerHTML = '<input type= "number" min="0" class="taskDurationBox"/>';
-  cell5.classList.add("taskDuration");
-  cell5.innerHTML = '<input type= "number" min="0" class="taskDurationBox"/>';
-  cell6.classList.add("taskDuration");
-  cell6.innerHTML = '<input type= "number" min="0" class="taskDurationBox"/>';
-  cell7.classList.add("taskDate");
-  cell8.classList.add("taskDate");
-  cell9.classList.add("taskDate");
+  
+  cell2.classList.add("taskDes");
+  cell2.innerHTML = '<input type="text" class="taskDescriptionBox taskDes" />';
+  cell3.classList.add("sDate");
+  cell4.classList.add("taskDuration","bCase");
+  cell4.innerHTML = '<input type= "number" min="0" class="taskDurationBox bCase"/>';
+  cell5.classList.add("taskDuration", "mlCase");
+  cell5.innerHTML = '<input type= "number" min="0" class="taskDurationBox mlCase"/>';
+  cell6.classList.add("taskDuration", "wCase");
+  cell6.innerHTML = '<input type= "number" min="0" class="taskDurationBox wCase"/>';
+  cell7.classList.add("taskDate", "bCase");
+  cell8.classList.add("taskDate", "mlCase");
+  cell9.classList.add("taskDate", "wCase");
 }
 
 function runSimulation() {
@@ -198,6 +215,7 @@ function runSimulation() {
   return simRunsArray;
 }
 function reLoad(){
+  //restarts everything!
   window.location.reload();
 }
 
