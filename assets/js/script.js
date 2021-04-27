@@ -197,6 +197,11 @@ function runSimulation() {
   }
   return simRunsArray;
 }
+function reLoad(){
+  window.location.reload();
+}
+
+
 
 function monteCarlo() {
   var dataPoints = 10; //number of data points for plotting probability chart
@@ -406,7 +411,6 @@ Array.from(workingDays).forEach(function () {
   this.addEventListener("change", workingDayUpdate, false);
 });
 
-//Sets up event listener for "Start Simulation" button
+//Sets up event listener for "Start Simulation" & "Restart Page" buttons
 document.getElementById("simulationStart").addEventListener("click", monteCarlo);
-
-
+document.getElementById("restartPage").addEventListener("click", reLoad);
