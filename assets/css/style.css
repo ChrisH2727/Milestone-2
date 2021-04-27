@@ -122,7 +122,11 @@ table th {
     margin:5px;
     width:50%;
 }
-
+.ctrHeading{
+    float:left;
+    text-align: center;
+    font-size: 25px;
+}
 
 /* --------- Header Style------------*/
 .header{
@@ -146,7 +150,7 @@ table th {
 #simulationStart,#restartPage{
     border:2px solid black;
     margin:20px;
-    background-color:green;
+    background-color:lightgray;
     color:white;
     text-align:center;
     width: 100px;
@@ -154,28 +158,13 @@ table th {
     display: inline-block;
 }
 
-
-.closebtn {
-    margin-left: 15px;
-    color: white;
-    font-weight: bold;
-    float: right;
-    font-size: 22px;
-    line-height: 20px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  
-  .closebtn:hover {
-    color: black;
-  }
 /* --------- Output Chart Style------*/
 
 /* --------- Output Heading Style----*/
 
 /*-----------Alert Window------------*/
 
-#alert {
+.alertbox {
     padding: 20px;
     background-color:white;
     color: black;
