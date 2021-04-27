@@ -121,8 +121,13 @@ table th {
     background-color: rgb(223, 236, 245);
 }
 
-/* --------- Footer Style------------*/
-
+/* --------- Working Day Buttons------------*/
+.workDayBt button{
+    display: block;
+    padding: 10px 24px;
+    margin:5px;
+    width:50%;
+}
 
 
 /* --------- Header Style------------*/
