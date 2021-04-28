@@ -6,45 +6,45 @@ $(document).ready(function () {
   disStart(); // disable simuation start button
   enReset(); // enable reset button
 })
-function initNonWorkingDays(){
+function initNonWorkingDays() {
   $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").css("background-color", "rgb(0, 128, 0)").data('clicked', false); //initialise buttons to green
   $("#saturDay,#sunDay").css("background-color", "rgb(220, 20, 60)").data('clicked', true); //initialise buttons to red
 }
 
-function disNonWorkingDays(){
+function disNonWorkingDays() {
   $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").css("background-color", "rgb(211, 211, 211)").attr("disabled", true);//grey buttons and disable
 }
 
-function enNonWorkingDays(){
+function enNonWorkingDays() {
   $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").removeAttr("disabled"); //re-enable non working day buttons
 }
 
-function initSimulationRuns(){
+function initSimulationRuns() {
   $("#twoT,#threeT,#fourT,#fiveT").css("background-color", "rgb(0, 128, 0)").data('clicked', false); //button green
   $("#oneT").css("background-color", "rgb(220, 20, 60)").data('clicked', true); //button red
 }
 
-function disSimulationRuns(){
+function disSimulationRuns() {
   $("#oneT,#twoT,#threeT,#fourT,#fiveT").css("background-color", "rgb(211, 211, 211)").attr("disabled", true); //grey buttons and disable
 }
 
-function enSimulationRuns(){
+function enSimulationRuns() {
   $("#oneT,#twoT,#threeT,#fourT,#fiveT").removeAttr("disabled"); //re-enable buttons
 }
 
-function disStart(){
+function disStart() {
   $("#simulationStart").attr("disabled", true)
 }
 
-function enStart(){
+function enStart() {
   $("#simulationStart").css("background-color", "rgb(0, 128, 0)").removeAttr("disabled");
 }
 
-function enReset(){
+function enReset() {
   $("#restartPage").css("background-color", "rgb(0, 128, 0)")
 }
 
-function setNonWorkingDays(){
+function setNonWorkingDays() {
   $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").on({
     click: function () {
       if ($(this).css("background-color") == "rgb(220, 20, 60)") {
@@ -55,28 +55,28 @@ function setNonWorkingDays(){
       taskUpdate(); //update the task table with new non working days
     }
   });
-  
+
 }
 
-function setSimulationRuns(){
+function setSimulationRuns() {
   $("#oneT,#twoT,#threeT,#fourT,#fiveT").on({
     click: function () {
       if ($(this).css("background-color") == "rgb(0, 128, 0)") { //if button 1000 green
         $("#twoT, #threeT, #fourT, #fiveT").css("background-color", "rgb(0, 128, 0)").data("clicked", false); //turn green
         $("#oneT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
-      } 
+      }
       if ($(this).css("background-color") == "rgb(0, 128, 0)") { //if button 2000 green
         $("#oneT, #threeT, #fourT, #fiveT").css("background-color", "rgb(0, 128, 0)").data("clicked", false); //turn green
         $("#twoT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
-      } 
+      }
       if ($(this).css("background-color") == "rgb(0, 128, 0)") { //if button 3000 green
         $("#oneT, #twoT, #fourT, #fiveT").css("background-color", "rgb(0, 128, 0)").data("clicked", false); //turn green
         $("#threeT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
-      } 
+      }
       if ($(this).css("background-color") == "rgb(0, 128, 0)") { //if button 4000 green
         $("#oneT, #twoT, #threeT, #fiveT").css("background-color", "rgb(0, 128, 0)").data("clicked", false); //turn green
         $("#fourT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
-      } 
+      }
       if ($(this).css("background-color") == "rgb(0, 128, 0)") { //if button 5000 green
         $("#oneT, #twoT, #threeT, #fourT").css("background-color", "rgb(0, 128, 0)").data("clicked", false); //turn green
         $("#fiveT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
@@ -93,20 +93,15 @@ function taskUpdate() {
   //start at i = 2 because the first two rows of the HTML task table have no task data
   for (var i = 2; i < tableRef.rows.length; i++) {
 
-    // start date in first row of task table is input box, subsequent rows are just table cells so reference differently 
-    if (i === 2) {
-      var startDate = new Date(tableRef.rows[i].cells[2].children[0].value);
-    } else if (i > 2) {
-      var startDate = new Date(revDateStr(tableRef.rows[i].cells[2].textContent));
-    }
-
     // if no task start date error out
-    if (!Date.parse(startDate)) {
-      errorHandler(0);
-    }
+    if (!Date.parse(getStartDate(i))) {
+        errorHandler(0);
+     }
+    
     let bcDuration = parseInt(tableRef.rows[i].cells[3].children[0].value);
     if (bcDuration) {
-      let bcDate = calcWorkingDays(startDate, bcDuration).toLocaleDateString();
+      let startDateN = getStartDate(i);
+      let bcDate = calcWorkingDays(startDateN, bcDuration).toLocaleDateString();
       tableRef.rows[i].cells[6].innerText = bcDate;
       if (tableRef.rows.length > 3) {
         // update the row start date and display start date in the task table field
@@ -115,12 +110,15 @@ function taskUpdate() {
     }
     let mlDuration = parseInt(tableRef.rows[i].cells[4].children[0].value);
     if (mlDuration) {
-      let mlDate = calcWorkingDays(startDate, mlDuration).toLocaleDateString();
+      let startDateN = getStartDate(i);
+      let mlDate = calcWorkingDays(startDateN, mlDuration).toLocaleDateString();
       tableRef.rows[i].cells[7].innerHTML = mlDate;
     }
+    //let startDateN = getStartDate(i);
     let wcDuration = parseInt(tableRef.rows[i].cells[5].children[0].value);
     if (wcDuration) {
-      let wcDate = calcWorkingDays(startDate, wcDuration).toLocaleDateString();
+      let startDateN = getStartDate(i);
+      let wcDate = calcWorkingDays(startDateN, wcDuration).toLocaleDateString();
       tableRef.rows[i].cells[8].innerHTML = wcDate;
     }
     if ((bcDuration > mlDuration) || (mlDuration > wcDuration) || (bcDuration > wcDuration)) {
@@ -132,6 +130,16 @@ function taskUpdate() {
     enStart(); //enable the simualtion start button
     // update the row start date and display start date in the task table field
     tableRef.rows[tableRef.rows.length - 1].cells[2].innerHTML = tableRef.rows[tableRef.rows.length - 2].cells[6].innerHTML;
+  }
+}
+
+function getStartDate(rowNumber) {
+  // start date in first row of task table is input box, subsequent rows are just table cells so reference differently
+  var tableRef = document.getElementById("taskEntryTable");
+  if (rowNumber === 2) {
+    return new Date(tableRef.rows[rowNumber].cells[2].children[0].value);
+  } else if (rowNumber > 2) {
+    return new Date(revDateStr(tableRef.rows[rowNumber].cells[2].textContent));
   }
 }
 
@@ -175,7 +183,7 @@ function calcWorkingDays(fromDate, days) {
 }
 
 //function workingDayUpdate() {
-  //Event handler called whenever there is a change to the non working day checkbox array
+//Event handler called whenever there is a change to the non working day checkbox array
 //  taskUpdate(); // call the task update function to revise dates
 //}
 
@@ -189,7 +197,7 @@ function addTableRow() {
   newTaskRow.insertCell(1).classList.add("taskDes");
   newTaskRow.insertCell(1).innerHTML = '<input type="text" class="taskDescriptionBox taskDes" />';
   newTaskRow.insertCell(2).classList.add("sDate");
-  newTaskRow.insertCell(3).classList.add("taskDuration","bCase");
+  newTaskRow.insertCell(3).classList.add("taskDuration", "bCase");
   newTaskRow.insertCell(3).innerHTML = '<input type= "number" min="0" class="taskDurationBox bCase"/>';
   newTaskRow.insertCell(4).classList.add("taskDuration", "mlCase");
   newTaskRow.insertCell(4).innerHTML = '<input type= "number" min="0" class="taskDurationBox mlCase"/>';
@@ -207,13 +215,13 @@ function runSimulation() {
   var simRunsArray = [];
   var runDuration = 0;  // initialise the sum of random variates for each simulation run
 
-// get the number of simulation runs from the DOM 
-  if ($("#oneT").data("clicked")) { simRuns =1000; }
-  if ($("#twoT").data("clicked")) { simRuns =2000; }
-  if ($("#threeT").data("clicked")) { simRuns =3000; }
-  if ($("#fourT").data("clicked")) { simRuns =4000; }
-  if ($("#fiveT").data("clicked")) { simRuns =5000; }
-  
+  // get the number of simulation runs from the DOM 
+  if ($("#oneT").data("clicked")) { simRuns = 1000; }
+  if ($("#twoT").data("clicked")) { simRuns = 2000; }
+  if ($("#threeT").data("clicked")) { simRuns = 3000; }
+  if ($("#fourT").data("clicked")) { simRuns = 4000; }
+  if ($("#fiveT").data("clicked")) { simRuns = 5000; }
+
   disSimulationRuns(); //disable simulation runs buttons
   disNonWorkingDays(); // disable non working days buttons
 
@@ -237,7 +245,7 @@ function runSimulation() {
   }
   return simRunsArray;
 }
-function reLoad(){
+function reLoad() {
   //restarts everything!
 
   window.location.reload();
@@ -267,7 +275,7 @@ function monteCarlo() {
 
 function addProjectDates(resultsArray, dataPoints) {
   //uses the calcWorkingDays function to determine the probable project dates and stores these in resultsArray (array of objects class Results) 
-  
+
   for (i = 0; i < dataPoints; i++) {
     let tableRef = document.getElementById("taskEntryTable");
     let startDate = new Date(tableRef.rows[2].cells[2].children[0].value);
@@ -355,7 +363,7 @@ function drawTimeLine() {
   plotTable.addColumn({ type: 'string', id: 'Name' });
   plotTable.addColumn({ type: 'date', id: 'Start' });
   plotTable.addColumn({ type: 'date', id: 'End' });
-                 
+
   let dataTableLength = (((tableRef.rows.length - 3) * 3)); // the length of the plot table
 
   //set number of rows in the the plot data table from the HTML task table * 3 for Best Case, Most Likely Case and Worst Case dates
