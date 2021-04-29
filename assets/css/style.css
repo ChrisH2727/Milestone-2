@@ -8,12 +8,17 @@ body {
 /* --------- Common style -------------*/
 .tableHeading{
     text-align: center;
-    font-size: 35px;
+    font-size: 30px;
+    font-weight: normal;
+    background-color: rgb(223, 236, 245);
+    border-top-color: rgb(223, 236, 245) ;
+    border-right-color: rgb(223, 236, 245) ;
+    border-left-color: rgb(223, 236, 245) ; 
  }
 
 /* --------- Input Table Style-------*/
 .taskPanel {
-    background-color:rgb(220, 235, 245);
+    background-color: rgb(223, 236, 245);
 }
 #overFlow{
     overflow-x:auto;  
@@ -111,7 +116,7 @@ table th {
 #plotPanel{
     display:none;
 }
-.tLine{
+.tLine,.probPlot{
     background-color: rgb(223, 236, 245);
 }
 
@@ -120,12 +125,23 @@ table th {
     display: block;
     padding: 10px 24px;
     margin:5px;
-    width:50%;
+    width:auto;
+    min-width:130px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    float:center;
+    
 }
+.blockbg{
+    background-color: rgb(223, 236, 245);
+}
+
 .ctrHeading{
-    float:left;
+    float:center;
     text-align: center;
     font-size: 25px;
+    display: block; 
 }
 
 /* --------- Header Style------------*/
@@ -153,7 +169,9 @@ table th {
     background-color:lightgray;
     color:white;
     text-align:center;
-    width: 100px;
+    width:auto;
+    border-radius: 10px;
+    min-width: 100px;
     height:40px;
     display: inline-block;
 }
