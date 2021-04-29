@@ -105,7 +105,7 @@ function taskUpdate() {
       tableRef.rows[i].cells[6].innerText = bcDate;
       if (tableRef.rows.length > 3) {
         // update the row start date and display start date in the task table field
-        tableRef.rows[tableRef.rows.length - 1].cells[2].innerHTML = tableRef.rows[tableRef.rows.length - 2].cells[6].innerHTML;
+        tableRef.rows[tableRef.rows.length - 1].cells[2].innerHTML = tableRef.rows[tableRef.rows.length - 2].cells[8].innerHTML; //was 6
       }
     }
     let mlDuration = parseInt(tableRef.rows[i].cells[4].children[0].value);
@@ -129,7 +129,7 @@ function taskUpdate() {
     addTableRow(); // add a task table row
     enStart(); //enable the simualtion start button
     // update the row start date and display start date in the task table field
-    tableRef.rows[tableRef.rows.length - 1].cells[2].innerHTML = tableRef.rows[tableRef.rows.length - 2].cells[6].innerHTML;
+    tableRef.rows[tableRef.rows.length - 1].cells[2].innerHTML = tableRef.rows[tableRef.rows.length - 2].cells[8].innerHTML; //was 6
   }
 }
 
@@ -218,9 +218,9 @@ function runSimulation() {
   // get the number of simulation runs from the DOM 
   if ($("#oneT").data("clicked")) { simRuns = 1000; }
   if ($("#twoT").data("clicked")) { simRuns = 2000; }
-  if ($("#threeT").data("clicked")) { simRuns = 3000; }
-  if ($("#fourT").data("clicked")) { simRuns = 4000; }
-  if ($("#fiveT").data("clicked")) { simRuns = 5000; }
+  if ($("#threeT").data("clicked")) { simRuns = 5000; }
+  if ($("#fourT").data("clicked")) { simRuns = 10000; }
+  if ($("#fiveT").data("clicked")) { simRuns = 20000; }
 
   disSimulationRuns(); //disable simulation runs buttons
   disNonWorkingDays(); // disable non working days buttons
@@ -254,7 +254,7 @@ function reLoad() {
 function monteCarlo() {
   //This is the core simulation function and is called when the "start" button is clicked
 
-  var dataPoints = 10; //number of data points for plotting probability chart
+  var dataPoints = 20; //number of data points for plotting probability chart
   //this is the callback function called when the simulation start button is clecked
   document.getElementById("simulationStart").style.backgroundColor = "red"; //turn button red for the duration of the simulation
   document.getElementById("plotPanel").style.display = "block";
@@ -334,8 +334,6 @@ function drawProbabilityChart(resultsArray, dataPoints) {
   var dataArray = [['Date', '% Probability']];
   for (i = 0; i < dataPoints; i++) {
     dataArray.push([(resultsArray[i].projectDate), resultsArray[i].percentage * 100]);
-    //alert("date = "+ resultsArray[i].projectDate + " "+ "percent = "+ resultsArray[i].percentage);
-    if (resultsArray[i].percentage === 1) { break; }  // break out of the loop early if 100% reached
   }
   var data = google.visualization.arrayToDataTable(dataArray);
 
