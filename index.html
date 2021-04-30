@@ -16,14 +16,14 @@
 <body>
   <header class="container-fluid">
     <div class="row">
-      <div class="header col-md-6">
+      <div class="header">
         <h1 class="headerText"> Rapid Project Scheduler</h1>
       </div>
     </div>
   </header>
   <section class="container-fluid blockbg">
     <div class="row">
-      <div class="col-6 col-md-6 taskPanel">
+      <div class="col-6 col-md-6 col-lg-6 taskPanel">
         <table id="taskEntryTable">
           <tr>
             <th colspan="9" class="tableHeading">Task Entry Table</th>
@@ -53,7 +53,7 @@
         </table>
 
       </div>
-        <div class=" col-lg-3 col-md-3 col-sm-3 ">
+        <div class=" col-sm-6 col-md-6 col-lg-3">
           <h3 class="ctrHeading">Non working days:</h3>
           <div class="workDayBt">
             <button id="monDay">Monday</button>
@@ -66,7 +66,7 @@
           </div>
         </div>
 
-        <div class=" col-3 col-md-3 col-sm-3" >
+        <div class=" col-sm-6 col-md-6 col-lg-3" >
           <h3 class="ctrHeading">Simulation runs:</h3>
           <div class="workDayBt">
             <button id="oneT">1000</button>
@@ -115,13 +115,11 @@
 
 
 
-  <script src="https://unpkg.com/mathjs@9.3.0/lib/browser/math.js"></script>
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
-  <script src="https://unpkg.com/@stdlib/stdlib/dist/stdlib-flat.min.js"></script>
   <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script src="assets/js/jquery-3.6.0.js"></script>
   <script src="assets/js/jquery-ui.js"></script>
-  <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
   <script src="assets/js/script.js"></script>
 
 </body>
