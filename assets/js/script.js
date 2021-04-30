@@ -339,7 +339,7 @@ function drawProbabilityChart(resultsArray, dataPoints) {
 
   //add plot options
   var options = {
-    title: 'Probability of Completing The Project',
+    // title: "",
     hAxis: { title: 'Date', minValue: resultsArray[0].projectDate, maxValue: resultsArray[9].projectDate },
     vAxis: { title: '% Probability', minValue: 0, maxValue: 100 },
     legend: 'none'
