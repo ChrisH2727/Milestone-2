@@ -2,125 +2,160 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <title>Fast Project Scheduling</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hover.css/2.1.1/css/hover-min.css"
-    type="text/css" />
-  <link rel="stylesheet" href="assets/css/style.css" type="text/css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    type="text/css" />
+    <meta charset="utf-8">
+    <title>Fast Project Scheduling</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hover.css/2.1.1/css/hover-min.css"
+        type="text/css" />
+    <link rel="stylesheet" href="assets/css/style.css" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        type="text/css" />
 
 </head>
 
 <body>
-  <header class="container-fluid">
-    <div class="row">
-      <div class="header">
-        <h1 class="headerText"> Rapid Project Scheduler</h1>
-      </div>
-    </div>
-  </header>
-  <section class="container-fluid blockbg">
-    <div class="row">
-      <div class="col-6 col-md-6 col-lg-6 taskPanel">
-        <table id="taskEntryTable">
-          <tr>
-            <th colspan="9" class="tableHeading">Task Entry Table</th>
-          </tr>
-          <tr>
-            <th class="taskNo">Task No</th>
-            <th class="taskDes">Task Description</th>
-            <th class="sDate">Start Date</th>
-            <th class="bCase">Best Case Duration</th>
-            <th class="mlCase">Most Likely Duration</th>
-            <th class="wCase">Worst Case Duration</th>
-            <th class="bCase">Best Case Finish Date</th>
-            <th class="mlCase">Most Likely Case Finish Date</th>
-            <th class="wCase">Worst Case Finish Date</th>
-          </tr>
-          <tr>
-            <td class="taskNo">1</td>
-            <td><input type="text" class="taskDescriptionBox taskDes" /></td>
-            <td><input type="date" class="taskDateBox sDate" /></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox bCase" /></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox mlCase" /></td>
-            <td class="taskDuration"><input type="number" min="0" class="taskDurationBox wCase" /></td>
-            <td class="taskDate bCase"></td>
-            <td class="taskDate mlCase"></td>
-            <td class="taskDate wCase"></td>
-          </tr>
-        </table>
+    <header class="container-fluid">
+        <div class="row">
+            <div class="header">
+                <h1 class="headerText"> Rapid Project Scheduler</h1>
+            </div>
+        </div>
+    </header>
+    <section class="container-fluid blockbg">
+        <div class="row">
+            <div class="col-md-6 taskPanel">
+                <table id="taskEntryTable">
+                    <tr>
+                        <th colspan="9" class="tableHeading">Task Entry Table</th>
+                    </tr>
+                    <tr>
+                        <th class="taskNo">Task No</th>
+                        <th class="taskDes">Task Description</th>
+                        <th class="sDate">Start Date</th>
+                        <th class="bCase">Best Case Duration</th>
+                        <th class="mlCase">Most Likely Duration</th>
+                        <th class="wCase">Worst Case Duration</th>
+                        <th class="bCase">Best Case Finish Date</th>
+                        <th class="mlCase">Most Likely Case Finish Date</th>
+                        <th class="wCase">Worst Case Finish Date</th>
+                    </tr>
+                    <tr>
+                        <td class="taskNo">1</td>
+                        <td><input type="text" class="taskDescriptionBox taskDes" /></td>
+                        <td><input type="date" class="taskDateBox sDate" /></td>
+                        <td class="taskDuration"><input type="number" min="0" class="taskDurationBox bCase" /></td>
+                        <td class="taskDuration"><input type="number" min="0" class="taskDurationBox mlCase" /></td>
+                        <td class="taskDuration"><input type="number" min="0" class="taskDurationBox wCase" /></td>
+                        <td class="taskDate bCase"></td>
+                        <td class="taskDate mlCase"></td>
+                        <td class="taskDate wCase"></td>
+                    </tr>
+                </table>
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="submit" id="simulationStart">Start</button>
+                        <button type="submit" id="restartPage">Reset</button>
+                    </div>
+                </div>
 
-      </div>
-        <div class=" col-sm-6 col-md-6 col-lg-3">
-          <h3 class="ctrHeading">Non working days:</h3>
-          <div class="workDayBt">
-            <button id="monDay">Monday</button>
-            <button id="tuesDay">Tuesday</button>
-            <button id="wednesDay">Wednesday</button>
-            <button id="thursDay">Thursday</button>
-            <button id="friDay">Friday</button>
-            <button id="saturDay">Saturday</button>
-            <button id="sunDay">Sunday</button>
-          </div>
+
+            </div>
+            <!-- Help modal inspiration taken from https://www.w3schools.com/howto/howto_css_modals.asp -->
+            <div id="myModal" class="helpModal">
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <span class="close" id="closeHelp">&times;</span>
+                    <p><strong>How To Get Started</strong><br>
+                        1. Enter a short task description. task start date and a best case, most likely case and worst
+                        case task duration into the Task Table below.<br>
+                        2. Enter as many tasks as you need to. All tasks have an automatic finish to start
+                        relationship.<br>
+                        3. Select the Non Project Days allocted to your team. Note that Saturday & Sunday are set by
+                        default as Non Working Days.<br>
+                        4. When ready click the Start button.<br>
+                        5. You can add more tasks, change task durations and change Non Project Days at any time and the
+                        task table will automatically update, but you must click
+                        the Start button to run the simulation.<br>
+                        6. Click the Reset button to clear the Task Entry Table.</p>
+                </div>
+            </div>
+
+
+
+            <div class=" col-md-6 >
+                <div class=" row">
+                <div class=" col-sm-4">
+                    <h3 class="ctrHeading">Non working days:</h3>
+                    <div class="workDayBt">
+                        <button id="monDay">Monday</button>
+                        <button id="tuesDay">Tuesday</button>
+                        <button id="wednesDay">Wednesday</button>
+                        <button id="thursDay">Thursday</button>
+                        <button id="friDay">Friday</button>
+                        <button id="saturDay">Saturday</button>
+                        <button id="sunDay">Sunday</button>
+                    </div>
+                </div>
+                <div class=" col-sm-4">
+                    <h3 class="ctrHeading">Simulation runs:</h3>
+                    <div class="workDayBt">
+                        <button id="oneT">1000</button>
+                        <button id="twoT">2000</button>
+                        <button id="threeT">3000</button>
+                        <button id="fourT">4000</button>
+                        <button id="fiveT">5000</button>
+                    </div>
+                </div>
+                <div class=" col-sm-4">
+                    <h3 class="ctrHeading">Get help</h3>
+                    <div class="workDayBt">
+                        <button id="getHelp">Help</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class=" col-sm-6 col-md-6 col-lg-3" >
-          <h3 class="ctrHeading">Simulation runs:</h3>
-          <div class="workDayBt">
-            <button id="oneT">1000</button>
-            <button id="twoT">2000</button>
-            <button id="threeT">3000</button>
-            <button id="fourT">4000</button>
-            <button id="fiveT">5000</button>
-          </div>
+        <!--div class="row">
+            <div class="col-md-6">
+                 <button type="submit" id="simulationStart">Start</button>
+                 <button type="submit" id="restartPage">Reset</button>
+           </div>
+        </div-->
+    </section>
+
+    <section class="container-fluid">
+        <div class="row" id="plotPanel">
+            <div class="col-md-6 tLine">
+                <h3 class="tableHeading">Time Line Plot</h3>
+                <p>Best Case, Most Likey Case and Worst Case Task Finish Days </p>
+                <div id="plot2"></div>
+                <p> Used: Google Charts library</p>
+            </div>
+            <div class="col-md-6 probPlot">
+                <h3 class="tableHeading">Probability Plot</h3>
+                <p>Probability of completing the project at a date</p>
+                <div id="plot1"></div>
+                <p> Used: Google Charts Library</p>
+            </div>
         </div>
-    </div>
+    </section>
 
-    <div class="row">
-      <div class="col-md-6">
-        <button  type="submit" id="simulationStart">Start</button>
-        <button type="submit" id="restartPage">Reset</button>
-      </div>
-    </div>
-  </section>
+    <section class="container-fluid" >
+        <div id="alertBox" class="alertModal">
+            <!-- Modal content -->
+            <div class="alert-content">
+                <span class="closeAlert" id="closeHelp">&times;</span>
+                <p id="alertMess"></p>
+            </div>
+        </div>
+    </section>
 
-  <section class="container-fluid">
-    <div class="row" id="plotPanel">
-      <div class="col-md-6 tLine">
-        <h3 class="tableHeading">Time Line Plot</h3>
-        <p>Best Case, Most Likey Case and Worst Case Task Finish Days </p>
-        <div id="plot2"></div>
-        <p> Used: Google Charts library</p>
-      </div>
-      <div class="col-md-6 probPlot">
-        <h3 class="tableHeading">Probability Plot</h3>
-        <p>Probability of completing the project at a date</p>
-        <div id="plot1"></div>
-        <p> Used: Google Charts Library</p>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    
-    <div id="alert" class="alertbox">
-      <p>Click to close the alert message.</p>
-      <!--https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_alert-->
-      <!--span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span-->
-      <!--strong>Danger!</strong-->
-    </div>
-  </section>
-
-
-
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
-  <script src="https://www.gstatic.com/charts/loader.js"></script>
-  <script src="assets/js/jquery-3.6.0.js"></script>
-  <script src="assets/js/jquery-ui.js"></script>
-  <script src="assets/js/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="assets/js/jquery-3.6.0.js"></script>
+    <script src="assets/js/jquery-ui.js"></script>
+    <script src="assets/js/script.js"></script>
 
 </body>
 
