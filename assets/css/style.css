@@ -5,6 +5,7 @@ body {
     color: black;
     text-align: center;
 }
+
 /* --------- Common style -------------*/
 .tableHeading{
     text-align: center;
@@ -200,7 +201,6 @@ table th {
     padding-top: 0px;
     padding-left:20px;
     left: 0;
-    /*bottom: 0;*/
     width: 100%; /* Full width */
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
@@ -210,7 +210,7 @@ table th {
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
-    border: 1px solid black;
+    border: 1.5px solid red;
     width: 80%;
     text-align: left;
   }
@@ -239,30 +239,26 @@ table th {
     width: 80%;
     text-align: left;
   }
-  .close {
+  .closeX {
     color:mediumblue;
     float: right;
     font-size: 28px;
     font-weight: bold;
-  }
-  
-  .close:hover,
-  .close:focus {
-    color: #000;
-    text-decoration: none;
+    line-height: 1;
+    text-shadow: 0 1px 0 #fff;
     cursor: pointer;
   }
+  
+
+
   .closeAlert {
     color:red;
     float: right;
     font-size: 28px;
     font-weight: bold;
-  }
-  
-  .closeAlert:hover,
-  .closeAlert:focus {
-    color: #000;
-    text-decoration: none;
+    line-height: 1;
+    text-shadow: 0 1px 0 #fff;
     cursor: pointer;
   }
+  
   
