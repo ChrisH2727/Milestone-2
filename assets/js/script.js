@@ -318,13 +318,11 @@ function resultProc(numbers, dataSamples) {
   var popSize = numbers.length;
   var histoArray = [];
   var maxDuration = Math.max.apply(null, numbers);
-  //alert("max days = "+ maxDuration);
   var minDuration = Math.min.apply(null, numbers);
-  //alert("min days = "+ minDuration);
   var binWidth = ((maxDuration - minDuration) / dataSamples);
   for (j = 1; j < dataSamples; j++) {
     for (let i = 0; i < popSize; i++) {
-      if (numbers[i] < ((binWidth * j))) {
+      if (numbers[i] < ((binWidth * j)+minDuration)) {
         fCount = fCount + 1;
       }
     }
@@ -413,7 +411,7 @@ function drawTimeLine() {
   }
 
   var options = {
-    timeline: { groupByRowLabel: true },
+    timeline: { groupByRowLabel: true }, // set up option to display best case, most likely case and worst case timelines on one bar
     colors: ["#90ee90", "#ffa500", "#ff4500"],
     timeline: { colorByRowLabel: false },
   }
@@ -425,8 +423,8 @@ function drawTimeLine() {
 
 function randomVariat(bestCase, mostLikelyCase, worstCase) {
   // This function returns a triangular distributed random variat from the Best Case, Most Likely Case and Worst Case
-  // estimates passed to it.
-  // Returns integer values only 
+  // estimates passed to it. Returns integer values only
+
   let sample = Math.random();
   if (sample <= ((mostLikelyCase - bestCase) / (worstCase - bestCase))) {
     return math.round(bestCase + Math.sqrt((worstCase - bestCase) * (mostLikelyCase - bestCase) * sample));
@@ -439,8 +437,9 @@ function randomVariat(bestCase, mostLikelyCase, worstCase) {
 
 
 function errorHandler(errorCode) {
-  document.getElementById("alertbox").style.display = "block";
-  alert("got here");
+  //displays an alert to the user when a date input or other error is detected
+
+  document.getElementById("alertBox").style.display = "block";
   switch (errorCode) {
     case 0:
       document.getElementById("alertMess").innerText = 'No start date entered: error code 0';
@@ -457,12 +456,12 @@ function errorHandler(errorCode) {
     default:
       document.getElementById("alertMess").innerText = 'Unkown error code';
   }
-  //document.getElementById("alert").addEventListener("click", hideAlert);
+  document.getElementById("disAlert").addEventListener("click", hideAlert);
 }
 
 function hideAlert() {
   //Clears alert modal
-  document.getElementById("alert").style.display = "none";
+  document.getElementById("alertBox").style.display = "none";
 }
 
 function loadHelp(){
@@ -475,6 +474,11 @@ function hideHelp(){
   document.getElementById("myModal").style.display = "none";
 }
 
+function helpClose(){
+  alert("got here")
+  document.getElementsByClassName("closeX").color="rgb(200,200,200)";
+}
+
 
 // Event listeners 
 document.getElementById("taskEntryTable").addEventListener("change", taskUpdate);                  //Sets up event listener for changes to the task table
@@ -482,4 +486,5 @@ document.getElementById("simulationStart").addEventListener("click", monteCarlo)
 document.getElementById("restartPage").addEventListener("click", reLoad);                          //Set up event listener for Restart button
 document.getElementById("getHelp").addEventListener("click", loadHelp);                            //Set up event listener for Help button
 document.getElementById("closeHelp").addEventListener("click", hideHelp);                          //Sets up event listener to close help modal
-document.getElementById("closeAlert").addEventListener("click", hideAlert);                          //Sets up event listener to close alert modal
+document.getElementById("closeAlert").addEventListener("click", hideAlert);                         //Sets up event listener to close alert modal
+document.getElementById("closeHelp").addEventListener("mouseover", helpClose);     
