@@ -1,47 +1,63 @@
 $(document).ready(function () {
-  initNonWorkingDays(); //initialise non working days buttons
-  initSimulationRuns(); //initialise simulation runs buttons
-  setNonWorkingDays(); // called when non working day button clicked 
-  setSimulationRuns(); //called when simulation runs button clicked
-  disStart(); // disable simuation start button
-  enReset(); // enable reset button
+  //Function called when the document has loaded
+  initNonWorkingDays();     //initialise non working days buttons
+  initSimulationRuns();     //initialise simulation runs buttons
+  setNonWorkingDays();      // called when non working day button clicked 
+  setSimulationRuns();      //called when simulation runs button clicked
+  disStart();               // disable simuation start button
+  enReset();                // enable reset button
+  enhelp();                 // Enables Help button 
 })
 function initNonWorkingDays() {
+  //Initialises the Non Working Day buttons. Mon - Fri set to inactive. Sat & Sun set to active, non working days
   $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").css("background-color", "rgb(0, 128, 0)").data('clicked', false); //initialise buttons to green
   $("#saturDay,#sunDay").css("background-color", "rgb(220, 20, 60)").data('clicked', true); //initialise buttons to red
 }
 
 function disNonWorkingDays() {
+  //Disables and greys out the Non Working Day buttons
   $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").css("background-color", "rgb(211, 211, 211)").attr("disabled", true);//grey buttons and disable
 }
 
 function enNonWorkingDays() {
+  //Enables the Non Woring Day buttons
   $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").removeAttr("disabled"); //re-enable non working day buttons
 }
 
 function initSimulationRuns() {
+  //Initialises the Simulation Runs buttons and defaults to 1000 runs
   $("#twoT,#threeT,#fourT,#fiveT").css("background-color", "rgb(0, 128, 0)").data('clicked', false); //button green
   $("#oneT").css("background-color", "rgb(220, 20, 60)").data('clicked', true); //button red
 }
 
 function disSimulationRuns() {
+  //Disables and greys out the Simulation Runs buttons  
   $("#oneT,#twoT,#threeT,#fourT,#fiveT").css("background-color", "rgb(211, 211, 211)").attr("disabled", true); //grey buttons and disable
 }
 
 function enSimulationRuns() {
+  //Enables the Simulation Runs buttons
   $("#oneT,#twoT,#threeT,#fourT,#fiveT").removeAttr("disabled"); //re-enable buttons
 }
 
 function disStart() {
+  //Disables the Start button
   $("#simulationStart").attr("disabled", true)
 }
 
 function enStart() {
+  //Enables the Start button
   $("#simulationStart").css("background-color", "rgb(0, 128, 0)").removeAttr("disabled");
 }
 
 function enReset() {
+  //Initialises the Reset button 
   $("#restartPage").css("background-color", "rgb(0, 128, 0)")
+}
+
+function enhelp(){
+  //Initialises the Help button
+  $("#getHelp").css("background-color", "rgb(0, 128, 0)")
 }
 
 function setNonWorkingDays() {
@@ -423,44 +439,47 @@ function randomVariat(bestCase, mostLikelyCase, worstCase) {
 
 
 function errorHandler(errorCode) {
-  document.getElementById("alert").style.display = "block";
-  document.getElementById("alert").classList.add("alertbox")
+  document.getElementById("alertbox").style.display = "block";
+  alert("got here");
   switch (errorCode) {
     case 0:
-      document.getElementById("alert").innerText = 'No start date entered: error code 0';
+      document.getElementById("alertMess").innerText = 'No start date entered: error code 0';
       break;
     case (1):
-      document.getElementById("alert").innerText = 'Out of range Gantt or Triangular distributed variat : error code 1';
+      document.getElementById("alertMess").innerText = 'Out of range Gantt or Triangular distributed variat : error code 1';
       break;
     case (2):
-      document.getElementById("alert").innerText = 'Best case duration musts be less that most likely case duration and most likely case duration must be less than worst case duration : error code 2';
+      document.getElementById("alertMess").innerText = 'Best case duration musts be less that most likely case duration and most likely case duration must be less than worst case duration : error code 2';
       break;
     case (3):
-      document.getElementById("alert").innerText = 'You must include at least 1 working day: error code 3';
+      document.getElementById("alertMess").innerText = 'You must include at least 1 working day: error code 3';
       break;
     default:
-      document.getElementById("alert").innerText = 'Unkown error code';
+      document.getElementById("alertMess").innerText = 'Unkown error code';
   }
-  document.getElementById("alert").addEventListener("click", hideAlert);
+  //document.getElementById("alert").addEventListener("click", hideAlert);
 }
 
 function hideAlert() {
+  //Clears alert modal
   document.getElementById("alert").style.display = "none";
 }
 
+function loadHelp(){
+  //Displays the help modal
+  document.getElementById("myModal").style.display = "block";
+}
+
+function hideHelp(){
+  //Clears the help modal
+  document.getElementById("myModal").style.display = "none";
+}
 
 
 // Event listeners 
-// Sets up event listener for changes to the task table
-document.getElementById("taskEntryTable").addEventListener("change", taskUpdate);
-
-// Sets up event listener for changes to the working day checkbox array 
-// credit: https://stackoverflow.com/questions/44988614/pass-this-to-addeventlistener-as-parameter
-var workingDays = document.getElementsByClassName('checkboxInput');
-Array.from(workingDays).forEach(function () {
-  this.addEventListener("change", workingDayUpdate, false);
-});
-
-//Sets up event listener for "Start Simulation" & "Restart Page" buttons
-document.getElementById("simulationStart").addEventListener("click", monteCarlo);
-document.getElementById("restartPage").addEventListener("click", reLoad);
+document.getElementById("taskEntryTable").addEventListener("change", taskUpdate);                  //Sets up event listener for changes to the task table
+document.getElementById("simulationStart").addEventListener("click", monteCarlo);                  //Sets up event listener for Start button
+document.getElementById("restartPage").addEventListener("click", reLoad);                          //Set up event listener for Restart button
+document.getElementById("getHelp").addEventListener("click", loadHelp);                            //Set up event listener for Help button
+document.getElementById("closeHelp").addEventListener("click", hideHelp);                          //Sets up event listener to close help modal
+document.getElementById("closeAlert").addEventListener("click", hideAlert);                          //Sets up event listener to close alert modal
