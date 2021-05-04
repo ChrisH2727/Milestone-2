@@ -24,7 +24,7 @@
     </header>
     <section class="container-fluid blockbg">
         <div class="row">
-            <div class="col-md-6 taskPanel">
+            <div class="col-xl-6 taskPanel">
                 <table id="taskEntryTable">
                     <tr>
                         <th colspan="9" class="tableHeading">Task Entry Table</th>
@@ -42,14 +42,14 @@
                     </tr>
                     <tr>
                         <td class="taskNo">1</td>
-                        <td><input type="text" class="taskDescriptionBox taskDes" /></td>
+                        <td class="taskDes"><input type="text" class="taskDescriptionBox taskDes" /></td>
                         <td><input type="date" class="taskDateBox sDate" /></td>
-                        <td class="taskDuration"><input type="number" min="0" class="taskDurationBox bCase" /></td>
-                        <td class="taskDuration"><input type="number" min="0" class="taskDurationBox mlCase" /></td>
-                        <td class="taskDuration"><input type="number" min="0" class="taskDurationBox wCase" /></td>
-                        <td class="taskDate bCase"></td>
-                        <td class="taskDate mlCase"></td>
-                        <td class="taskDate wCase"></td>
+                        <td class="bctaskDuration"><input type="number" min="1" class="bctaskDurationBox bCase" /></td>
+                        <td class="mltaskDuration"><input type="number" min="1" class="mltaskDurationBox mlCase" /></td>
+                        <td class="wctaskDuration"><input type="number" min="1" class="wctaskDurationBox wCase" /></td>
+                        <td class="bctaskDate"></td>
+                        <td class="mltaskDate"></td>
+                        <td class="wctaskDate"></td>
                     </tr>
                 </table>
                 <div class="row">
@@ -83,7 +83,7 @@
 
 
 
-            <div class=" col-md-6 >
+            <div class=" col-lg-6 >
                 <div class=" row">
                 <div class=" col-sm-4">
                     <h3 class="ctrHeading">Non working days:</h3>
@@ -115,31 +115,30 @@
                 </div>
             </div>
         </div>
+        <div id="alertBox" class="alertModal">
+            <!-- Modal content-->
+            <div class="alert-content">
+                <span class="closeAlert" id="disAlert">&times;</span>
+                <p id="alertMess"></p>
+            </div>
+        </div>
     </section>
 
     <section class="container-fluid">
         <div class="row" id="plotPanel">
+            <!--Time line plot-->
             <div class="col-md-6 tLine">
                 <h3 class="tableHeading">Time Line Plot</h3>
                 <p>Best Case, Most Likey Case and Worst Case Task Finish Days </p>
                 <div id="plot2"></div>
                 <p> Used: Google Charts library</p>
             </div>
+            <!--Probability plot-->
             <div class="col-md-6 probPlot">
                 <h3 class="tableHeading">Probability Plot</h3>
                 <p>Probability of completing the project at a date</p>
                 <div id="plot1"></div>
                 <p> Used: Google Charts Library</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="container-fluid blockbg" >
-        <div id="alertBox" class="alertModal">
-            <!-- Modal content -->
-            <div class="alert-content">
-                <span class="closeAlert" id="disAlert">&times;</span>
-                <p id="alertMess"></p>
             </div>
         </div>
     </section>
