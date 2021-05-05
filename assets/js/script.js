@@ -1,5 +1,6 @@
 $(document).ready(function () {
   //Function called when the document has loaded
+
   initNonWorkingDays();     //initialise non working days buttons
   initSimulationRuns();     //initialise simulation runs buttons
   setNonWorkingDays();      // called when non working day button clicked 
@@ -11,7 +12,7 @@ $(document).ready(function () {
   google.charts.load("current", { "packages": ["timeline"] });    //Load Google charting package
 })
 function initNonWorkingDays() {
-  //Initialises the Non Working Day buttons. Mon - Fri set to inactive. Sat & Sun set to active, non working days
+  //Initialises the Non Project Day buttons. Mon - Fri set to inactive. Sat & Sun set to active, non working days
 
   $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").css("background-color", "rgb(0, 128, 0)").data('clicked', false); //initialise buttons to green
   $("#saturDay,#sunDay").css("background-color", "rgb(220, 20, 60)").data('clicked', true); //initialise buttons to red
@@ -73,6 +74,8 @@ function enhelp() {
 }
 
 function setNonWorkingDays() {
+  // Initialises the Non Project Days buttons both with background colour and clicked state
+
   $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").on({
     click: function () {
       if ($(this).css("background-color") == "rgb(220, 20, 60)") {
@@ -83,10 +86,11 @@ function setNonWorkingDays() {
       taskUpdate(); //update the task table with new non working days
     }
   });
-
 }
 
 function setSimulationRuns() {
+  //This function ensures that only one of the Simulations Runs buttons is active Red turing all others to inactive green
+
   $("#oneT,#twoT,#threeT,#fourT,#fiveT").on({
     click: function () {
       if ($(this).css("background-color") == "rgb(0, 128, 0)") { //if button 1000 green
@@ -112,7 +116,6 @@ function setSimulationRuns() {
     }
   });
 }
-
 
 function taskUpdate() {
 //Event handler called whenever there is a change to the task table
@@ -216,6 +219,7 @@ function checkAllData() {
 
 function getStartDate(rowNumber) {
   // start date in first row of task table is input box, subsequent rows are just table cells so reference differently
+
   var tableRef = document.getElementById("taskEntryTable");
   if (rowNumber === 2) {
     return new Date(tableRef.rows[rowNumber].cells[2].children[0].value);
@@ -226,6 +230,7 @@ function getStartDate(rowNumber) {
 
 function revDateStr(Sdate) {
   //re formats input string from dd/mm/yyyy to yyyy-mm-dd
+
   let sYear = Sdate.slice(6, 10);
   let sMonth = Sdate.slice(3, 5);
   let sDay = Sdate.slice(0, 2);
@@ -237,9 +242,11 @@ function calcWorkingDays(fromDate, days) {
   // working and non working.
   // The function also catches the condition where the Start Date is a non working day and calculates the next working day.
   //read the non working days selected by the checkboxes into the array nonWorkingdays
+
   var nonWorkingDays = [];
   var workingDay = 0;
 
+  //Check each non project day button and push a numeric to array nonWorkingDays
   if ($("#monDay").data("clicked")) {
     nonWorkingDays.push("1"); 
   }
@@ -261,14 +268,16 @@ function calcWorkingDays(fromDate, days) {
   if ($("#sunDay").data("clicked")) {
      nonWorkingDays.push("0"); 
     }
-
+  
+  // Error check. Checks the condition where the user has selected every day of the week as a Non Project Day  
   if (nonWorkingDays.includes("0") && nonWorkingDays.includes("1") && nonWorkingDays.includes("2") && nonWorkingDays.includes("3") &&
     nonWorkingDays.includes("4") && nonWorkingDays.includes("5") && nonWorkingDays.includes("6")) { //Detect error condition where all days of the selected as non working
     errorHandler(3);                                                                                //Would result in a catestrophic failure 
     nonWorkingDays = ["0", "2", "3", "4", "5", "6"];    //Make Monday a working day
     $("#monDay").removeAttr("disabled").css("background-color", "rgb(0, 128, 0)").data('clicked', true);                //Re-enable Monday as working day  
   }
-
+  
+  //Determines the project date
   while (workingDay < days) {                    //Loop through the task duation days
     fromDate.setDate(fromDate.getDate() + 1);    //Get the day of the week for the next day  
     if (!(nonWorkingDays.includes(fromDate.getDay().toString()))) {   // If day of the week is not a non working day then continue through the loop 
@@ -280,6 +289,7 @@ function calcWorkingDays(fromDate, days) {
 
 function addTableRow() {
   //function adds a new row into the task entry table
+
   let tableRef = document.getElementById("taskEntryTable");
   let newTaskRow = tableRef.insertRow(tableRef.rows.length);
   const taskNumber = 0;
@@ -297,21 +307,31 @@ function addTableRow() {
 }
 
 function runSimulation() {
-  //runs the Monte Carlo simulation
+  //Runs the Monte Carlo simulation in response to the start button clicked
 
   var tableRef = document.getElementById("taskEntryTable");
   var simRunsArray = [];
   var runDuration = 0;  // initialise the sum of random variates for each simulation run
 
   // get the number of simulation runs from the DOM 
-  if ($("#oneT").data("clicked")) { simRuns = 1000; }
-  if ($("#twoT").data("clicked")) { simRuns = 2000; }
-  if ($("#threeT").data("clicked")) { simRuns = 5000; }
-  if ($("#fourT").data("clicked")) { simRuns = 10000; }
-  if ($("#fiveT").data("clicked")) { simRuns = 20000; }
+  if ($("#oneT").data("clicked")) { 
+    simRuns = 1000; 
+  }
+  if ($("#twoT").data("clicked")) { 
+    simRuns = 2000; 
+  }
+  if ($("#threeT").data("clicked")) {
+     simRuns = 5000; 
+    }
+  if ($("#fourT").data("clicked")) {
+     simRuns = 7000; 
+    }
+  if ($("#fiveT").data("clicked")) {
+     simRuns = 10000; 
+    }
 
   // last HTML task entry table row is always blank
-  var dataTableEnd = tableRef.rows.length - 1;
+  let dataTableEnd = tableRef.rows.length - 1;
   for (let i = 0; i < simRuns; i++) {
     for (let j = 2; j < dataTableEnd; j++) {
       let bestCaseDuration = parseInt(tableRef.rows[j].cells[3].children[0].value);
@@ -372,7 +392,7 @@ function addProjectDates(resultsArray, dataPoints) {
 }
 
 function resultProc(numbers, dataSamples) {
-  //this function inputs the Monte Carlo simulation results and processes the results into percentage frequency bins.
+  //This function inputs the Monte Carlo simulation results and processes the results into percentage frequency bins.
   //the output is stored in the form of a array of objects of class Results
   class Results {
     constructor(percentage, yAxis, freqCount, projectDays, projectDate) {
@@ -412,6 +432,8 @@ function resultProc(numbers, dataSamples) {
 }
 
 function drawProbabilityChart(resultsArray, dataPoints) {
+  //This fuction uses the Google scatter plot API to create  a chart of %probabilities versus project completion dates
+
   var chart = new google.visualization.ScatterChart(document.getElementById('plot1'));
 
   //construct data array for plotting in the scatter plot
@@ -429,11 +451,13 @@ function drawProbabilityChart(resultsArray, dataPoints) {
     legend: 'none'
   };
   chart.draw(data, options); //generate chart
+  // Credit: see ref:3 in the README.MD
+
 }
 
 
 function drawTimeLine() {
-  //plots the time lines from the HTML task entry table
+  //plots the time lines from the HTML task entry table using the Google Timeline API
 
   var container = document.getElementById('plot2');
   var chart = new google.visualization.Timeline(container);
@@ -487,7 +511,7 @@ function drawTimeLine() {
   }
   chart.draw(plotTable, options);
 
-  // Credit: this function was inspired by the code examples provided at: https://developers.google.com/chart/interactive/docs/gallery/timeline
+  // Credit: see ref:3 in the README.MD
 
 }
 
@@ -505,60 +529,58 @@ function randomVariat(bestCase, mostLikelyCase, worstCase) {
   }
 }
 
-
 function errorHandler(errorCode) {
   //displays an alert to the user when a date input or other error is detected
 
-  document.getElementById("alertBox").style.display = "block"; //bring up the alert modal
-
+  $("#alertBox").css("display","block"); //bring up the alert modal
   switch (errorCode) { //display the alert message
     case 0:
-      document.getElementById("alertMess").innerText = 'No start date entered: error code 0';
+      $("#alertMess").text('No start date entered: error code 0');
       break;
     case (1):
-      document.getElementById("alertMess").innerText = "A catastrophic error has occured, please reload the page and start again: error code 1";
+      $("#alertMess").text("A catastrophic error has occured, please reload the page and start again: error code 1");
       break;
     case (2):
-      document.getElementById("alertMess").innerText = 'Best case duration musts be less that most likely case duration and most likely case duration must be less than worst case duration : error code 2';
+      $("#alertMess").text('Best case duration musts be less that most likely case duration and most likely case duration must be less than worst case duration : error code 2');
       break;
     case (3):
-      document.getElementById("alertMess").innerText = 'You must include at least 1 working day: error code 3';
+      $("#alertMess").text('You must include at least 1 working day: error code 3');
       break;
     case (4):
-      document.getElementById("alertMess").innerText = 'You must include a unique task description: error code 4';
+      $("#alertMess").text('You must include a unique task description: error code 4');
       break;
     case (5):
-      document.getElementById("alertMess").innerText = 'Best case, most likely case and worst case duration must be greater than 1 day: error code 5';
+      $("#alertMess").text('Best case, most likely case and worst case duration must be greater than 1 day: error code 5');
       break;
     case (6):
-      document.getElementById("alertMess").innerText = 'Unrelaible task entry table data, please reset and try again: error code 6';
+      $("#alertMess").text('Unrelaible task entry table data, please reset and try again: error code 6');
       break;
     default:
-      document.getElementById("alertMess").innerText = 'Unkown error code';
+      $("#alertMess").text('Unkown error code');
   }
-  document.getElementById("disAlert").addEventListener("click", hideAlert);
+  $("#disAlert").click(function () { hideAlert();});
 }
 
 function hideAlert() {
-  //Clears alert modal
-  //document.getElementById("alertBox").style.display = "none";
+  //Clears the alert modal window
+
   $("#alertBox").css("display","none");
 }
 
 function loadHelp() {
-  //Displays the help modal
-  //document.getElementById("myModal").style.display = "block";
+  //Displays the help modal window
+
   $("#myModal").css("display","block");
 }
 
 function hideHelp() {
-  //Clears the help modal
+  //Clears the help modal window
+
   $("#myModal").css("display","none");
-  //document.getElementById("myModal").style.display = "none";
 }
 
 function helpClose() {
-  document.getElementsByClassName("closeX").color = "rgb(200, 200, 200)";
+
   $(".closeX").css("color","rgb(200, 200, 200)");
 }
 
