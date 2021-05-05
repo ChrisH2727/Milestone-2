@@ -263,14 +263,15 @@ function calcWorkingDays(fromDate, days) {
     }
 
   if (nonWorkingDays.includes("0") && nonWorkingDays.includes("1") && nonWorkingDays.includes("2") && nonWorkingDays.includes("3") &&
-    nonWorkingDays.includes("4") && nonWorkingDays.includes("5") && nonWorkingDays.includes("6")) { //detect error condition where all week days selected as non working
-    errorHandler(3);
-    nonWorkingDays = ["0", "2", "3", "4", "5", "6"];
+    nonWorkingDays.includes("4") && nonWorkingDays.includes("5") && nonWorkingDays.includes("6")) { //Detect error condition where all days of the selected as non working
+    errorHandler(3);                                                                                //Would result in a catestrophic failure 
+    nonWorkingDays = ["0", "2", "3", "4", "5", "6"];    //Make Monday a working day
+    $("#monDay").removeAttr("disabled").css("background-color", "rgb(0, 128, 0)").data('clicked', true);                //Re-enable Monday as working day  
   }
 
-  while (workingDay < days) {
-    fromDate.setDate(fromDate.getDate() + 1);
-    if (!(nonWorkingDays.includes(fromDate.getDay().toString()))) {
+  while (workingDay < days) {                    //Loop through the task duation days
+    fromDate.setDate(fromDate.getDate() + 1);    //Get the day of the week for the next day  
+    if (!(nonWorkingDays.includes(fromDate.getDay().toString()))) {   // If day of the week is not a non working day then continue through the loop 
       workingDay++;
     }
   }
@@ -540,21 +541,25 @@ function errorHandler(errorCode) {
 
 function hideAlert() {
   //Clears alert modal
-  document.getElementById("alertBox").style.display = "none";
+  //document.getElementById("alertBox").style.display = "none";
+  $("#alertBox").css("display","none");
 }
 
 function loadHelp() {
   //Displays the help modal
-  document.getElementById("myModal").style.display = "block";
+  //document.getElementById("myModal").style.display = "block";
+  $("#myModal").css("display","block");
 }
 
 function hideHelp() {
   //Clears the help modal
-  document.getElementById("myModal").style.display = "none";
+  $("#myModal").css("display","none");
+  //document.getElementById("myModal").style.display = "none";
 }
 
 function helpClose() {
-  document.getElementsByClassName("closeX").color = "rgb(200,200,200)";
+  document.getElementsByClassName("closeX").color = "rgb(200, 200, 200)";
+  $(".closeX").css("color","rgb(200, 200, 200)");
 }
 
 
@@ -567,3 +572,18 @@ $("#getHelp").click(function () { loadHelp(); });                               
 $("#closeHelp").click(function () { hideHelp(); });                                                       //Sets up event listener to close help modal
 $("#closeAlert").click(function () { hideAlert(); });                                                    //Sets up event listener to close alert modal
 $("#closeHelp").mouseover(function () { helpClose(); });
+$("#monDay").hover(function(){ $("#monDay").css("filter", "brightness(115%)");},function(){$("#monDay").css("filter", "brightness(100%)"); });     //Refer to acknowledgement ref. 1 in Readme.md 
+$("#tuesDay").hover(function(){ $("#tuesDay").css("filter", "brightness(115%)");},function(){$("#tuesDay").css("filter", "brightness(100%)"); });  //Refer to acknowledgement ref. 1 in Readme.md 
+$("#wednesDay").hover(function(){ $("#wednesDay").css("filter", "brightness(115%)");},function(){$("#wednesDay").css("filter", "brightness(100%)"); });   //Refer to acknowledgement ref. 1 in Readme.md 
+$("#thursDay").hover(function(){ $("#thursDay").css("filter", "brightness(115%)");},function(){$("#thursDay").css("filter", "brightness(100%)"); });      //Refer to acknowledgement ref. 1 in Readme.md 
+$("#friDay").hover(function(){ $("#friDay").css("filter", "brightness(115%)");},function(){$("#friDay").css("filter", "brightness(100%)"); });            //Refer to acknowledgement ref. 1 in Readme.md 
+$("#saturDay").hover(function(){ $("#saturDay").css("filter", "brightness(115%)");},function(){$("#saturDay").css("filter", "brightness(100%)"); });      //Refer to acknowledgement ref. 1 in Readme.md 
+$("#sunDay").hover(function(){ $("#sunDay").css("filter", "brightness(115%)");},function(){$("#sunDay").css("filter", "brightness(100%)"); });            //Refer to acknowledgement ref. 1 in Readme.md 
+$("#oneT").hover(function(){ $("#oneT").css("filter", "brightness(115%)");},function(){$("#oneT").css("filter", "brightness(100%)"); });                  //Refer to acknowledgement ref. 1 in Readme.md 
+$("#twoT").hover(function(){ $("#twoT").css("filter", "brightness(115%)");},function(){$("#twoT").css("filter", "brightness(100%)"); });                  //Refer to acknowledgement ref. 1 in Readme.md 
+$("#threeT").hover(function(){ $("#threeT").css("filter", "brightness(115%)");},function(){$("#threeT").css("filter", "brightness(100%)"); });            //Refer to acknowledgement ref. 1 in Readme.md 
+$("#fourT").hover(function(){ $("#fourT").css("filter", "brightness(115%)");},function(){$("#fourT").css("filter", "brightness(100%)"); });               //Refer to acknowledgement ref. 1 in Readme.md 
+$("#fiveT").hover(function(){ $("#fiveT").css("filter", "brightness(115%)");},function(){$("#fiveT").css("filter", "brightness(100%)"); });               //Refer to acknowledgement ref. 1 in Readme.md 
+$("#getHelp").hover(function(){ $("#getHelp").css("filter", "brightness(115%)");},function(){$("#getHelp").css("filter", "brightness(100%)"); });         //Refer to acknowledgement ref. 1 in Readme.md 
+$("#simulationStart").hover(function(){ $("#simulationStart").css("filter", "brightness(115%)");},function(){$("#simulationStart").css("filter", "brightness(100%)"); });         //Refer to acknowledgement ref. 1 in Readme.md 
+$("#restartPage").hover(function(){ $("#restartPage").css("filter", "brightness(115%)");},function(){$("#restartPage").css("filter", "brightness(100%)"); });                     //Refer to acknowledgement ref. 1 in Readme.md 
