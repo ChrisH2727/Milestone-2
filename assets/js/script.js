@@ -439,14 +439,14 @@ function drawProbabilityChart(resultsArray, dataPoints) {
   //construct data array for plotting in the scatter plot
   var dataArray = [['Date', '% Probability']];
   for (i = 0; i < dataPoints; i++) {
-    dataArray.push([(resultsArray[i].projectDate), resultsArray[i].percentage * 100]);
+    dataArray.push([resultsArray[i].projectDate , resultsArray[i].percentage * 100]);
   }
   var data = google.visualization.arrayToDataTable(dataArray);
 
   //add plot options
   var options = {
     // title: "",
-    hAxis: { title: 'Date', minValue: resultsArray[0].projectDate, maxValue: resultsArray[9].projectDate },
+    hAxis: { title: 'Date', minValue: resultsArray[0].projectDate, maxValue: resultsArray[dataPoints-1].projectDate },
     vAxis: { title: '% Probability', minValue: 0, maxValue: 100 },
     legend: 'none'
   };
@@ -459,8 +459,7 @@ function drawProbabilityChart(resultsArray, dataPoints) {
 function drawTimeLine() {
   //plots the time lines from the HTML task entry table using the Google Timeline API
 
-  var container = document.getElementById('plot2');
-  var chart = new google.visualization.Timeline(container);
+  var chart = new google.visualization.Timeline(document.getElementById('plot2'));
   var plotTable = new google.visualization.DataTable();
   let tableRef = document.getElementById("taskEntryTable");
 
