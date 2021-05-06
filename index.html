@@ -24,107 +24,139 @@
     </header>
     <section class="container-fluid blockbg">
         <div class="row">
-            <div class="col-xl-6 taskPanel">
-                <table id="taskEntryTable">
-                    <tr>
-                        <th colspan="9" class="tableHeading">Task Entry Table</th>
-                    </tr>
-                    <tr>
-                        <th class="taskNo">Task No</th>
-                        <th class="taskDes">Task Description</th>
-                        <th class="sDate">Start Date</th>
-                        <th class="bCase">Best Case Duration</th>
-                        <th class="mlCase">Most Likely Duration</th>
-                        <th class="wCase">Worst Case Duration</th>
-                        <th class="bCase">Best Case Finish Date</th>
-                        <th class="mlCase">Most Likely Case Finish Date</th>
-                        <th class="wCase">Worst Case Finish Date</th>
-                    </tr>
-                    <tr>
-                        <td class="taskNo">1</td>
-                        <td class="taskDes"><input type="text" class="taskDescriptionBox taskDes" /></td>
-                        <td><input type="date" class="taskDateBox sDate" /></td>
-                        <td class="bctaskDuration"><input type="number" min="1" class="bctaskDurationBox bCase" /></td>
-                        <td class="mltaskDuration"><input type="number" min="1" class="mltaskDurationBox mlCase" /></td>
-                        <td class="wctaskDuration"><input type="number" min="1" class="wctaskDurationBox wCase" /></td>
-                        <td class="bctaskDate"></td>
-                        <td class="mltaskDate"></td>
-                        <td class="wctaskDate"></td>
-                    </tr>
-                </table>
+            <div class="col-lg-6 taskPanel">
+                <!--Task entry table-->
+                <div id="overflow">
+                    <table id="taskEntryTable">
+                        <tr>
+                            <th colspan="9" class="tableHeading">Task Entry Table</th>
+                        </tr>
+                        <!--Task entry table headers-->
+                        <tr>
+                            <th class="taskNo">Task No</th>
+                            <th class="taskDes">Task Description</th>
+                            <th class="sDate">Task Start Date</th>
+                            <th class="bCase">Task Best Case Duration</th>
+                            <th class="mlCase">Task Most Likely Duration</th>
+                            <th class="wCase">Task Worst Case Duration</th>
+                            <th class="bCase">Task Best Case Finish Date</th>
+                            <th class="mlCase">Task Most Likely Case Finish Date</th>
+                            <th class="wCase">Task Worst Case Finish Date</th>
+                        </tr>
+                        <!--First blank line of the task entry table-->
+                        <tr>
+                            <td class="taskNo">1</td>
+                            <td class="taskDes"><input type="text" class="taskDescriptionBox taskDes" /></td>
+                            <td><input type="date" class="taskDateBox sDate" /></td>
+                            <td class="bctaskDuration"><input type="number" min="1" class="bctaskDurationBox bCase" />
+                            </td>
+                            <td class="mltaskDuration"><input type="number" min="1" class="mltaskDurationBox mlCase" />
+                            </td>
+                            <td class="wctaskDuration"><input type="number" min="1" class="wctaskDurationBox wCase" />
+                            </td>
+                            <td class="bctaskDate"></td>
+                            <td class="mltaskDate"></td>
+                            <td class="wctaskDate"></td>
+                        </tr>
+                    </table>
+                </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <!--Summit button, when clicked starts the simulation-->
+                    <div class="col-md">
+                        <!--Summit button, when clicked starts the simulation-->
                         <button type="submit" id="simulationStart">Start</button>
+                        <!--Restart button, when clicked re-loads the page-->
                         <button type="submit" id="restartPage">Reset</button>
                     </div>
                 </div>
 
 
             </div>
-            <!-- Help modal inspiration taken from https://www.w3schools.com/howto/howto_css_modals.asp -->
+            <!-- Modal for the help function. See ref2. in README.MD -->
             <div id="myModal" class="helpModal">
-                <!-- Modal content -->
                 <div class="modal-content">
+                    <!--Close button for clearing the modal -->
                     <span class="closeX" id="closeHelp">&times;</span>
+                    <!--Help modal content-->
                     <p><strong>How To Get Started</strong><br>
-                        1. Enter a short task description. task start date and a best case, most likely case and worst
-                        case task duration into the Task Table below.<br>
-                        2. Enter as many tasks as you need to. All tasks have an automatic finish to start
+                        1. Enter a short <strong>Task Description</strong>.<br>
+                        2. Select a <strong>Task Start Date</strong>. This may be the present day, a day in the past or
+                        a day in the future
+                        3. Enter a <strong>Task Best Case Duration</strong>, <strong>Task Most Likely Case
+                            Duration</strong> and <strong>Task Wost Case Duration</strong>
+                        into the Task Table below.<br>
+                        4. Enter as many tasks as you need to. All tasks have an automatic finish to start
                         relationship.<br>
-                        3. Select the Non Project Days allocted to your team. Note that Saturday & Sunday are set by
-                        default as Non Working Days.<br>
-                        4. When ready click the Start button.<br>
-                        5. You can add more tasks, change task durations and change Non Project Days at any time and the
-                        task table will automatically update, but you must click
-                        the Start button to run the simulation.<br>
-                        6. Click the Reset button to clear the Task Entry Table.</p>
+                        5. Select the <strong>Non Project Work Days</strong> allocted to your team. Note that
+                        <strong>Saturday</strong> & <strong>Sunday</strong> are set by default as Non Working Days.<br>
+                        6. When you are ready click the <strong>Start</strong> button.<br>
+                        7. You can add more tasks, change task durations and change <strong>Non Project Work
+                            Days</strong> at any time and the
+                        task table will automatically update, but you must click the <strong>Start</strong> button to
+                        run the simulation.<br>
+                        8. If you select every day of the week as a non project work day, then the programme will
+                        automatically allocate <strong>Monday</strong> as the only
+                        work day.<br>
+                        9. Click the <strong>Resart</strong> button to clear the Task Entry Table.
+                    </p>
                 </div>
             </div>
 
-
-
-            <div class=" col-lg-6 >
+            <div class=" col-lg-6">
                 <div class=" row">
-                <div class=" col-sm-4">
-                    <h3 class="ctrHeading">Non working days:</h3>
-                    <div class="workDayBt">
-                        <button id="monDay">Monday</button>
-                        <button id="tuesDay">Tuesday</button>
-                        <button id="wednesDay">Wednesday</button>
-                        <button id="thursDay">Thursday</button>
-                        <button id="friDay">Friday</button>
-                        <button id="saturDay">Saturday</button>
-                        <button id="sunDay">Sunday</button>
+                    <!--Button headings-->
+                    <div class=" col-sm-4">
+                        <h3 class="ctrHeading">Non Project Days:</h3>
+                    </div>
+                    <div class=" col-sm-4">
+                        <h3 class="ctrHeading">Simulation Runs:</h3>
+                    </div>
+                    <div class=" col-sm-4">
+                        <h3 class="ctrHeading">Get Help:</h3>
                     </div>
                 </div>
-                <div class=" col-sm-4">
-                    <h3 class="ctrHeading">Simulation runs:</h3>
-                    <div class="workDayBt">
-                        <button id="oneT">1000</button>
-                        <button id="twoT">2000</button>
-                        <button id="threeT">3000</button>
-                        <button id="fourT">4000</button>
-                        <button id="fiveT">5000</button>
+
+                <div class=" row">
+                    <!--Buttons-->
+                    <div class=" col-sm-4">
+                        <!--Non project days control buttons-->
+                        <div class="workDayBt">
+                            <button id="monDay">Monday</button>
+                            <button id="tuesDay">Tuesday</button>
+                            <button id="wednesDay">Wednesday</button>
+                            <button id="thursDay">Thursday</button>
+                            <button id="friDay">Friday</button>
+                            <button id="saturDay">Saturday</button>
+                            <button id="sunDay">Sunday</button>
+                        </div>
                     </div>
-                </div>
-                <div class=" col-sm-4">
-                    <h3 class="ctrHeading">Get help</h3>
-                    <div class="workDayBt">
-                        <button id="getHelp">Help</button>
+                    <div class=" col-sm-4">
+                        <!--Simulation run buttons-->
+                        <div class="workDayBt">
+                            <button id="oneT">1000</button>
+                            <button id="twoT">2000</button>
+                            <button id="threeT">3000</button>
+                            <button id="fourT">4000</button>
+                            <button id="fiveT">5000</button>
+                        </div>
+                    </div>
+                    <div class=" col-sm-4">
+                        <!--help button-->
+                        <div class="workDayBt">
+                            <button id="getHelp">Help</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div id="alertBox" class="alertModal">
-            <!-- Modal content-->
-            <div class="alert-content">
-                <span class="closeAlert" id="disAlert">&times;</span>
-                <p id="alertMess"></p>
+            <div id="alertBox" class="alertModal"> <!-- Alert modal-->
+                <div class="alert-content">
+                    <span class="closeAlert" id="disAlert">&times;</span>
+                    <p id="alertMess"></p>
+                </div>
             </div>
-        </div>
     </section>
 
-    <section class="container-fluid">
+    <section class="container-fluid"> <!--Plot section -->
         <div class="row" id="plotPanel">
             <!--Time line plot-->
             <div class="col-md-6 tLine">
