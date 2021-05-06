@@ -4,8 +4,9 @@
 
     1.0 Introduction
         1.1 Why The Project?
-        1.2 Monte Carlo Simulation
-        1.3 Random Numbers and All That
+        1.2 Some Project Planning Basics
+        1.3 Monte Carlo Simulation
+        1.4 Random Numbers and All That
 
     2.0 UX
         2.1 User Stories
@@ -46,26 +47,35 @@
 
 ### 1.1 Why The Project?
 
-As a project manager I have on many occasions been set the challenge of generating a high level project schedule for the development of a new product or an enhancement to an existing product. Often I am asked to consider more than one option and to consider the risks associated with each.  Somehow such requests usually come about a few days before the next board meeting. While the resulting project schedule(s) appear simple, the effort required can be significant and disruptive to the project team. This need not be the case if an appropriate scheduling tool is used. While there are many project planning tools available that can meet this challenge, they are complex to use and often require significant of initial set up. 
-My proposed browser based planning tool overcomes many of the problems by providing a simple interactive user interface that focuses on the need to produce simple project schedule and risk analysis.
-Some project planning basics
-While agile project management methodologies are used by virtually every organisation involved in development work, they are of little use when preparing an initial project schedule(s) for the project board. The project board will want to know, how long will the project take to complete, what options have been considered and have the associated risks been taken into consideration. Project costs can usually be determined at least at a high level from the schedule.
-It has been common practice to estimate the duration of project stages or tasks using a 3 point estimate: 
+As a project manager I have on many occasions been set the challenge of generating a high level project schedule for the development of a new product or an enhancement to an existing product. Often I am asked to consider more than one option and to consider the risks associated with each option.  Somehow such requests usually come about a few days before the next board meeting. While the resulting project schedule(s) appear simple, the effort required to generate such a project schedule can be significant and disruptive to the project team. This need not be the case if an appropriate scheduling tool is used. While there are many project planning tools available that can meet this challenge, they are complex to use and often require significant of initial set up.
+
+My proposed browser based planning tool overcomes many of the problems by providing a simple interactive user interface that focuses on the need to produce project timeline together with an analysis of the assocaited risks.
+
+### 1.2 Some Project Planning Basics
+
+While agile project management methodologies are used by virtually every organisation involved in development work, they are of little use when preparing an initial project schedule(s) for the project board. The project board will want to know, how long will the project take to complete, what options have been considered and have the associated risks been taken into consideration. Project costs can usually be determined at least at a high level from the schedule. Details rarely matter at this stage.
+
+It has been common practice to estimate the duration of project stages or tasks using a 3 point estimate:
+
 Best Case:  where it is assumed that nothing goes wrong.
+
 Worst Case: where everything that will go wrong does go wrong
-Most Likely Case: what the team lead / technical authority believes will happen
-For a simple project schedule where each task or stage has a finish to start relationship with its successor,  total project duration will be the sum of all the individual task or stage durations. Summing the Most Likely durations means that risks have not been factored in and therefore not a reflection of how long the project will take to complete. Summing all the Worst Case durations means that all the risks will mature. This again is unlikely to turn out to be true. In reality, the actual duration of the project will lie somewhere between the sum of the Most Likely Case estimates and the sum  of the Worst Case estimates, but where?
 
-### 1.2 Monte Carlo Simulation
+Most Likely Case: somewhere between the Best Case and Worst Case estimates based on the project team's past experience
 
-Fortunately, a Monte Carlo simulation can be used to determine not only finish date for the project, but also an associated probability. It is then up to the project board to decide on which project option, but also the delivery date dependant on their risk appetite.
-For project scheduling application Monte Carlo simulation involves selecting a random (in the next section we will talk more about what random means) duration task or project stage duration greater than the Best Case estimate and less than the Worst Case estimate and because the project tasks or stages have a simple finish to start relationship, summing together to produce an estimate for the duration of the complete project. By iterating through this process many times we end up with a range of project durations.  
+For a simple project schedule where each task or stage has a finish to start relationship with its successor,  total project duration will be the sum of all the individual task or stage durations. Summing the Most Likely durations means that risks have not been factored in and therefore not a reflection of how long the project will take to complete. Summing all the Worst Case durations means that all the risks will mature. This again is unlikely to turn out to be true. In reality, the actual duration of the project will lie somewhere between the sum of the Best Case estimates and the sum  of the Worst Case estimates. Assocaited with this is also a risk profile, with the project accepting a high level of risk and a low probability of completion at the Best Case estimate date and the project accepsting a low level of risk and a high probability of completion at the Worst Case estimate date. It is then up to the project board to decide not only which project option to choose, but also the delivery date dependant on their risk appetite. For example, some project boards may decide that planning on an earlier date completion date with a 50% probability is acceptable, while other project boards may decide that a 70% probability is required with the assocaited later project completion date.
 
-### 1.3 Random Numbers and All That
+### 1.3 Monte Carlo Simulation
 
-Most programming languages include a function to generate a random number, either in the range 0 -1 or some other numerical range. Javascript is no exception, however as with other programming languages Javascript generates random numbers with a linear probability of occurrence. Unfortunately project task durations do not follow a linear distribution. The probability of a project task requiring the worst case duration is in reality lower than the probability of the task requiring the most likely time to complete. When selecting a random task duration between the best case and worst case for our Monte Carlo simulation we need to take this into consideration. Fortunately this has all been taken care of by the PERT probability distribution.
+A [Monte Carlo simulation](https://en.wikipedia.org/wiki/Monte_Carlo_method) can be used to create a statistical model of the project and may be used to determine not only the likely finish date for the project, but also the associated probability of doing so.
 
-While the PERT distribution is not native Javascript nor JQuery, 
+For project scheduling application Monte Carlo simulations involves selecting a random (in the next section we will talk more about what random means) duration task or project stage duration between the Best Case estimate and the Worst Case estimate. By iterating through this process many times we end up with a range of project durations outcomes. The probabilty of achieving a given project duration is given by the fraction of times the project duration was achieved out of all the times that the processes was itterated. In essence, it is as if we were running the project many times and looking to see how many times a given project duration was achieved. Key to a successful Monte Carlo simulation is chosing the right random number distribution.  
+
+### 1.4 Random Numbers and All That
+
+Most programming languages include a function to generate a random number, either in the range 0 -1 or some other numerical range. Javascript is no exception, however as with other programming languages Javascript generates random numbers with a linear probability of occurrence. For example, the probability of the random() fuction generating 0.9 as the next number is the same as generating 0.7. Unfortunately project task durations do not follow a linear distribution. The probability of a project task requiring the worst case duration is in reality lower than the probability of the task requiring the most likely time to complete. When selecting a random task duration between the best case and worst case for our Monte Carlo simulation we need to take this into consideration. Fortunately this has all been taken care of by the [PERT probability distribution](https://en.wikipedia.org/wiki/PERT_distribution).
+
+While the PERT distribution is not native to Javascript or JQuery, it is relatively simple to generate a random number with a [triangular probability distribution](https://en.wikipedia.org/wiki/Triangular_distribution). Although not ideal, for the purpose of this project the triagular probability distribution will be sufficient.
 
 ## 2.0 UX
 
@@ -77,7 +87,7 @@ While the PERT distribution is not native Javascript nor JQuery,
 
 3. As a project manager I want a project planning tool that will calculate a range of probable project completion dates so that the project board can select an option dependant on their appetite for risk.
 
-4. As a project manager I want a project planning tool that will permit me to enter 3 point task estimates in man days and have the task completion dates calculated for me.
+4. As a project manager I want a project planning tool that will permit me to enter 3 point task estimates (Best Case Estimate, Most Likely Case Estimate and Worst Case Estimate) in man days and have the task completion dates calculated for me.
 
 5. As a project manager I want a project planning tool that allows me to enter 3 point estimates in tabular form similar to other project planning tools that I am familiar with.
 
@@ -99,29 +109,51 @@ This project scheduling tool consists of a single web page.
 
 ### 2.4 (Surface) Wireframes
 
-The web page may be considered in terms of 5 distinct section. 
+The web page may be considered in terms of 3 distinct section with the addition of 2 modal windows. 
 
 1. Section 1 Top left - provides a task entry table. 
 
-2. Section 2 Top right - provides buttons for selecting non working days and the number of simulation runs. 
+2. Section 2 Top right - provides buttons for selecting non working days, the number of simulation runs and a help button.
 
 3. Section 3 Middle - provides a timeline for the tasks entered by the user and a probability chart detailing the probability of compleing the project by a given date.
 
-4. Section 4 Bottom  - provides an alert box which is displayed whenever an error is detected.
+4. The **Help** modal is rendered when help button is clicked.
 
-![wireframe full size](screenshots/fullSize.png)
+5. The **Alert** modal is rendered when ever the programme detects an error in the entry of task data via the Task Entry Table.
+
+On first loading, the page will be rendered as follows:
+
+![Startup full size](screenshots/StartUp.png)
+  
+The charts will not be rendered until task data has been entered and the submit button clicked.
+
+Clicking on the **Help** button will render the help modal. This will provide the user with instructions on how to use the Rapid Project Scheduler.
+
+![Startup full size](screenshots/HelpModal.png)
+
+If an error is detected in the entry of task data via the **Task Entry Table** then an alert modal window is rendered.
+
+![Alert modal](screenshots/AlertModal.png)
+
+The Alert and Help modal windows are rendered at the different screen widths supported by this project. 
+
+![wireframe full size](screenshots/fullSize1.png)
 
 *fig: Full screen width 1206px*
 
 
-All pages will render to provide a readable display at 1206px, 768px and 320px screen widths.
+The web page will render to provide a readable display at 1206px, 768px and 320px screen widths. The wireframes below show the contents of the web page without either the alert or help modal windows.
 
-![wireframe full size](screenshots/ipad.png){width=80%}
-*fig: wireframe representation at 768px*
+![Full size](screenshots/fullSize1.png)
+Web page rendered at 1206px.
+
+![wireframe full size](screenshots/ipad1.png)
+Web page rendered at 768px
+
+![wireframe full size](screenshots/ifone1.png)
+Web page rendered at 320px
 
 Colours will be used to guide the user to make the correct assocaitions between information presented by the web page.
-
-
 
 ## 3.0 Features
 
@@ -131,37 +163,65 @@ Colours will be used to guide the user to make the correct assocaitions between 
 
 * As the user completes the entry of one line in the task entry table, a new blank line appears automatically.
 
-* The user may enter as many tasks as are required 
+* The user may enter as many tasks as are required to plan the complete project
 
 * Task numbers are automatically numbered from 1.
 
-* Best case, worst case and most likely case dates are automatically determined based on the non working days selected.
+* Only the start date assocaited with the first task may be entered by the user.
 
-* The user may change either the best case duration, most likely case duration and worst case duration at any time and the table will be recalculated.
+* The start date associated with the first task may be in the past or in the future.
+
+* Best case, worst case and most likely case dates are automatically determined for each task based on the non working days selected .
+
+* The user may change either the best case duration, most likely case duration and worst case duration at any time and the associated dates will be recalculated.
 
 * All tasks have a best case finish to best case start relationship with the subsequent task.
 
-* Until atleast one task is fully entered, the submit button is greyed out and disabled.
+* With the exception of the first task, start date of a task is the next working day following the worst case finish date of the previous task. If the worst case finish date of a task falls on a Friday and Saturday and Sunday have been selected as non workng days, then the start date of the next task will be for the Monday.
+
+* Until atleast one task is fully entered, the submit button is greyed out and disabled to prevent the simualtion from running.
 
 * Selecting fewer or more non working days using the non working days buttons causes the calculated best case, most likely case and worst case dates displayed by the task entry table to be recalculated. 
 
-* During simulation runs, the Non Working Days and Simulation run buttons are greyed out and disabled to prevent errors while running the simulation algorthm.  
+* During simulation runs, the Non Working Days and Simulation run buttons are greyed out and disabled to prevent errors while running the simulation algorthm.
+
+* The Best Case duration, Most Likely Case duration and Worst Case duration are checked to confirm that Best Case duration <  Most Likely Case duration < Worst Case duration. A new task line will not be added to the task table is this is not true. The user is alerted to this error.
+
+* If the user fails to enter a task description, a task line will not be added to the task table. The user is alerted to this error.
+
+* Task table errors may be corrected at any time and in any order.
 
 * The restart button is always enabled and when clicked, reloads the complete page.
 
 #### 3.1.2 Section 2 - Non Working Days & Simulation Runs Buttons
 
-The user may select from between 1000 and 5000 simulation runs. Note that it is not possible to select any other value including 0.
+* The user may select from between 1000 and 5000 simulation runs as informed by the legend on the buttons. The default is set to 1000 simulation runs
 
-when a simulation runs button is clicked it turns from green to red to indicate that it is now active.
+* When the Simulations Runs button is clicked, it turns from green to red. It's status is used to determine how many simulations to execute
 
-The user may select any of the days in the week as non working.
+* Clicking on one Simulation Runs button extinguishes all other Simuation Runs buttons.
 
-If the user attempts to select all 7 days as non working, then dates in the task table will be marked as invalid and an error message will be displayed at the bottom of the page.  
+* After clicking the Start button to commence the simulation, the Simulation Runs buttons are disabled and greyed out. This is to prevent errors occuring during the simulation. When the simulations has completed, the Simulation Runs buttons are reenabled and returned to their red/green status.
+
+* The user may select any of the days in the week as non working using the Non Working Days buttons.
+
+* When the user clicks on one of the Non Working Days buttons, it's colour changes from green to red.
+
+* Saturday and Sunday are pre-selected as non working days, but may be made working days. 
+
+* If the user attempts to select all 7 week days as non working, then Monday will automatically be selected as the only working day. The user will be informed of the error through an error message. Selection all 7 days of the week as non working days could result in a catastrophic failure and therfore is prevented.
+
+* Adding or subtracting Non working days automatically adjusts the Best Case, Most likely and Worst Case dates displayed by the task entry table.
+
+* Adding or subtracting Non working days does not restart the simulation. The Start button must be clicked for this to happen.
 
 #### 3.1.3 Section 3 - Timeline Plot & Probability Plot
 
-The timeline plots and probability plots are rendered using Google Charts.
+* The timeline plots and probability plots are rendered using Google Charts.
+
+* The timeline plot is constructed to make the Best Case duration, Most Likely Case duration and Worst Case duration for a given task appear on one line.
+
+* Hovering over a given line displays details of the task
 
 #### 3.1.4 Section 4 - Alert Box
 
@@ -172,8 +232,6 @@ The alert box appears when one of the following error conditions is detected:
 * A task description has not been provided.
 
 * All days of the week have been selected as non working.
-
-* ......
 
 ### 3.2 Future Features Possibilities
 
@@ -201,31 +259,144 @@ The alert box appears when one of the following error conditions is detected:
 
 ## 5.0 Detailed Requirements
 
+This section colates and numbers individual requirements from this document for test purposes.
+
 ### 5.1 Functional Requirements
+
+
+
 
 ### 5.2 Non Functional Requirements
 
-1. The HTML code  must validation by a suitable code validator.
+5.2.1 The HTML code  must validation by a suitable code validator.
 
-2. The CSS code must pass validation by a suitable code validator.
+5.2.2 The CSS code must pass validation by a suitable code validator.
 
-3. The JavaScript code must pass validation by a suitable code validator.
+5.2.3 The JavaScript code must pass validation by a suitable code validator.
 
 ## 6.0 Code Design Description
 
 ### 6.1 Data Structures and Handling
 
-All data required to render the timeline plot and the probability ploy is sourced from the DOM.
+Start, Best Case, Most Likely and Worst Case dates together with the number of times that simulation is required to run is stored in the DOM. No other variable data is required.
 
-......
+Clicking the Start button results in the event handler function **monteCarlo()** being called. With regard to data handling this function undertakes two activities:
+
+1. Function **drawTimeLine()** is called to plot the timeline chart using Best Case, Most Likely Case and Worst Case dates determined from task duration entries provided  via the Task Entry table. The Google API requires data using in following class definition.
+
+    ![Google Timeline Plot Data Structure](screenshots/TimelinePlotData.jpg)        
+
+   Apart from calling the Google function to create the timeline plot, it is the function of **drawTimeLine()** to take the Best Case, Most Likely Case and Worst Case dates from the Task Entry Table and format it into an array of objects of the above class. 
+
+   The next function called by **drawTimeLine()** is **runSimulation()**. This function is responsible for running the actual Monte Carlo simulation. Function **runSimulation()** declares an array **simRunsArray** and reads the status of the Simulation Runs buttons to determine the number of simultion runs and to determine the dimension of the  **simRunsArray** array. The remaining code runs the simulation and stores the result in **simRunsArray**. Results are integer day durations for the project to complete. Function **runSimulation()** returns **simRunsArray**.
+
+2. The event handler **monteCarlo()** passes **simRunsArray** to function **resultProc()**. Function **resultProc()** is essencially a "binning function". Function **resultProc()** declares a class **Results** and an array **histoArray** of objects class **Results**.
+
+   ![Results Class Declaration](screenshots/ResultsClass.jpg)
+
+   The function **resultProc()** then executes a cumulative frequency binning function on the **simRunsArray** using a fixed number of 20 bins. 20 bins was chosen as it provides a trade-of between speed of execution and readability of the probability plot. Cumulative percentages, projectDays (the number of days required to complete the project at a given percentage probability) is held in **histoArray**
+
+   Function **resultProc()** returns **histoArray**. Function **monteCarlo()** then passes this array to function **addProjectDates()**. Function **addProjectDates()** extracts the project days from **histoArray** and determines the assocaited project completion dates. Function **addProjectDates()** then pushes the project completion dates back into the array **histoArray** before returning it to function **monteCarlo()**.
+
+  Function **monteCarlo()** then passes array **histoArray** to function **drawProbabilityChart()**. Function **drawProbabilityChart()** transfers the percentages and project dates from the **histoArray** to the array with data structure required by the Google plotting API. 
 
 ### 6.2 JavaScript Code Stucture and flow
 
-.....
+The JavaScript code may be devived into 3 main components parts:
 
+1. The 1st component part located at the top of the script waits for the HTML page to load before initiallising the:
+
+   * The Non Project Days Buttons
+
+   * The Simulations Runs Buttons
+
+   * The Start Button
+
+   * The Restart Button
+  
+    ![Load](screenshots/Load.jpg)
+
+   In this case initialisation means setting the correct background colour and state of the button. This is important as clicking on the Restart button will cause the page to fully reload and all parameters to reset.
+
+   Finally the Google chart packages for plotting the project timeline and probability charts are loaded.
+
+2. The 2nd component part is executed when the **Task Entry Table** event listener is triggered:
+
+    ![Task Table Event Listener](screenshots/TaskTableEvent.jpg)
+
+   The purpose of function **taskUpdate()** is to cycle through the **Task Entry Table** updating the project completion dates from the task durations newly entered or changed. To start with, it takes the worst case finish date generates and loads the start date for the next task in the table using function **loadNextStartDate** 
+
+    ![Update Start Date](screenshots/UpdateStartDate.jpg)
+
+   Function **loadNextStartDate** finds the worst case finish date and adds one day to it for the next task start date. Note that if the next day is non project day then it will omit that day. For example if the worst case finish date is a Friday and Saturday and Sunday have been selected as non project days, then the start date of the next task will be the Monday.
+
+   Function **taskUpdate()** then cycles through the best case, most likely case and worst case task durations calculating the best case, most likely case and worst case completion dates.
+
+   ![Update All Dates](screenshots/UpdateAllDates.jpg)
+
+   Again, non project days are ommited in the determination of the finish date. This is achieved through function **calcWorkingDays()**
+
+   Finally function **taskUpdate()** checks that all the task table data ( task description, task start date, best task duration, most likely case task duration and worst case task duration) has been correctly entered and that a worst case task date is present.This is acheived throught function **errorCheckRow()**.  If both these conditions are met, then a new task row is inserted into the DOM using fuctiion **addTableRow()** and the submit button is enabled using function **enStart()**
+
+   ![Check task line](screenshots/NextLine.jpg)
+
+   Note that with just one task fully entered, it is possible to run the Monte Carlo simulation, although the results have little significance.
+
+   Given the cohesive design of function **taskUpdate()** it can be called from anywhere else in the programme.
+
+3. The 3rd component part is executed when the **Task Entry Table** event listener is triggered:
+
+    ![Monte Carlo Event Listener](screenshots/MonteCarloEvent.jpg)
+
+   Function **monteCarlo()** starts by disabling all the buttons. This is to ensure that the data required during the simulation remains unchanged.
+
+   ![function MonteCarlo](screenshots/MonteCarloFunction.jpg)
+
+   A function **checkAllData()** is then called to confirm the integrity of the task entry table. If **checkAllData()** returns false then the error handler is called and all buttons previously disabled, re-enabled. If **checkAllData** returns true then the following actions are taken:
+
+    * A constant **DataPoints** is declared.
+
+    * The div element containing the timeline and probability charts is enabled.
+
+    * The function **drawTimeLine()** is called to plot the time line from the task entry table.
+
+    * The core simulation is run through function **runSimulation()**.
+
+    * The simulation run results are subjected to a cumulative binning function using using function **resultsProc()** with the number of frequency bins defined by **DataPoints**.
+
+    * Function **addProjectDates()** converts the project duration days into dates using the selected non project days.
+
+    * Function **drawProbabilityChart()** then plots the probability chart using the binned data and the **DataPoints**.
+
+4. When the **restartPage** event listener is triggered on clicking the restart button, it calls function **reLoad()**. 
+
+    ![Restart Page](screenshots/RestartPage.jpg)
+
+   Function **reLoad()** reloads the entire HTML page and therefore restarts the JavaScript programme.
+
+   ![Reload](screenshots/reLoad.jpg)
+
+5. Clicking the Help button results in the event listener **getHelp** to be triggered
+
+   ![Get help](screenshots/GetHelp.jpg) 
+
+    Function **loadHelp()** enable the div with id myModal to be rendered in a modal window.
+
+   ![Load Help](screenshots/loadhelp.jpg)
+
+   A further event listener when triggered by clicking on the close icon in the help modal
+
+   ![Close Help](screenshots/closeHelp.jpg) 
+
+      causes the help modal to close by disabling the div.
+
+6. The remaining event listeners have been included to provide the user with a positive response when hovering over a button. Please refer to credits ref.1 for acknowledgements regarding the source of this feature.  
+
+   ![Other Event Listeners](screenshots/Otherlisteners.jpg)
+ 
 ### 6.3 Javascript Functions and their Purpose
 
-......
+While some of 
 
 ## 7.0 Testing
 
@@ -247,10 +418,17 @@ All data required to render the timeline plot and the probability ploy is source
 
 ### 9.0 Acknowledgements
 
-......
+1. This line of code makes use of the idea presented here: [CSS Lighten an element on hover](https://stackoverflow.com/questions/16178382/css-lighten-an-element-on-hover), but then augments it with the use of a JQuery event listener. My challenge here was to write a single line of code that would lighten a button's background when hovered over without reference to the actual background colour.
+
+2. Help modal inspiration taken from https://www.w3schools.com/howto/howto_css_modals.asp -->
+
+3. // Credit: this function was inspired by the code examples provided at: https://developers.google.com/chart/interactive/docs/gallery/timeline
+
 
 ## Annex 1. Triangular Probability Distribution
 
 Although the equations for generating a triangularly distributed are generally available, no examples of coding in JavaScript are available, and since this is key to the operation of the web page, it was worthy of further investigation.
+
+
 
 ......
