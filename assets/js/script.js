@@ -10,7 +10,7 @@ $(document).ready(function () {
   enhelp();                 // Enables Help button
   google.charts.load('current', { 'packages': ['corechart'] });   //Load Google charting package
   google.charts.load("current", { "packages": ["timeline"] });    //Load Google charting package
-})
+});
 function initNonWorkingDays() {
   //Initialises the Non Project Day buttons. Mon - Fri set to inactive. Sat & Sun set to active, non working days
 
@@ -52,7 +52,7 @@ function enSimulationRuns() {
 function disStart() {
   //Disables the Start button
 
-  $("#simulationStart").css("background-color", "rgb(211, 211, 211)").attr("disabled", true)
+  $("#simulationStart").css("background-color", "rgb(211, 211, 211)").attr("disabled", true);
 }
 
 function enStart() {
@@ -64,13 +64,13 @@ function enStart() {
 function enReset() {
   //Initialises the Reset button
 
-  $("#restartPage").css("background-color", "rgb(0, 128, 0)")
+  $("#restartPage").css("background-color", "rgb(0, 128, 0)");
 }
 
 function enhelp() {
   //Initialises the Help button
 
-  $("#getHelp").css("background-color", "rgb(0, 128, 0)")
+  $("#getHelp").css("background-color", "rgb(0, 128, 0)");
 }
 
 function setNonWorkingDays() {
@@ -127,9 +127,8 @@ function taskUpdate() {
   for (var currentRow = startDay; currentRow < tableRef.rows.length; currentRow++) {
 
     if (currentRow > startDay) {    //only do if more than one task has been entered
-      // update the row start date from previous worst case date
-      loadNextStartDate(currentRow);
-      //tableRef.rows[currentRow].cells[2].innerHTML = tableRef.rows[currentRow - 1].cells[8].innerHTML
+      
+      loadNextStartDate(currentRow);  // update the row start date from previous worst case date
     }
 
     let bcDuration = parseInt(tableRef.rows[currentRow].cells[3].children[0].value);
@@ -234,7 +233,7 @@ function revDateStr(Sdate) {
   let sYear = Sdate.slice(6, 10);
   let sMonth = Sdate.slice(3, 5);
   let sDay = Sdate.slice(0, 2);
-  return Sdate = sYear.concat("-", sMonth, "-", sDay);
+  return sYear.concat("-", sMonth, "-", sDay);
 }
 
 function calcWorkingDays(fromDate, days) {
@@ -299,7 +298,7 @@ function addTableRow() {
   newTaskRow.insertCell(1).innerHTML = '<input type="text" class="taskDescriptionBox taskDes" />';
   newTaskRow.insertCell(2).classList.add("sDate");
   newTaskRow.insertCell(3).innerHTML = '<input type= "number" min="1" class="bctaskDurationBox bCase"/>';
-  newTaskRow.insertCell(4).innerHTML = '<input type= "number" min="1" class="mltaskDurationBox mlCase"/>'
+  newTaskRow.insertCell(4).innerHTML = '<input type= "number" min="1" class="mltaskDurationBox mlCase"/>';
   newTaskRow.insertCell(5).innerHTML = '<input type= "number" min="1" class="wctaskDurationBox wCase"/>';
   newTaskRow.insertCell(6).classList.add("bctaskDate");
   newTaskRow.insertCell(7).classList.add("mltaskDate");
@@ -312,7 +311,8 @@ function runSimulation() {
   var tableRef = document.getElementById("taskEntryTable");
   var simRunsArray = [];
   var runDuration = 0;  // initialise the sum of random variates for each simulation run
-
+  let simRuns ;
+  
   // get the number of simulation runs from the DOM 
   if ($("#oneT").data("clicked")) { 
     simRuns = 1000; 
@@ -360,9 +360,9 @@ function monteCarlo() {
   disNonWorkingDays(); // disable non working days buttons
 
   if (checkAllData()) {     //If no task table errors plot data
-    var dataPoints = 20;  //number of data points for plotting probability chart
+    const dataPoints = 20;  //number of data points for plotting probability chart
     
-    document.getElementById("plotPanel").style.display = "block"; //display HTML div for plotting charts
+     $("#plotPanel").css("display","block");        //display HTML div for plotting charts
     google.charts.setOnLoadCallback(drawTimeLine); //plot timeline on call back
     let simRunsArray = runSimulation(); //run core simulation
     let results = resultProc(simRunsArray, dataPoints); // process simulation runs into frequency buckets and determine project durations 
@@ -382,7 +382,7 @@ function monteCarlo() {
 function addProjectDates(resultsArray, dataPoints) {
   //uses the calcWorkingDays function to determine the probable project dates and stores these in resultsArray (array of objects class Results) 
 
-  for (i = 0; i < dataPoints; i++) {
+  for (let i = 0; i < dataPoints; i++) {
     let tableRef = document.getElementById("taskEntryTable");
     let startDate = new Date(tableRef.rows[2].cells[2].children[0].value);
     let finishDate = calcWorkingDays(startDate, resultsArray[i].projectDays);
@@ -402,7 +402,7 @@ function resultProc(numbers, dataSamples) {
       this.projectDays = projectDays;
       this.projectDate = projectDate;
     }
-  };
+  }
 
   var fCount = 0;
   var popSize = numbers.length;
@@ -438,7 +438,7 @@ function drawProbabilityChart(resultsArray, dataPoints) {
 
   //construct data array for plotting in the scatter plot
   var dataArray = [['Date', '% Probability']];
-  for (i = 0; i < dataPoints; i++) {
+  for (let i = 0; i < dataPoints; i++) {
     dataArray.push([resultsArray[i].projectDate , resultsArray[i].percentage * 100]);
   }
   var data = google.visualization.arrayToDataTable(dataArray);
@@ -506,8 +506,8 @@ function drawTimeLine() {
   var options = {
     timeline: { groupByRowLabel: true }, // set up option to display best case, most likely case and worst case timelines on one bar
     colors: ["#90ee90", "#ffa500", "#ff4500"],
-    timeline: { colorByRowLabel: false },
-  }
+    //timeline: { colorByRowLabel: false },
+  };
   chart.draw(plotTable, options);
 
   // Credit: see ref:3 in the README.MD
@@ -520,9 +520,9 @@ function randomVariat(bestCase, mostLikelyCase, worstCase) {
 
   let sample = Math.random();
   if (sample <= ((mostLikelyCase - bestCase) / (worstCase - bestCase))) {
-    return math.round(bestCase + Math.sqrt((worstCase - bestCase) * (mostLikelyCase - bestCase) * sample));
+    return Math.round(bestCase + Math.sqrt((worstCase - bestCase) * (mostLikelyCase - bestCase) * sample));
   } else if (sample > ((mostLikelyCase - bestCase) / (worstCase - bestCase))) {
-    return math.round(worstCase - Math.sqrt((worstCase - bestCase) * (worstCase - mostLikelyCase) * (1 - sample)));
+    return Math.round(worstCase - Math.sqrt((worstCase - bestCase) * (worstCase - mostLikelyCase) * (1 - sample)));
   } else {
     errorHandler(1); //Catastrophic error!
   }
@@ -586,13 +586,14 @@ function helpClose() {
 
 // Event listeners 
 
-$("#taskEntryTable").change(function () { taskUpdate(); });                                              //Sets up event listener for changes to the task table//document.getElementById("simulationStart").addEventListener("click", monteCarlo);                  
+$("#taskEntryTable").change(function () { taskUpdate(); });                  
 $("#simulationStart").click(function () { monteCarlo(); });                                               //Sets up event listener for Start button
 $("#restartPage").click(function () { reLoad(); });                                                      //Set up event listener for Restart button
 $("#getHelp").click(function () { loadHelp(); });                                                        //Set up event listener for Help button
 $("#closeHelp").click(function () { hideHelp(); });                                                       //Sets up event listener to close help modal
 $("#closeAlert").click(function () { hideAlert(); });                                                    //Sets up event listener to close alert modal
 $("#closeHelp").mouseover(function () { helpClose(); });
+
 $("#monDay").hover(function(){ $("#monDay").css("filter", "brightness(115%)");},function(){$("#monDay").css("filter", "brightness(100%)"); });     //Refer to acknowledgement ref. 1 in Readme.md 
 $("#tuesDay").hover(function(){ $("#tuesDay").css("filter", "brightness(115%)");},function(){$("#tuesDay").css("filter", "brightness(100%)"); });  //Refer to acknowledgement ref. 1 in Readme.md 
 $("#wednesDay").hover(function(){ $("#wednesDay").css("filter", "brightness(115%)");},function(){$("#wednesDay").css("filter", "brightness(100%)"); });   //Refer to acknowledgement ref. 1 in Readme.md 
