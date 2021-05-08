@@ -1,16 +1,18 @@
 $(document).ready(function () {
   //Function called when the document has loaded
 
-  initNonWorkingDays();     //initialise non working days buttons
-  initSimulationRuns();     //initialise simulation runs buttons
-  setNonWorkingDays();      // called when non working day button clicked 
-  setSimulationRuns();      //called when simulation runs button clicked
-  disStart();               // disable simuation start button
-  enReset();                // enable reset button
-  enhelp();                 // Enables Help button
+  initNonWorkingDays();                                            //initialise non working days buttons
+  initSimulationRuns();                                            //initialise simulation runs buttons
+  setNonWorkingDays();                                             // called when non working day button clicked 
+  setSimulationRuns();                                             //called when simulation runs button clicked
+  disStart();                                                      // disable simuation start button
+  enReset();                                                       // enable reset button
+  enhelp();                                                        // Enables Help button
   google.charts.load('current', { 'packages': ['corechart'] });   //Load Google charting package
   google.charts.load("current", { "packages": ["timeline"] });    //Load Google charting package
 });
+
+
 function initNonWorkingDays() {
   //Initialises the Non Project Day buttons. Mon - Fri set to inactive. Sat & Sun set to active, non working days
 
@@ -118,60 +120,75 @@ function setSimulationRuns() {
 }
 
 function taskUpdate() {
-//Event handler called whenever there is a change to the task table
+  //Event handler called whenever there is a change to the task table
 
   var tableRef = document.getElementById("taskEntryTable");
-  const startDay = 2;
+  const startDay = 2;                                                                        //Aid code readability
+  const bcDurCol = 3;
+  const mlDurCol = 4;
+  const wcDurCol = 5;
+  const bcDateCol = 6;
+  const mlDateCol = 7;
+  const wcDateCol = 8;
 
-  //start at currentRow = 2 because the first two rows of the HTML task table have no task data
-  for (var currentRow = startDay; currentRow < tableRef.rows.length; currentRow++) {
 
-    if (currentRow > startDay) {    //only do if more than one task has been entered
-      
-      loadNextStartDate(currentRow);  // update the row start date from previous worst case date
+  for (var currentRow = startDay; currentRow < tableRef.rows.length; currentRow++) {          //start at currentRow = 2 because the first two rows of the HTML task table have no task data
+
+    if (currentRow > startDay) {                                                              //only do if more than one task has been entered
+
+      loadNextStartDate(currentRow);                                                          // update the row start date from previous worst case date
     }
 
-    let bcDuration = parseInt(tableRef.rows[currentRow].cells[3].children[0].value);
-    if (bcDuration >= 1) {                                          //Test duration value entered in task table
-      let startDateN = getStartDate(currentRow);
-      let bcDate = calcWorkingDays(startDateN, bcDuration).toLocaleDateString();
-      tableRef.rows[currentRow].cells[6].innerText = bcDate;
+    let bcDuration = parseInt(tableRef.rows[currentRow].cells[bcDurCol].children[0].value);
+    if (bcDuration >= 1) {                                                                    //Test best case duration value entered in task table
+      let bcDate = calcWorkingDays(getStartDate(currentRow), bcDuration).toLocaleDateString("en-GB");
+      if (bcDate != "Invalid Date") {
+        tableRef.rows[currentRow].cells[bcDateCol].innerText = bcDate;                        //Enter best case date into table
+      } else {
+        tableRef.rows[currentRow].cells[bcDateCol].innerText = "No start date";               //Display error message
+      }
     } else {
-      tableRef.rows[currentRow].cells[6].innerHTML = "";             //Test failed clear best case date
+      tableRef.rows[currentRow].cells[bcDateCol].innerText = "";                              //No duration value entered yet so make best case date ""
     }
-    let mlDuration = parseInt(tableRef.rows[currentRow].cells[4].children[0].value);
-    if (mlDuration >= 1) {
-      let startDateN = getStartDate(currentRow);
-      let mlDate = calcWorkingDays(startDateN, mlDuration).toLocaleDateString();
-      tableRef.rows[currentRow].cells[7].innerHTML = mlDate;
+    let mlDuration = parseInt(tableRef.rows[currentRow].cells[mlDurCol].children[0].value);
+    if (mlDuration >= 1) {                                                                    //Test most likely case duration value entered in task table
+      let mlDate = calcWorkingDays(getStartDate(currentRow), mlDuration).toLocaleDateString("en-GB");
+      if (mlDate != "Invalid Date") {
+        tableRef.rows[currentRow].cells[mlDateCol].innerText = mlDate;
+      } else {
+        tableRef.rows[currentRow].cells[mlDateCol].innerText = "No start date";                //Test failed clear most likely case date
+      }
     } else {
-      tableRef.rows[currentRow].cells[7].innerHTML = "";            //Test failed clear most likely case date
+      tableRef.rows[currentRow].cells[mlDateCol].innerText = "";                               //No duration value entered yet so make best case date ""
+    }
+    let wcDuration = parseInt(tableRef.rows[currentRow].cells[wcDurCol].children[0].value);
+    if (wcDuration >= 1) {                                                                     //Test worst case duration value entered in task table 
+      let wcDate = calcWorkingDays(getStartDate(currentRow), wcDuration).toLocaleDateString("en-GB");
+      if (wcDate != "Invalid Date") {                                                          //Test worst case duration value entered in task table
+        tableRef.rows[currentRow].cells[wcDateCol].innerText = wcDate;
+      } else {
+        tableRef.rows[currentRow].cells[wcDateCol].innerText = "No start date";                        //Test failed clear worst case date
+      }
+    } else {
+      tableRef.rows[currentRow].cells[wcDateCol].innerText = "";                                       //No duration value entered yet so make worst case date ""
     }
 
-    let wcDuration = parseInt(tableRef.rows[currentRow].cells[5].children[0].value);
-    if (wcDuration >= 1) {
-      let startDateN = getStartDate(currentRow);
-      let wcDate = calcWorkingDays(startDateN, wcDuration).toLocaleDateString();
-      tableRef.rows[currentRow].cells[8].innerHTML = wcDate;
-    } else {
-      tableRef.rows[currentRow].cells[8].innerHTML = "";            //Test failed clear worst case date
-    }
   }
-  if ((tableRef.rows[tableRef.rows.length - 1].cells[8].innerText != "") && (errorCheckRow(currentRow - 1))) { //check that a worst case date has been calculated and that there are no errors in the task entry 
-    addTableRow();                      // Add a new task table row
-    loadNextStartDate(tableRef.rows.length - 1);                // Load a start date into the new task table row from worst case date of previous task row
-    enStart();                          //Enable the simualtion start button
+  if ((tableRef.rows[tableRef.rows.length - 1].cells[wcDateCol].innerText != "") && (errorCheckRow(currentRow - 1))) { //check that a worst case date has been calculated and that there are no errors in the task entry 
+    addTableRow();                                                                             // Add a new task table row
+    loadNextStartDate(tableRef.rows.length - 1);                                               // Load a start date into the new task table row from worst case date of previous task row
+    enStart();                                                                                 //Enable the simualtion start button
 
   }
 }
 
-function loadNextStartDate(currentRow){
+function loadNextStartDate(currentRow) {
   //Determines the next working day omitting the non working days selected by the user
 
   let tableRef = document.getElementById("taskEntryTable");
-  let lastwc = new Date(revDateStr(tableRef.rows[currentRow - 1].cells[8].innerHTML));  //Get the worst case date from the task table reverse the sting and convert to date object
-  tableRef.rows[currentRow].cells[2].innerHTML = calcWorkingDays(lastwc, 1).toLocaleDateString();  // Add one working day to the worst case date and convert back to a string
-    
+  let lastwc = new Date(revDateStr(tableRef.rows[currentRow - 1].cells[8].innerText));          //Get the worst case date from the task table reverse the sting and convert to date object
+  tableRef.rows[currentRow].cells[2].innerText = calcWorkingDays(lastwc, 1).toLocaleDateString("en-GB");  // Add one working day to the worst case date and convert back to a string
+
 }
 
 
@@ -210,7 +227,7 @@ function checkAllData() {
   let tableRef = document.getElementById("taskEntryTable");
   let curRow = 2;  // task entry table starts on row 2
 
-  while ((curRow < tableRef.rows.length-1) && (errorCheckRow(curRow)== true)) {
+  while ((curRow < tableRef.rows.length - 1) && (errorCheckRow(curRow) == true)) {
     curRow++;
   }
   return errorCheckRow(curRow - 1); // -1 as curRow has been incremented in while loop
@@ -219,7 +236,7 @@ function checkAllData() {
 function getStartDate(rowNumber) {
   // start date in first row of task table is input box, subsequent rows are just table cells so reference differently
 
-  var tableRef = document.getElementById("taskEntryTable");
+  let tableRef = document.getElementById("taskEntryTable");
   if (rowNumber === 2) {
     return new Date(tableRef.rows[rowNumber].cells[2].children[0].value);
   } else if (rowNumber > 2) {
@@ -247,42 +264,43 @@ function calcWorkingDays(fromDate, days) {
 
   //Check each non project day button and push a numeric to array nonWorkingDays
   if ($("#monDay").data("clicked")) {
-    nonWorkingDays.push("1"); 
+    nonWorkingDays.push("1");
   }
-  if ($("#tuesDay").data("clicked")) { 
-    nonWorkingDays.push("2"); 
+  if ($("#tuesDay").data("clicked")) {
+    nonWorkingDays.push("2");
   }
   if ($("#wednesDay").data("clicked")) {
-    nonWorkingDays.push("3"); 
+    nonWorkingDays.push("3");
   }
-  if ($("#thursDay").data("clicked")) { 
-    nonWorkingDays.push("4"); 
+  if ($("#thursDay").data("clicked")) {
+    nonWorkingDays.push("4");
   }
   if ($("#friDay").data("clicked")) {
-     nonWorkingDays.push("5"); 
-    }
+    nonWorkingDays.push("5");
+  }
   if ($("#saturDay").data("clicked")) {
-     nonWorkingDays.push("6"); 
-    }
+    nonWorkingDays.push("6");
+  }
   if ($("#sunDay").data("clicked")) {
-     nonWorkingDays.push("0"); 
-    }
-  
+    nonWorkingDays.push("0");
+  }
+
   // Error check. Checks the condition where the user has selected every day of the week as a Non Project Day  
   if (nonWorkingDays.includes("0") && nonWorkingDays.includes("1") && nonWorkingDays.includes("2") && nonWorkingDays.includes("3") &&
-    nonWorkingDays.includes("4") && nonWorkingDays.includes("5") && nonWorkingDays.includes("6")) { //Detect error condition where all days of the selected as non working
-    errorHandler(3);                                                                                //Would result in a catestrophic failure 
-    nonWorkingDays = ["0", "2", "3", "4", "5", "6"];    //Make Monday a working day
-    $("#monDay").removeAttr("disabled").css("background-color", "rgb(0, 128, 0)").data('clicked', true);                //Re-enable Monday as working day  
+    nonWorkingDays.includes("4") && nonWorkingDays.includes("5") && nonWorkingDays.includes("6")) {                  //Detect error condition where all days of the selected as non working
+    errorHandler(3);                                                                                                 //Would result in a catestrophic failure 
+    nonWorkingDays = ["0", "2", "3", "4", "5", "6"];                                                                 //Make Monday a working day
+    $("#monDay").removeAttr("disabled").css("background-color", "rgb(0, 128, 0)").data('clicked', true);             //Re-enable Monday as working day  
   }
   
   //Determines the project date
-  while (workingDay < days) {                    //Loop through the task duation days
-    fromDate.setDate(fromDate.getDate() + 1);    //Get the day of the week for the next day  
-    if (!(nonWorkingDays.includes(fromDate.getDay().toString()))) {   // If day of the week is not a non working day then continue through the loop 
+  while (workingDay < days) {                                                                                        //Loop through the task duation days
+    fromDate.setDate(fromDate.getDate() + 1);                                                                        //Get the day of the week for the next day  
+    if (!(nonWorkingDays.includes(fromDate.getDay().toString()))) {                                                // If day of the week is not a non working day then continue through the loop     
       workingDay++;
     }
   }
+
   return fromDate;
 }
 
@@ -308,41 +326,40 @@ function addTableRow() {
 function runSimulation() {
   //Runs the Monte Carlo simulation in response to the start button clicked
 
-  var tableRef = document.getElementById("taskEntryTable");
-  var simRunsArray = [];
-  var runDuration = 0;  // initialise the sum of random variates for each simulation run
-  let simRuns ;
-  
-  // get the number of simulation runs from the DOM 
-  if ($("#oneT").data("clicked")) { 
-    simRuns = 1000; 
+  let tableRef = document.getElementById("taskEntryTable");
+  let simRunsArray = [];
+  let runDuration = 0;                                                    // initialise the sum of random variates for each simulation run
+  let simRuns;
+  const bcDurCol = 3;                                                      //Aid code readability
+  const mlDurCol = 4;
+  const wcDurCol = 5;
+
+  if ($("#oneT").data("clicked")) {                                       // get the number of simulation runs from the DOM 
+    simRuns = 1000;
   }
-  if ($("#twoT").data("clicked")) { 
-    simRuns = 2000; 
+  if ($("#twoT").data("clicked")) {
+    simRuns = 2000;
   }
   if ($("#threeT").data("clicked")) {
-     simRuns = 5000; 
-    }
+    simRuns = 5000;
+  }
   if ($("#fourT").data("clicked")) {
-     simRuns = 7000; 
-    }
+    simRuns = 7000;
+  }
   if ($("#fiveT").data("clicked")) {
-     simRuns = 10000; 
-    }
-
-  // last HTML task entry table row is always blank
-  let dataTableEnd = tableRef.rows.length - 1;
+    simRuns = 10000;
+  }                                                                      // No else required here
+  let dataTableEnd = tableRef.rows.length - 1;                           // last HTML task entry table row is always blank
   for (let i = 0; i < simRuns; i++) {
     for (let j = 2; j < dataTableEnd; j++) {
-      let bestCaseDuration = parseInt(tableRef.rows[j].cells[3].children[0].value);
-      let mostLikelyCaseDuration = parseInt(tableRef.rows[j].cells[4].children[0].value);
-      let worstCaseDuration = parseInt(tableRef.rows[j].cells[5].children[0].value);
-      // cumulative addition of task random variats is ok because all tasks have a finish to start date relationship
-      let variat = randomVariat(bestCaseDuration, mostLikelyCaseDuration, worstCaseDuration);
-      runDuration = runDuration + variat;
+      let bestCaseDuration = parseInt(tableRef.rows[j].cells[bcDurCol].children[0].value);
+      let mostLikelyCaseDuration = parseInt(tableRef.rows[j].cells[mlDurCol].children[0].value);
+      let worstCaseDuration = parseInt(tableRef.rows[j].cells[wcDurCol].children[0].value);
+      let variat = randomVariat(bestCaseDuration, mostLikelyCaseDuration, worstCaseDuration);  //Get random variat between best case and worst case duration
+      runDuration = runDuration + variat;                              // addition of task random variats is ok as all tasks are finish to start
     }
     simRunsArray[i] = runDuration;
-    runDuration = 0; //reset the sum of random variates after each run
+    runDuration = 0;                                                  //reset the sum of random variates after each run
   }
   return simRunsArray;
 }
@@ -361,15 +378,15 @@ function monteCarlo() {
 
   if (checkAllData()) {     //If no task table errors plot data
     const dataPoints = 20;  //number of data points for plotting probability chart
-    
-     $("#plotPanel").css("display","block");        //display HTML div for plotting charts
+
+    $("#plotPanel").css("display", "block");        //display HTML div for plotting charts
     google.charts.setOnLoadCallback(drawTimeLine); //plot timeline on call back
     let simRunsArray = runSimulation(); //run core simulation
     let results = resultProc(simRunsArray, dataPoints); // process simulation runs into frequency buckets and determine project durations 
     let resultsProj = addProjectDates(results, dataPoints); // assign dates to project duration dates 
     google.charts.setOnLoadCallback(drawProbabilityChart(resultsProj, dataPoints)); //plot probability chart
-    
-  } else {             
+
+  } else {
     errorHandler(6); // Do not plot data report error
   }
   enStart();  //Enable start button
@@ -395,15 +412,13 @@ function resultProc(numbers, dataSamples) {
   //This function inputs the Monte Carlo simulation results and processes the results into percentage frequency bins.
   //the output is stored in the form of a array of objects of class Results
   class Results {
-    constructor(percentage, yAxis, freqCount, projectDays, projectDate) {
+    constructor(percentage, freqCount, projectDays, projectDate) {
       this.percentage = percentage;
-      this.yAxis = yAxis;
       this.freqCount = freqCount;
       this.projectDays = projectDays;
       this.projectDate = projectDate;
     }
   }
-
   var fCount = 0;
   var popSize = numbers.length;
   var histoArray = [];
@@ -439,14 +454,14 @@ function drawProbabilityChart(resultsArray, dataPoints) {
   //construct data array for plotting in the scatter plot
   var dataArray = [['Date', '% Probability']];
   for (let i = 0; i < dataPoints; i++) {
-    dataArray.push([resultsArray[i].projectDate , resultsArray[i].percentage * 100]);
+    dataArray.push([resultsArray[i].projectDate, resultsArray[i].percentage * 100]);
   }
   var data = google.visualization.arrayToDataTable(dataArray);
 
   //add plot options
   var options = {
     // title: "",
-    hAxis: { title: 'Date', minValue: resultsArray[0].projectDate, maxValue: resultsArray[dataPoints-1].projectDate },
+    hAxis: { title: 'Date', minValue: resultsArray[0].projectDate, maxValue: resultsArray[dataPoints - 1].projectDate },
     vAxis: { title: '% Probability', minValue: 0, maxValue: 100 },
     legend: 'none'
   };
@@ -531,7 +546,7 @@ function randomVariat(bestCase, mostLikelyCase, worstCase) {
 function errorHandler(errorCode) {
   //displays an alert to the user when a date input or other error is detected
 
-  $("#alertBox").css("display","block"); //bring up the alert modal
+  $("#alertBox").css("display", "block"); //bring up the alert modal
   switch (errorCode) { //display the alert message
     case 0:
       $("#alertMess").text('No start date entered: error code 0');
@@ -557,36 +572,36 @@ function errorHandler(errorCode) {
     default:
       $("#alertMess").text('Unkown error code');
   }
-  $("#disAlert").click(function () { hideAlert();});
+  $("#disAlert").click(function () { hideAlert(); });
 }
 
 function hideAlert() {
   //Clears the alert modal window
 
-  $("#alertBox").css("display","none");
+  $("#alertBox").css("display", "none");
 }
 
 function loadHelp() {
   //Displays the help modal window
 
-  $("#myModal").css("display","block");
+  $("#myModal").css("display", "block");
 }
 
 function hideHelp() {
   //Clears the help modal window
 
-  $("#myModal").css("display","none");
+  $("#myModal").css("display", "none");
 }
 
 function helpClose() {
 
-  $(".closeX").css("color","rgb(200, 200, 200)");
+  $(".closeX").css("color", "rgb(200, 200, 200)");
 }
 
 
 // Event listeners 
 
-$("#taskEntryTable").change(function () { taskUpdate(); });                  
+$("#taskEntryTable").change(function () { taskUpdate(); });
 $("#simulationStart").click(function () { monteCarlo(); });                                               //Sets up event listener for Start button
 $("#restartPage").click(function () { reLoad(); });                                                      //Set up event listener for Restart button
 $("#getHelp").click(function () { loadHelp(); });                                                        //Set up event listener for Help button
@@ -594,18 +609,19 @@ $("#closeHelp").click(function () { hideHelp(); });                             
 $("#closeAlert").click(function () { hideAlert(); });                                                    //Sets up event listener to close alert modal
 $("#closeHelp").mouseover(function () { helpClose(); });
 
-$("#monDay").hover(function(){ $("#monDay").css("filter", "brightness(115%)");},function(){$("#monDay").css("filter", "brightness(100%)"); });     //Refer to acknowledgement ref. 1 in Readme.md 
-$("#tuesDay").hover(function(){ $("#tuesDay").css("filter", "brightness(115%)");},function(){$("#tuesDay").css("filter", "brightness(100%)"); });  //Refer to acknowledgement ref. 1 in Readme.md 
-$("#wednesDay").hover(function(){ $("#wednesDay").css("filter", "brightness(115%)");},function(){$("#wednesDay").css("filter", "brightness(100%)"); });   //Refer to acknowledgement ref. 1 in Readme.md 
-$("#thursDay").hover(function(){ $("#thursDay").css("filter", "brightness(115%)");},function(){$("#thursDay").css("filter", "brightness(100%)"); });      //Refer to acknowledgement ref. 1 in Readme.md 
-$("#friDay").hover(function(){ $("#friDay").css("filter", "brightness(115%)");},function(){$("#friDay").css("filter", "brightness(100%)"); });            //Refer to acknowledgement ref. 1 in Readme.md 
-$("#saturDay").hover(function(){ $("#saturDay").css("filter", "brightness(115%)");},function(){$("#saturDay").css("filter", "brightness(100%)"); });      //Refer to acknowledgement ref. 1 in Readme.md 
-$("#sunDay").hover(function(){ $("#sunDay").css("filter", "brightness(115%)");},function(){$("#sunDay").css("filter", "brightness(100%)"); });            //Refer to acknowledgement ref. 1 in Readme.md 
-$("#oneT").hover(function(){ $("#oneT").css("filter", "brightness(115%)");},function(){$("#oneT").css("filter", "brightness(100%)"); });                  //Refer to acknowledgement ref. 1 in Readme.md 
-$("#twoT").hover(function(){ $("#twoT").css("filter", "brightness(115%)");},function(){$("#twoT").css("filter", "brightness(100%)"); });                  //Refer to acknowledgement ref. 1 in Readme.md 
-$("#threeT").hover(function(){ $("#threeT").css("filter", "brightness(115%)");},function(){$("#threeT").css("filter", "brightness(100%)"); });            //Refer to acknowledgement ref. 1 in Readme.md 
-$("#fourT").hover(function(){ $("#fourT").css("filter", "brightness(115%)");},function(){$("#fourT").css("filter", "brightness(100%)"); });               //Refer to acknowledgement ref. 1 in Readme.md 
-$("#fiveT").hover(function(){ $("#fiveT").css("filter", "brightness(115%)");},function(){$("#fiveT").css("filter", "brightness(100%)"); });               //Refer to acknowledgement ref. 1 in Readme.md 
-$("#getHelp").hover(function(){ $("#getHelp").css("filter", "brightness(115%)");},function(){$("#getHelp").css("filter", "brightness(100%)"); });         //Refer to acknowledgement ref. 1 in Readme.md 
-$("#simulationStart").hover(function(){ $("#simulationStart").css("filter", "brightness(115%)");},function(){$("#simulationStart").css("filter", "brightness(100%)"); });         //Refer to acknowledgement ref. 1 in Readme.md 
-$("#restartPage").hover(function(){ $("#restartPage").css("filter", "brightness(115%)");},function(){$("#restartPage").css("filter", "brightness(100%)"); });                     //Refer to acknowledgement ref. 1 in Readme.md 
+$("#monDay").hover(function () { $("#monDay").css("filter", "brightness(115%)"); }, function () { $("#monDay").css("filter", "brightness(100%)"); });     //Refer to acknowledgement ref. 1 in Readme.md 
+$("#tuesDay").hover(function () { $("#tuesDay").css("filter", "brightness(115%)"); }, function () { $("#tuesDay").css("filter", "brightness(100%)"); });  //Refer to acknowledgement ref. 1 in Readme.md 
+$("#wednesDay").hover(function () { $("#wednesDay").css("filter", "brightness(115%)"); }, function () { $("#wednesDay").css("filter", "brightness(100%)"); });   //Refer to acknowledgement ref. 1 in Readme.md 
+$("#thursDay").hover(function () { $("#thursDay").css("filter", "brightness(115%)"); }, function () { $("#thursDay").css("filter", "brightness(100%)"); });      //Refer to acknowledgement ref. 1 in Readme.md 
+$("#friDay").hover(function () { $("#friDay").css("filter", "brightness(115%)"); }, function () { $("#friDay").css("filter", "brightness(100%)"); });            //Refer to acknowledgement ref. 1 in Readme.md 
+$("#saturDay").hover(function () { $("#saturDay").css("filter", "brightness(115%)"); }, function () { $("#saturDay").css("filter", "brightness(100%)"); });      //Refer to acknowledgement ref. 1 in Readme.md 
+$("#sunDay").hover(function () { $("#sunDay").css("filter", "brightness(115%)"); }, function () { $("#sunDay").css("filter", "brightness(100%)"); });            //Refer to acknowledgement ref. 1 in Readme.md 
+$("#oneT").hover(function () { $("#oneT").css("filter", "brightness(115%)"); }, function () { $("#oneT").css("filter", "brightness(100%)"); });                  //Refer to acknowledgement ref. 1 in Readme.md 
+$("#twoT").hover(function () { $("#twoT").css("filter", "brightness(115%)"); }, function () { $("#twoT").css("filter", "brightness(100%)"); });                  //Refer to acknowledgement ref. 1 in Readme.md 
+$("#threeT").hover(function () { $("#threeT").css("filter", "brightness(115%)"); }, function () { $("#threeT").css("filter", "brightness(100%)"); });            //Refer to acknowledgement ref. 1 in Readme.md 
+$("#fourT").hover(function () { $("#fourT").css("filter", "brightness(115%)"); }, function () { $("#fourT").css("filter", "brightness(100%)"); });               //Refer to acknowledgement ref. 1 in Readme.md 
+$("#fiveT").hover(function () { $("#fiveT").css("filter", "brightness(115%)"); }, function () { $("#fiveT").css("filter", "brightness(100%)"); });               //Refer to acknowledgement ref. 1 in Readme.md 
+$("#getHelp").hover(function () { $("#getHelp").css("filter", "brightness(115%)"); }, function () { $("#getHelp").css("filter", "brightness(100%)"); });         //Refer to acknowledgement ref. 1 in Readme.md 
+$("#simulationStart").hover(function () { $("#simulationStart").css("filter", "brightness(115%)"); }, function () { $("#simulationStart").css("filter", "brightness(100%)"); });         //Refer to acknowledgement ref. 1 in Readme.md 
+$("#restartPage").hover(function () { $("#restartPage").css("filter", "brightness(115%)"); }, function () { $("#restartPage").css("filter", "brightness(100%)"); });                     //Refer to acknowledgement ref. 1 in Readme.md
+
