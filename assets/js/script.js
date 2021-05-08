@@ -292,7 +292,7 @@ function calcWorkingDays(fromDate, days) {
     nonWorkingDays = ["0", "2", "3", "4", "5", "6"];                                                                 //Make Monday a working day
     $("#monDay").removeAttr("disabled").css("background-color", "rgb(0, 128, 0)").data('clicked', true);             //Re-enable Monday as working day  
   }
-  
+
   //Determines the project date
   while (workingDay < days) {                                                                                        //Loop through the task duation days
     fromDate.setDate(fromDate.getDate() + 1);                                                                        //Get the day of the week for the next day  
@@ -609,19 +609,8 @@ $("#closeHelp").click(function () { hideHelp(); });                             
 $("#closeAlert").click(function () { hideAlert(); });                                                    //Sets up event listener to close alert modal
 $("#closeHelp").mouseover(function () { helpClose(); });
 
-$("#monDay").hover(function () { $("#monDay").css("filter", "brightness(115%)"); }, function () { $("#monDay").css("filter", "brightness(100%)"); });     //Refer to acknowledgement ref. 1 in Readme.md 
-$("#tuesDay").hover(function () { $("#tuesDay").css("filter", "brightness(115%)"); }, function () { $("#tuesDay").css("filter", "brightness(100%)"); });  //Refer to acknowledgement ref. 1 in Readme.md 
-$("#wednesDay").hover(function () { $("#wednesDay").css("filter", "brightness(115%)"); }, function () { $("#wednesDay").css("filter", "brightness(100%)"); });   //Refer to acknowledgement ref. 1 in Readme.md 
-$("#thursDay").hover(function () { $("#thursDay").css("filter", "brightness(115%)"); }, function () { $("#thursDay").css("filter", "brightness(100%)"); });      //Refer to acknowledgement ref. 1 in Readme.md 
-$("#friDay").hover(function () { $("#friDay").css("filter", "brightness(115%)"); }, function () { $("#friDay").css("filter", "brightness(100%)"); });            //Refer to acknowledgement ref. 1 in Readme.md 
-$("#saturDay").hover(function () { $("#saturDay").css("filter", "brightness(115%)"); }, function () { $("#saturDay").css("filter", "brightness(100%)"); });      //Refer to acknowledgement ref. 1 in Readme.md 
-$("#sunDay").hover(function () { $("#sunDay").css("filter", "brightness(115%)"); }, function () { $("#sunDay").css("filter", "brightness(100%)"); });            //Refer to acknowledgement ref. 1 in Readme.md 
-$("#oneT").hover(function () { $("#oneT").css("filter", "brightness(115%)"); }, function () { $("#oneT").css("filter", "brightness(100%)"); });                  //Refer to acknowledgement ref. 1 in Readme.md 
-$("#twoT").hover(function () { $("#twoT").css("filter", "brightness(115%)"); }, function () { $("#twoT").css("filter", "brightness(100%)"); });                  //Refer to acknowledgement ref. 1 in Readme.md 
-$("#threeT").hover(function () { $("#threeT").css("filter", "brightness(115%)"); }, function () { $("#threeT").css("filter", "brightness(100%)"); });            //Refer to acknowledgement ref. 1 in Readme.md 
-$("#fourT").hover(function () { $("#fourT").css("filter", "brightness(115%)"); }, function () { $("#fourT").css("filter", "brightness(100%)"); });               //Refer to acknowledgement ref. 1 in Readme.md 
-$("#fiveT").hover(function () { $("#fiveT").css("filter", "brightness(115%)"); }, function () { $("#fiveT").css("filter", "brightness(100%)"); });               //Refer to acknowledgement ref. 1 in Readme.md 
-$("#getHelp").hover(function () { $("#getHelp").css("filter", "brightness(115%)"); }, function () { $("#getHelp").css("filter", "brightness(100%)"); });         //Refer to acknowledgement ref. 1 in Readme.md 
-$("#simulationStart").hover(function () { $("#simulationStart").css("filter", "brightness(115%)"); }, function () { $("#simulationStart").css("filter", "brightness(100%)"); });         //Refer to acknowledgement ref. 1 in Readme.md 
-$("#restartPage").hover(function () { $("#restartPage").css("filter", "brightness(115%)"); }, function () { $("#restartPage").css("filter", "brightness(100%)"); });                     //Refer to acknowledgement ref. 1 in Readme.md
-
+let buttonsArray = ["#monDay", "#tuesDay", "#wednesDay", "#thursDay", "#friDay", "#saturDay", "#sunDay", "#oneT", "#twoT", "#threeT", "#fourT", "#fiveT", "#getHelp",
+  "#simulationStart", "#restartPage"];
+buttonsArray.forEach(function (elem) {
+  $(elem).hover(function () { $(elem).css("filter", "brightness(115%)"); }, function () { $(elem).css("filter", "brightness(100%)"); });  //Refer to acknowledgement ref. 1 in Readme.md 
+});
