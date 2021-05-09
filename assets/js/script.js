@@ -48,7 +48,7 @@ function disSimulationRuns() {
 function enSimulationRuns() {
   //Enables the Simulation Runs buttons
 
-  $("#oneT,#twoT,#threeT,#fourT,#fiveT").removeAttr("disabled"); //re-enable buttons
+  $("#oneT,#twoT,#threeT,#fourT,#fiveT").removeAttr("disabled");                       //re-enable buttons
 }
 
 function disStart() {
@@ -75,48 +75,40 @@ function enhelp() {
   $("#getHelp").css("background-color", "rgb(0, 128, 0)");
 }
 
-function setNonWorkingDays() {
+function setNonWorkingDays(elem) {
   // Initialises the Non Project Days buttons both with background colour and clicked state
 
-  $("#monDay,#tuesDay,#wednesDay,#thursDay,#friDay,#saturDay,#sunDay").on({
-    click: function () {
-      if ($(this).css("background-color") == "rgb(220, 20, 60)") {
-        $(this).css("background-color", "rgb(0, 128, 0)").data('clicked', false);
-      } else {
-        $(this).css("background-color", "rgb(220, 20, 60)").data('clicked', true);
-      }
-      taskUpdate(); //update the task table with new non working days
-    }
-  });
+  if ($(elem).css("background-color") == "rgb(220, 20, 60)") {                      //if button colour red
+    $(elem).css("background-color", "rgb(0, 128, 0)").data('clicked', false);       //toggle to green and set to non clicked state
+  } else {
+    $(elem).css("background-color", "rgb(220, 20, 60)").data('clicked', true);      //otherwise toggle to red and set to clicked state
+  }
+  taskUpdate();                                                                     //update the task table with new non working days
 }
 
-function setSimulationRuns() {
+function setSimulationRuns(elem) {
   //This function ensures that only one of the Simulations Runs buttons is active Red turing all others to inactive green
+  
+  if (elem == "#oneT") {                                                                                  //if button 1000 green
+    $("#twoT, #threeT, #fourT, #fiveT").css("background-color", "rgb(0, 128, 0)").data("clicked", false); //turn green
+    $("#oneT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
 
-  $("#oneT,#twoT,#threeT,#fourT,#fiveT").on({
-    click: function () {
-      if ($(this).css("background-color") == "rgb(0, 128, 0)") { //if button 1000 green
-        $("#twoT, #threeT, #fourT, #fiveT").css("background-color", "rgb(0, 128, 0)").data("clicked", false); //turn green
-        $("#oneT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
-      }
-      if ($(this).css("background-color") == "rgb(0, 128, 0)") { //if button 2000 green
-        $("#oneT, #threeT, #fourT, #fiveT").css("background-color", "rgb(0, 128, 0)").data("clicked", false); //turn green
-        $("#twoT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
-      }
-      if ($(this).css("background-color") == "rgb(0, 128, 0)") { //if button 3000 green
-        $("#oneT, #twoT, #fourT, #fiveT").css("background-color", "rgb(0, 128, 0)").data("clicked", false); //turn green
-        $("#threeT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
-      }
-      if ($(this).css("background-color") == "rgb(0, 128, 0)") { //if button 4000 green
-        $("#oneT, #twoT, #threeT, #fiveT").css("background-color", "rgb(0, 128, 0)").data("clicked", false); //turn green
-        $("#fourT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
-      }
-      if ($(this).css("background-color") == "rgb(0, 128, 0)") { //if button 5000 green
-        $("#oneT, #twoT, #threeT, #fourT").css("background-color", "rgb(0, 128, 0)").data("clicked", false); //turn green
-        $("#fiveT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
-      }
-    }
-  });
+  } else if (elem == "#twoT") {                                                                           //if button 2000 green
+    $("#oneT, #threeT, #fourT, #fiveT").css("background-color", "rgb(0, 128, 0)").data("clicked", false); //turn green
+    $("#twoT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
+
+  } else if (elem == "#threeT") {                                                                         //if button 3000 green
+    $("#oneT, #twoT, #fourT, #fiveT").css("background-color", "rgb(0, 128, 0)").data("clicked", false);   //turn green
+    $("#threeT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
+
+  } else if (elem == "#fourT") {                                                                          //if button 4000 green
+    $("#oneT, #twoT, #threeT, #fiveT").css("background-color", "rgb(0, 128, 0)").data("clicked", false);  //turn green
+    $("#fourT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
+
+  } else if (elem == "#fiveT") { //if button 5000 green
+    $("#oneT, #twoT, #threeT, #fourT").css("background-color", "rgb(0, 128, 0)").data("clicked", false); //turn green
+    $("#fiveT").css("background-color", "rgb(220, 20, 60)").data("clicked", true); //turn red
+  }
 }
 
 function taskUpdate() {
@@ -167,16 +159,19 @@ function taskUpdate() {
       if (wcDate != "Invalid Date") {                                                          //Test worst case duration value entered in task table
         tableRef.rows[currentRow].cells[wcDateCol].innerText = wcDate;
       } else {
-        tableRef.rows[currentRow].cells[wcDateCol].innerText = "No start date";                        //Test failed clear worst case date
+        tableRef.rows[currentRow].cells[wcDateCol].innerText = "No start date";                 //Test failed clear worst case date
       }
     } else {
-      tableRef.rows[currentRow].cells[wcDateCol].innerText = "";                                       //No duration value entered yet so make worst case date ""
+      tableRef.rows[currentRow].cells[wcDateCol].innerText = "";                                 //No duration value entered yet so make worst case date ""
     }
 
   }
   if ((tableRef.rows[tableRef.rows.length - 1].cells[wcDateCol].innerText != "") && (errorCheckRow(currentRow - 1))) { //check that a worst case date has been calculated and that there are no errors in the task entry 
+    alert("got here 1");
     addTableRow();                                                                             // Add a new task table row
+    alert("got here 2");
     loadNextStartDate(tableRef.rows.length - 1);                                               // Load a start date into the new task table row from worst case date of previous task row
+    alert("got here 3");
     enStart();                                                                                 //Enable the simualtion start button
 
   }
@@ -188,8 +183,7 @@ function loadNextStartDate(currentRow) {
   let tableRef = document.getElementById("taskEntryTable");
   let lastwc = new Date(revDateStr(tableRef.rows[currentRow - 1].cells[8].innerText));          //Get the worst case date from the task table reverse the sting and convert to date object
   tableRef.rows[currentRow].cells[2].innerText = calcWorkingDays(lastwc, 1).toLocaleDateString("en-GB");  // Add one working day to the worst case date and convert back to a string
-
-}
+}                                                                                                         // defect fix "en-GB" option required for IE browser                          
 
 
 function errorCheckRow(curRow) {
@@ -247,10 +241,7 @@ function getStartDate(rowNumber) {
 function revDateStr(Sdate) {
   //re formats input string from dd/mm/yyyy to yyyy-mm-dd
 
-  let sYear = Sdate.slice(6, 10);
-  let sMonth = Sdate.slice(3, 5);
-  let sDay = Sdate.slice(0, 2);
-  return sYear.concat("-", sMonth, "-", sDay);
+  return Sdate.slice(6, 10).concat("-", Sdate.slice(3, 5), "-", Sdate.slice(0, 2));
 }
 
 function calcWorkingDays(fromDate, days) {
@@ -293,10 +284,10 @@ function calcWorkingDays(fromDate, days) {
     $("#monDay").removeAttr("disabled").css("background-color", "rgb(0, 128, 0)").data('clicked', true);             //Re-enable Monday as working day  
   }
 
-  //Determines the project date
-  while (workingDay < days) {                                                                                        //Loop through the task duation days
-    fromDate.setDate(fromDate.getDate() + 1);                                                                        //Get the day of the week for the next day  
-    if (!(nonWorkingDays.includes(fromDate.getDay().toString()))) {                                                // If day of the week is not a non working day then continue through the loop     
+  
+  while (workingDay < days) {                                                  //Determines the project date                                                       //Loop through the task duation days
+    fromDate.setDate(fromDate.getDate() + 1);                                  //Get the week day number of the next day                                      //Get the day of the week for the next day  
+    if (!(nonWorkingDays.includes(fromDate.getDay().toString()))) {            // Is the week day number in the non working day array?     
       workingDay++;
     }
   }
@@ -309,18 +300,22 @@ function addTableRow() {
 
   let tableRef = document.getElementById("taskEntryTable");
   let newTaskRow = tableRef.insertRow(tableRef.rows.length);
-  const taskNumber = 0;
+  const taskNumberCol = 0;
+  const bcDurCol = 3;                                                      //Aid code readability
+  const mlDurCol = 4;
+  const wcDurCol = 5;
 
-  newTaskRow.insertCell(taskNumber).classList.add("taskNo");
-  tableRef.rows[tableRef.rows.length - 1].cells[taskNumber].innerHTML = (tableRef.rows.length - 2);
+  newTaskRow.insertCell(taskNumberCol).classList.add("taskNo");
+  tableRef.rows[tableRef.rows.length - 1].cells[taskNumberCol].innerHTML = (tableRef.rows.length - 2);
   newTaskRow.insertCell(1).innerHTML = '<input type="text" class="taskDescriptionBox taskDes" />';
   newTaskRow.insertCell(2).classList.add("sDate");
-  newTaskRow.insertCell(3).innerHTML = '<input type= "number" min="1" class="bctaskDurationBox bCase"/>';
-  newTaskRow.insertCell(4).innerHTML = '<input type= "number" min="1" class="mltaskDurationBox mlCase"/>';
-  newTaskRow.insertCell(5).innerHTML = '<input type= "number" min="1" class="wctaskDurationBox wCase"/>';
+  newTaskRow.insertCell(bcDurCol).innerHTML = '<input type= "number" min="1" class="bctaskDurationBox bCase"/>';
+  newTaskRow.insertCell(mlDurCol).innerHTML = '<input type= "number" min="1" class="mltaskDurationBox mlCase"/>';
+  newTaskRow.insertCell(wcDurCol).innerHTML = '<input type= "number" min="1" class="wctaskDurationBox wCase"/>';
   newTaskRow.insertCell(6).classList.add("bctaskDate");
   newTaskRow.insertCell(7).classList.add("mltaskDate");
   newTaskRow.insertCell(8).classList.add("wctaskDate");
+
 }
 
 function runSimulation() {
@@ -372,28 +367,28 @@ function reLoad() {
 function monteCarlo() {
   //This is the core simulation function and is called when the "start" button is clicked
 
-  disStart();   //Disable start button while in simulation
-  disSimulationRuns(); //disable simulation runs buttons
-  disNonWorkingDays(); // disable non working days buttons
+  disStart();                                                                  //Disable start button while in simulation
+  disSimulationRuns();                                                         //disable simulation runs buttons
+  disNonWorkingDays();                                                         // disable non working days buttons
 
-  if (checkAllData()) {     //If no task table errors plot data
-    const dataPoints = 20;  //number of data points for plotting probability chart
+  if (checkAllData()) {                                                        //If no task table errors plot data
+    const dataPoints = 20;                                                     //number of data points for plotting probability chart
 
-    $("#plotPanel").css("display", "block");        //display HTML div for plotting charts
-    google.charts.setOnLoadCallback(drawTimeLine); //plot timeline on call back
-    let simRunsArray = runSimulation(); //run core simulation
-    let results = resultProc(simRunsArray, dataPoints); // process simulation runs into frequency buckets and determine project durations 
-    let resultsProj = addProjectDates(results, dataPoints); // assign dates to project duration dates 
+    $("#plotPanel").css("display", "block");                                   //display HTML div for plotting charts
+    google.charts.setOnLoadCallback(drawTimeLine);                             //plot timeline on call back
+    let simRunsArray = runSimulation();                                        //run core simulation
+    let results = resultProc(simRunsArray, dataPoints);                        // process simulation runs into frequency buckets and determine project durations 
+    let resultsProj = addProjectDates(results, dataPoints);                    // assign dates to project duration dates 
     google.charts.setOnLoadCallback(drawProbabilityChart(resultsProj, dataPoints)); //plot probability chart
 
   } else {
-    errorHandler(6); // Do not plot data report error
+    errorHandler(6);                                                           // Do not plot data report error
   }
-  enStart();  //Enable start button
-  enSimulationRuns(); //enable simulation runs buttons
-  initSimulationRuns(); // re initialise simulation runs buttons
-  enNonWorkingDays(); // enable non working days buttons
-  initNonWorkingDays(); // re initialise non working days buttons
+  enStart();                                                                   //Enable start button
+  enSimulationRuns();                                                          //enable simulation runs buttons
+  initSimulationRuns();                                                        // re initialise simulation runs buttons
+  enNonWorkingDays();                                                          // enable non working days buttons
+  initNonWorkingDays();                                                        // re initialise non working days buttons
 }
 
 function addProjectDates(resultsArray, dataPoints) {
@@ -419,28 +414,28 @@ function resultProc(numbers, dataSamples) {
       this.projectDate = projectDate;
     }
   }
-  var fCount = 0;
-  var popSize = numbers.length;
-  var histoArray = [];
+  var fCount = 0;                                                         //initialise count for frequency bin
+  var popSize = numbers.length;                                           //Get length of array with project completion date
+  var histoArray = [];                                                    //Initialise array of objects class Results
   var maxDuration = Math.max.apply(null, numbers);
   var minDuration = Math.min.apply(null, numbers);
-  var binWidth = ((maxDuration - minDuration) / dataSamples);
-  for (let j = 1; j < dataSamples; j++) {
-    for (let i = 0; i < popSize; i++) {
-      if (numbers[i] < ((binWidth * j) + minDuration)) {
+  var binWidth = ((maxDuration - minDuration) / dataSamples);             //Calculate bin width
+  for (let j = 1; j < dataSamples; j++) {                                 // For each element in the the project completion array
+    for (let i = 0; i < popSize; i++) {                                   //For each frequency bin
+      if (numbers[i] < ((binWidth * j) + minDuration)) {                  //Increment frequency count each time project completion date less than cumulative bin width 
         fCount = fCount + 1;
       }
     }
     histoArray.push(new Results());
-    histoArray[j - 1].freqCount = fCount;
-    histoArray[j - 1].percentage = fCount / popSize;
+    histoArray[j - 1].freqCount = fCount;                                
+    histoArray[j - 1].percentage = fCount / popSize;                      //Calc frequency count as % of total possible project outcomes
     histoArray[j - 1].projectDays = Math.round(minDuration + (binWidth * j)); //integer number of project days only
     fCount = 0;
   }
-  // hard code the 100% entry to include the entire population
+  
   histoArray.push(new Results());
-  histoArray[dataSamples - 1].freqCount = popSize;
-  histoArray[dataSamples - 1].percentage = 1; //100% expressed as a decimal
+  histoArray[dataSamples - 1].freqCount = popSize;                        // hard code the 100% entry to include the entire population
+  histoArray[dataSamples - 1].percentage = 1;                             //100% expressed as a decimal
   histoArray[dataSamples - 1].projectDays = maxDuration;
 
   return histoArray;
@@ -451,21 +446,19 @@ function drawProbabilityChart(resultsArray, dataPoints) {
 
   var chart = new google.visualization.ScatterChart(document.getElementById('plot1'));
 
-  //construct data array for plotting in the scatter plot
-  var dataArray = [['Date', '% Probability']];
+  var dataArray = [['Date', '% Probability']];                                         //declare data array for plotting in the scatter plot
   for (let i = 0; i < dataPoints; i++) {
-    dataArray.push([resultsArray[i].projectDate, resultsArray[i].percentage * 100]);
+    dataArray.push([resultsArray[i].projectDate, resultsArray[i].percentage * 100]);   //Push the dates and probability into plotting array
   }
   var data = google.visualization.arrayToDataTable(dataArray);
 
   //add plot options
-  var options = {
-    // title: "",
-    hAxis: { title: 'Date', minValue: resultsArray[0].projectDate, maxValue: resultsArray[dataPoints - 1].projectDate },
-    vAxis: { title: '% Probability', minValue: 0, maxValue: 100 },
+  var options = {                                                                       //define plot options 
+    hAxis: { title: 'Date', minValue: resultsArray[0].projectDate, maxValue: resultsArray[dataPoints - 1].projectDate },    //X axis range
+    vAxis: { title: '% Probability', minValue: 0, maxValue: 100 },                      // Y axis range
     legend: 'none'
   };
-  chart.draw(data, options); //generate chart
+  chart.draw(data, options);                                                            //Generate chart
   // Credit: see ref:3 in the README.MD
 
 }
@@ -613,4 +606,14 @@ let buttonsArray = ["#monDay", "#tuesDay", "#wednesDay", "#thursDay", "#friDay",
   "#simulationStart", "#restartPage"];
 buttonsArray.forEach(function (elem) {
   $(elem).hover(function () { $(elem).css("filter", "brightness(115%)"); }, function () { $(elem).css("filter", "brightness(100%)"); });  //Refer to acknowledgement ref. 1 in Readme.md 
+});
+
+let SimButtonArray = ["#oneT", "#twoT", "#threeT", "#fourT", "#fiveT"];
+SimButtonArray.forEach(function (elem) {
+  $(elem).click(function () { setSimulationRuns(elem); });
+});
+
+let nonProjectDayArray = ["#monDay", "#tuesDay", "#wednesDay", "#thursDay", "#friDay", "#saturDay", "#sunDay"];
+nonProjectDayArray.forEach(function (elem) {
+  $(elem).click(function () { setNonWorkingDays(elem); });
 });
