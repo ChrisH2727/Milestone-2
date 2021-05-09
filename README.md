@@ -31,15 +31,17 @@
     6.0 Code Design Description
         6.1 Data Structures and Handling
         6.2 JavaScript Code Stucture and flow
-        6.3 Javascript Functions and their Purpose
+        6.3 Error Handling
+        6.4 Javascript Functions
 
     7.0 Testing
         7.1 Test Approach
         7.2 Test Cases & Test Execution
+        7.3 Residual Defects
 
     8.0 Deployment
 
-    9.0 Acknowledgements
+    9.0 Acknowledgements & Credits
 
     Annex 1. Triangular Probability Distribution
 
@@ -105,7 +107,11 @@ The purpose of this web site is to provide project managers with a high level pr
 
 ### 2.3 Structure
 
-This project scheduling tool consists of a single web page.
+This project consists of a single web page.
+
+Discrete buttons are used to allow the user to select options or initiate actions. In some cases such as the selection of non project days or the number of simulation runs, the use of radio buttons was considered, but discounted as they did not provide the desired visual impact.
+
+Not every component of the web page is rendered on loading. As will be discussed later on, only those components that the user use or provides useful information is rendered. 
 
 ### 2.4 (Surface) Wireframes
 
@@ -284,7 +290,7 @@ Clicking the Start button results in the event handler function **monteCarlo()**
 
 1. Function **drawTimeLine()** is called to plot the timeline chart using Best Case, Most Likely Case and Worst Case dates determined from task duration entries provided  via the Task Entry table. The Google API requires data using in following class definition.
 
-    ![Google Timeline Plot Data Structure](screenshots/TimelinePlotData.jpg)        
+    ![Google Timeline Plot Data Structure](screenshots/TimelinePlotData.jpg)
 
    Apart from calling the Google function to create the timeline plot, it is the function of **drawTimeLine()** to take the Best Case, Most Likely Case and Worst Case dates from the Task Entry Table and format it into an array of objects of the above class. 
 
@@ -298,7 +304,7 @@ Clicking the Start button results in the event handler function **monteCarlo()**
 
    Function **resultProc()** returns **histoArray**. Function **monteCarlo()** then passes this array to function **addProjectDates()**. Function **addProjectDates()** extracts the project days from **histoArray** and determines the assocaited project completion dates. Function **addProjectDates()** then pushes the project completion dates back into the array **histoArray** before returning it to function **monteCarlo()**.
 
-  Function **monteCarlo()** then passes array **histoArray** to function **drawProbabilityChart()**. Function **drawProbabilityChart()** transfers the percentages and project dates from the **histoArray** to the array with data structure required by the Google plotting API. 
+   Function **monteCarlo()** then passes array **histoArray** to function **drawProbabilityChart()**. Function **drawProbabilityChart()** transfers the percentages and project dates from the **histoArray** to the array with data structure required by the Google plotting API. 
 
 ### 6.2 JavaScript Code Stucture and flow
 
@@ -393,10 +399,48 @@ The JavaScript code may be devived into 3 main components parts:
 6. The remaining event listeners have been included to provide the user with a positive response when hovering over a button. Please refer to credits ref.1 for acknowledgements regarding the source of this feature.  
 
    ![Other Event Listeners](screenshots/Otherlisteners.jpg)
- 
-### 6.3 Javascript Functions and their Purpose
 
-While some of 
+### 6.3 Error Handling
+
+Errors are detected at seveal points in the JavaScript code, but reporting is centalised through a single **errorHandler()** function.
+
+![Error Handler](screenshots/errorHandler.jpg)
+
+Function **errorHandler()** inputs a unique error code and displays a single error message. An event listener is then setup so that the user can click on the close button to close the modal window. Using an error handler in this way allows more errors to be reported should should further changes to the JavaScript code require it.
+
+Function **errorCheckRow()** is called after the user has entered the best case , most likely case and worst case duration for a task entered via the task entry table and before a new task line is added to the table.
+
+Function **errorCheckRow()** performs 3 checks on a task entry row:
+ 
+* Checks that a task description has been entered
+
+* Checks that a task start date is available.
+
+* Checks that Best Case Durations < Most Likely Case Duration < Worst Case Duration.
+
+It then reports the error via function **errorHandler** returns a **false** if an error is found. Note that function **taskUpdate()** is prevented from allowing a new task line to be added, but is permitted to run to completion. This gives the user the oportunity of correcting any errors in the entry of a task.
+
+Function **monteCarlo()** also initiatates error checking. Here function **checkAllData()** is used to confirm that the task entry table does not include errors before any charting is undertaken. Function **checkAllData()** loops round all the task table rows using function **errorCheckRow()**. If a task table error is detected at this point then charting is prevented and an additional error is reported inviting the user to re-enter the complete task entry table.  
+
+### 6.4 JavaScript Functions
+
+While operation of most of the critical JavaScript functions have been described in the above two sections, a few non trivial functions still require identification.
+
+Function **runSimulation()** is a core component of the Programme.
+
+![Run Simulation](screenshots/runsimulation.jpg) 
+
+This function starts by determining which "simulations runs" button has been clicked. 
+
+For each task in the task entry table a random variat **variat** between the best case duration and worst case duration is determined using **randomVariat()** and added to that of the next task. The total is then one simulation run and represents one probable outcome for the durtation of the project. The number of times this is repeated is determined by the number of simulation runs.
+
+At the end of these loops, array **simRunsArray[]** contains the number of probable project duration outomes set by "simulation runs". Note that the most likley case task duration is required by **randomVariat()** because **variat** is a triangularly distributed variable. 
+
+Function **resultsProc()** inputs the **simRunsArray[]** as **numbers[]** and the number of datapoints **dataSamples** to be plotted by the probability plot. 
+
+![Run Simulation](screenshots/resultsProc.jpg) 
+
+From **numbers[]** and **dataSamples** this function determines a bin width and using two loops determines bin counts for each **dataSamples**. As this is cumulative, the final sample includes all of the values in **numbers[]**. Note that Google Charts provides an API for cumulative histogram which would have obviated the need for this function. This was investigated. Unfortunately, there seemed no obvious way of attaching dates to the x axis so abandoned. 
 
 ## 7.0 Testing
 
@@ -408,27 +452,33 @@ While some of
 
 ........
 
+### 7.3 Residual Defects
+
 ## 8.0 Deployment
 
-........
+The project is deployed through GitHub pages and may be loaded via the following link  [Milestone 2 project](https://chrish2727.github.io/Milestone-2/).
 
-## 9.0 Credits
+## 9.0 Maitenance and Further Development
 
-.........
+The project may be cloned to the desired directory using the command gh repo clone ChrisH2727/Milestone-2
 
-### 9.0 Acknowledgements
+The following folder stucture is assumed and must be maintained:
+![Directory Structure](screenshots/dirStruc.jpg)
+
+## 9.0 Acknowledgements & Credits
 
 1. This line of code makes use of the idea presented here: [CSS Lighten an element on hover](https://stackoverflow.com/questions/16178382/css-lighten-an-element-on-hover), but then augments it with the use of a JQuery event listener. My challenge here was to write a single line of code that would lighten a button's background when hovered over without reference to the actual background colour.
 
-2. Help modal inspiration taken from https://www.w3schools.com/howto/howto_css_modals.asp -->
+2. Help modal inspiration taken from https://www.w3schools.com/howto/howto_css_modals.asp however modified such that the behaviour close button is via a Jquirey function rather than CSS
 
-3. // Credit: this function was inspired by the code examples provided at: https://developers.google.com/chart/interactive/docs/gallery/timeline
-
+3. The timeline and scatter chart APIs were sourced from  https://developers.google.com/chart/interactive/docs/gallery/timeline as was the code for interfacing to them.
 
 ## Annex 1. Triangular Probability Distribution
 
 Although the equations for generating a triangularly distributed are generally available, no examples of coding in JavaScript are available, and since this is key to the operation of the web page, it was worthy of further investigation.
 
+The equation for generating a triangularly distributed variat from a linearly distributed variat is given by the following equations:
 
+![Triangular Distribution](screenshots/triangle.jpg)
 
-......
+*Insert courtsey of Wikipedia*  (https://en.wikipedia.org/wiki/Triangular_distribution)
