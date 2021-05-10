@@ -15,6 +15,7 @@
 </head>
 
 <body>
+    <!--Top header -->
     <header class="container-fluid">
         <div class="row">
             <div class="header">
@@ -22,9 +23,10 @@
             </div>
         </div>
     </header>
+
     <section class="container-fluid blockbg">
         <div class="row">
-            <div class="col-lg-6 taskPanel">
+            <div class="col-md-8 taskPanel">
                 <!--Task entry table-->
                 <div id="overflow">
                     <table id="taskEntryTable">
@@ -48,11 +50,11 @@
                             <td class="taskNo">1</td>
                             <td class="taskDes"><input type="text" class="taskDescriptionBox taskDes" /></td>
                             <td><input type="date" class="taskDateBox sDate" /></td>
-                            <td class="bctaskDuration"><input type="number" min="1" class="bctaskDurationBox bCase" />
+                            <td class="bctaskDuration"><input type="number" min="0" class="bctaskDurationBox bCase" />
                             </td>
-                            <td class="mltaskDuration"><input type="number" min="1" class="mltaskDurationBox mlCase" />
+                            <td class="mltaskDuration"><input type="number" min="0" class="mltaskDurationBox mlCase" />
                             </td>
-                            <td class="wctaskDuration"><input type="number" min="1" class="wctaskDurationBox wCase" />
+                            <td class="wctaskDuration"><input type="number" min="0" class="wctaskDurationBox wCase" />
                             </td>
                             <td class="bctaskDate"></td>
                             <td class="mltaskDate"></td>
@@ -69,9 +71,8 @@
                         <button type="submit" id="restartPage">Reset</button>
                     </div>
                 </div>
-
-
             </div>
+
             <!-- Modal for the help function. See ref2. in README.MD -->
             <div id="myModal" class="helpModal">
                 <div class="modal-content">
@@ -89,20 +90,40 @@
                         relationship.<br>
                         5. Select the <strong>Non Project Work Days</strong> allocted to your team. Note that
                         <strong>Saturday</strong> & <strong>Sunday</strong> are set by default as Non Working Days.<br>
-                        6. When you are ready click the <strong>Start</strong> button.<br>
-                        7. You can add more tasks, change task durations and change <strong>Non Project Work
+                        6.Select the number of simulation runs required. The larger the number of simulation runs
+                        selected, the longer
+                        the simulation will take to run, however the outcome will be more accurate. <br>
+                        7. When you are ready click the <strong>Start</strong> button.<br>
+                        8. You can add more tasks, change task durations and change <strong>Non Project Work
                             Days</strong> at any time and the
                         task table will automatically update, but you must click the <strong>Start</strong> button to
                         run the simulation.<br>
-                        8. If you select every day of the week as a non project work day, then the programme will
+                        9. If you select every day of the week as a non project work day, then the programme will
                         automatically allocate <strong>Monday</strong> as the only
                         work day.<br>
-                        9. Click the <strong>Resart</strong> button to clear the Task Entry Table.
+                        10. Click the <strong>Restart</strong> button to clear the Task Entry Table.<br>
+                        <br>
+                        <strong>How To Read The Charts</strong><br>
+                        On clicking the <strong>Start</strong> button two charts are generated.<br>
+                        The Timeline chart show the task best case, most likely case and worst case dates graphically.
+                        The worst case finish date of a task determines
+                        the start date of the next task. At a project level this chart shows the Timeline for the
+                        project if everything that could go wrong does go wrong.
+                        In practical terms
+                        this is unlikely to be the case. Some project risks will mature into problems and others will
+                        become obsolete over the duration of the project.
+                        In other words not everything that will go wrong.<br>
+                        The probability chart takes this a stage further and provides a statistical analysis of the task
+                        best case, most likely case and worst case durations
+                        and then provides probability of completing a project by a given date. The final date provided
+                        by the probability plot is always earlier or the same as
+                        the final date given by the Timeline chart.<br>
+                        In a project <strong>not everything that can go wrong will go wrong</strong>.<br>
                     </p>
                 </div>
             </div>
 
-            <div class=" col-lg-6">
+            <div class=" col-md-4">
                 <div class=" row">
                     <!--Button headings-->
                     <div class=" col-sm-4">
@@ -148,15 +169,18 @@
                     </div>
                 </div>
             </div>
-            <div id="alertBox" class="alertModal"> <!-- Alert modal-->
+            <div id="alertBox" class="alertModal">
+                <!-- Alert modal-->
                 <div class="alert-content">
                     <span class="closeAlert" id="disAlert">&times;</span>
                     <p id="alertMess"></p>
                 </div>
             </div>
+        </div>
     </section>
 
-    <section class="container-fluid"> <!--Plot section -->
+    <section class="container-fluid">
+        <!--Plot section -->
         <div class="row" id="plotPanel">
             <!--Time line plot-->
             <div class="col-md-6 tLine">
