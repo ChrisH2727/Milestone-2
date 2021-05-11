@@ -23,7 +23,6 @@ body {
 #overflow{
     overflow-x:auto;
 }
-
 th,td {
     border: 1px solid black;
   }
@@ -154,7 +153,6 @@ table th {
 }
 .tLine,.probPlot{
     background-color: rgb(223, 236, 245);
-
 }
 /* --------- Working Day Buttons------------*/
 .workDayBt button{
@@ -162,10 +160,9 @@ table th {
     display: block;
     padding: 10px 10px;
     margin-top:5px;
-    margin-left:25%;
-    margin-right:15%;
+    margin-right:60%;
     width:40%;
-    min-width:110px;
+    min-width:100px;
     border-radius: 10px;
     color: white;
     cursor: pointer;
@@ -178,10 +175,12 @@ table th {
     background-color: rgb(223, 236, 245);
 }
 .ctrHeading{
-    float:center;
-    text-align: center;
+    text-align: left;
     font-size: 20px;
     display: block; 
+}
+.greyed{
+    background-color:rgb(211, 211, 211);
 }
 
 /* --------- Header Style------------*/
@@ -260,14 +259,14 @@ table th {
     display: none; /* Hide modal until called by JavaScript code */
     position: fixed;
     z-index: 1; /* Sit on top */
-    padding-top: 80px;
+    padding-top: 500px;
     padding-left:20px;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0); /* Fallback color */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0);
   }
 .modal-content {
     background-color: #fefefe;
@@ -283,7 +282,7 @@ table th {
     font-size: 28px;
     font-weight: bold;
     line-height: 1;
-    text-shadow: 0 1px 0 #fff;
+    /*text-shadow: 0 1px 0 #fff;*/
     cursor: pointer;
   }
 
