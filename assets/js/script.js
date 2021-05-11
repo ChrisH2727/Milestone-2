@@ -207,7 +207,7 @@ function errorCheckRow(curRow) {
   } else if ((bcDur <= 1) || (mlDur <= 1) || (wcDur <= 1)) { //check duration days greater or equal to 1
     errorHandler(5);
     return false;
-  } else if ((bcDur > mlDur) || (mlDur > wcDur) || (bcDur > wcDur)) { // check best case < most likely case < worst case days
+  } else if ((bcDur >= mlDur) || (mlDur >= wcDur) || (bcDur >= wcDur)) { // check best case < most likely case < worst case days
     errorHandler(2);
     return false;
   } else if (!Date.parse(getStartDate(curRow))) { // check task start date present
@@ -218,16 +218,24 @@ function errorCheckRow(curRow) {
   }
 }
 
+
 function checkAllData() {
   // checks the complete task entry table for errors. Returns true for no error found, false if error found
 
   let tableRef = document.getElementById("taskEntryTable");
   let curRow = 2;  // task entry table starts on row 2
+  var errorState = true;
 
-  while ((curRow < tableRef.rows.length - 1) && (errorCheckRow(curRow) == true)) {
-    curRow++;
+  while (curRow < tableRef.rows.length - 1) {
+    if(errorCheckRow(curRow) == true){
+      errorState = true;
+      curRow++;
+    } else {
+      errorState = false;
+      break;
+    }
   }
-  return errorCheckRow(curRow - 1); // -1 as curRow has been incremented in while loop
+  return errorState;
 }
 
 function getStartDate(rowNumber) {
@@ -368,11 +376,10 @@ function reLoad() {
 
 function monteCarlo() {
   //This is the core simulation function and is called when the "start" button is clicked
-
+  
   disStart();                                                                  //Disable start button while in simulation
   disSimulationRuns();                                                         //disable simulation runs buttons
   disNonWorkingDays();                                                         // disable non working days buttons
-
 
   if (checkAllData()) {                                                        //If no task table errors plot data
     const dataPoints = 20;                                                     //number of data points for plotting probability chart
@@ -386,12 +393,9 @@ function monteCarlo() {
     enStart();                                                                   //Enable start button
     enSimulationRuns();                                                          //enable simulation runs buttons
     enNonWorkingDays();                                                          // enable non working days buttons
-
   } else {
     errorHandler(6);                                                           // Do not plot data report error
   }
-
-  
 }
 
 function addProjectDates(resultsArray, dataPoints) {
