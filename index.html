@@ -3,15 +3,17 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Fast Project Scheduling</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-        type="text/css" />
+    <title>Rapid Project Scheduler</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hover.css/2.1.1/css/hover-min.css"
         type="text/css" />
     <link rel="stylesheet" href="assets/css/style.css" type="text/css" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" /-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
         type="text/css" />
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        type="text/css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css"
+        integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous" />
 </head>
 
 <body>
@@ -26,13 +28,12 @@
 
     <section class="container-fluid blockbg">
         <div class="row">
-            <div class="col-md-8 taskPanel">
+            <div class="col-xl-8 taskPanel">
                 <!--Task entry table-->
+                <p class="tableHeading">Task Entry Table</p>
                 <div id="overflow">
+                    <!--For those difficult screen widths-->
                     <table id="taskEntryTable">
-                        <tr>
-                            <th colspan="9" class="tableHeading">Task Entry Table</th>
-                        </tr>
                         <!--Task entry table headers-->
                         <tr>
                             <th class="taskNo">Task No</th>
@@ -64,7 +65,7 @@
                 </div>
                 <div class="row">
                     <!--Summit button, when clicked starts the simulation-->
-                    <div class="col-md">
+                    <div class="col-md-8 offset-md-3">
                         <!--Summit button, when clicked starts the simulation-->
                         <button type="submit" id="simulationStart">Start</button>
                         <!--Restart button, when clicked re-loads the page-->
@@ -122,7 +123,7 @@
                 </div>
             </div>
 
-            <div class=" col-md-4">
+            <div class=" col-xl-4 buttonBlock">
                 <div class=" row">
                     <!--Button headings-->
                     <div class=" col-sm-4">
@@ -138,7 +139,7 @@
 
                 <div class=" row">
                     <!--Buttons-->
-                    <div class=" col-sm-4">
+                    <div class=" col-md-4">
                         <!--Non project days control buttons-->
                         <div class="workDayBt">
                             <button id="monDay">Monday</button>
@@ -150,7 +151,7 @@
                             <button id="sunDay">Sunday</button>
                         </div>
                     </div>
-                    <div class=" col-sm-4">
+                    <div class=" col-md-4">
                         <!--Simulation run buttons-->
                         <div class="workDayBt">
                             <button id="oneT">500</button>
@@ -182,14 +183,14 @@
         <!--Plot section -->
         <div class="row" id="plotPanel">
             <!--Time line plot-->
-            <div class="col-md-6 tLine">
+            <div class="col-lg-6">
                 <h3 class="tableHeading">Time Line Plot</h3>
                 <p>Best Case, Most Likey Case and Worst Case Task Finish Days </p>
                 <div id="plot2"></div>
                 <p> Used: Google Charts library</p>
             </div>
             <!--Probability plot-->
-            <div class="col-md-6 probPlot">
+            <div class="col-lg-6">
                 <h3 class="tableHeading">Probability Plot</h3>
                 <p>Probability of completing the project at a date</p>
                 <div id="plot1"></div>
@@ -197,7 +198,48 @@
             </div>
         </div>
     </section>
+    <footer class="container-fluid nav-bg">
+        <!--Footer obtained from Milestone 1 project https://github.com/ChrisH2727/Milestone-1-->
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="list-inline icon-Pos">
+                    <li Class="find-me list-inline-item">Chris Heisig:</li>
+                    <li class="list-inline-item">
+                        <a target="_blank" href="https://www.linkedin.com/in/chrisheisig/">
+                            <i class="fab fa-linkedin social-icon" aria-hidden="true"></i>
+                            <span class="sr-only">LinkedIn</span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item ">
+                        <a target="_blank" href="https://github.com/ChrisH2727/">
+                            <i class="fab fa-git-square social-icon" aria-hidden="true"></i>
+                            <span class="sr-only">Git</span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item ">
+                        <a target="_blank" href="https://app.slack.com/client/T01P97B2L4W/C01P97JS2MC">
+                            <i class="fab fa-slack social-icon" aria-hidden="true"></i>
+                            <span class="sr-only">Slack</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="attribution icon-Pos">
+                    Icons from <a href="https://fontawesome.com/">FontAwesome</a>
+                </div>
+            </div>
+        </div>
 
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="assets/js/jquery-3.6.0.js"></script>
