@@ -1,22 +1,17 @@
-/* --------- body style -------------*/
+
+/***********Common*****************/
 body {
     background-color: white;
     color: black;
     text-align: center;
 }
-
-/* --------- Common style -------------*/
+/************Task Table Style**********/
 .tableHeading{
     text-align: center;
     font-size: 30px;
     font-weight: normal;
-    background-color: rgb(223, 236, 245);
-    border-top-color: rgb(223, 236, 245) ;
-    border-right-color: rgb(223, 236, 245) ;
-    border-left-color: rgb(223, 236, 245) ; 
+    margin-top: 10px;
  }
-
-/* --------- Input Table Style-------*/
 .taskPanel {
     background-color: rgb(223, 236, 245);
 }
@@ -25,8 +20,7 @@ body {
 }
 th,td {
     border: 1px solid black;
-  }
-
+}
  table{
     width:fit-content;
     border-collapse:collapse;
@@ -37,11 +31,9 @@ th,td {
     background-color:white;
     border:1px solid black;
     padding:0;
- }
+}
 table th {
     text-align: center;
-    /*font-size: 15px;*/
-    /*background-color:lightgrey;*/
     margin :auto;
     height:auto;
     width:auto;
@@ -66,6 +58,7 @@ table th {
 }
 .sDate{
     background-color:yellow;
+    text-align: center;
 }
 .bctaskDuration {
     width:60px;
@@ -139,24 +132,16 @@ table th {
 .taskDes{
     background-color:cornflowerblue;
 }
-/* --------- Time Line & Probability Chart-------*/
+/************Time Line & Probability Chart************/
 #plot2,#plot1{
     height: 300px;
-    width:90%;
-    margin-left: 5%;
-    margin-right: 5%;
 }
 #plotPanel{
     display:none; /* hide plot or charting panel until called for by the JavaScript code*/
-    max-width: auto;
-    max-height:auto;
-}
-.tLine,.probPlot{
     background-color: rgb(223, 236, 245);
 }
-/* --------- Working Day Buttons------------*/
+/**************Working Day Buttons****************/
 .workDayBt button{
-    float: center;
     display: block;
     padding: 10px 10px;
     margin-top:5px;
@@ -168,9 +153,9 @@ table th {
     cursor: pointer;
     font-size: 15px;
 }
-.ctr{
+/*.ctr{
     float:center;
-}
+}*/
 .blockbg{
     background-color: rgb(223, 236, 245);
 }
@@ -182,8 +167,7 @@ table th {
 .greyed{
     background-color:rgb(211, 211, 211);
 }
-
-/* --------- Header Style------------*/
+/*************Header Style***************/
 .header{
     background-color:cornflowerblue;
     height:100px;
@@ -194,8 +178,10 @@ table th {
 .headerText{
     font-weight: bold; 
 }
-
-/* --------- Setup & Submit Style------------*/
+.buttonBlock{
+    margin-bottom: 20px;
+}
+/***********Setup & Submit Style****************/
 .label{
     font-weight:normal;
 }
@@ -211,9 +197,8 @@ table th {
     height:40px;
     display: inline-block;
 }
-
-/*-----------Alert Modal------------*/
-/* inspiration taken from https://www.w3schools.com/howto/howto_css_modals.asp */
+/****************Alert Modal***********************/
+/* inspiration taken from https://www.w3schools.com/howto/howto_css_modals.asp*/
 .alertbox {
     padding: 20px;
     background-color:white;
@@ -233,7 +218,7 @@ table th {
     width: 100%;
     height: 100%; 
     overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(230, 139, 139, 0); /* Fallback color */
+    background-color: rgba(230, 139, 139, 0);
   } 
   .alert-content {
     background-color: #fefefe;
@@ -252,8 +237,7 @@ table th {
     text-shadow: 0 1px 0 #fff;
     cursor: pointer;
   }
-
-/*--------- Help Modal ---------*/
+/*****************Help Modal****************/
 /* inspiration taken from https://www.w3schools.com/howto/howto_css_modals.asp */
 .helpModal {
     display: none; /* Hide modal until called by JavaScript code */
@@ -276,15 +260,30 @@ table th {
     width: 80%;
     text-align: left;
   }
-  .closeX {
+.closeX {
     color:mediumblue;
     float: right;
     font-size: 28px;
     font-weight: bold;
     line-height: 1;
-    /*text-shadow: 0 1px 0 #fff;*/
     cursor: pointer;
   }
-
-  
-  
+/*************Footer**************/
+.nav-bg{
+    background-color:cornflowerblue;
+}
+.find-me{
+    font-size:30px;
+    color:black;
+}
+.social-icon {
+    font-size: 30px;
+    color: black;
+    margin-right: 10px;
+    margin-top:30px;
+}
+.icon-Pos{
+    float:right;
+    margin-right: 60px;
+    margin-bottom: 10px; 
+}  
