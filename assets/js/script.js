@@ -1,3 +1,28 @@
+//
+//Title:                                  Rapid Project Scheduler
+//                                       -----------------------
+// JavaScript Code
+//
+// The cells within HTML task entry table are navigated by row and column. The following constants define the column labels used throughout this script
+// This is provided to aid code readability.
+//
+// | TASKNOCOL | TASKDESCOL | STARTDAYCOL | BCDURCOL | MLDURCOL| WCDURCOL | BCDATECOL | MLDATECOL | WCDATECOL |  
+// |-----------|------------|-------------|----------|---------|----------|-----------|-----------|-----------|
+// |           |            |             |          |         |          |           |           |           |
+//
+const TASKNUMCOL = 0;
+const TASKDESCOL = 1;
+const STARTDAYCOL = 2;                                                                                 
+const BCDURCOL = 3;
+const MLDURCOL = 4;
+const WCDURCOL = 5;
+const BCDATECOL = 6;
+const MLDATECOL = 7;
+const WCDATECOL = 8;
+const TABLEREF = document.getElementById("taskEntryTable");
+//
+// If using any of the functions below in isolation, you must include the above constants
+//
 
 $(document).ready(function () {
   //Function called when the document has loaded
@@ -50,7 +75,6 @@ function enSimulationRuns() {
   //Enables the Simulation Runs buttons
 
   $("#oneT,#twoT,#threeT,#fourT,#fiveT").removeAttr("disabled").toggleClass("greyed");                       //re-enable buttons
-
 }
 
 function disStart() {
@@ -63,7 +87,6 @@ function enStart() {
   //Enables the Start button
 
   $("#simulationStart").css("background-color", "rgb(0, 128, 0)").removeAttr("disabled");
-
 }
 
 function enReset() {
@@ -117,100 +140,96 @@ function setSimulationRuns(elem) {
 function taskUpdate() {
   //Event handler called whenever there is a change to the task table
 
-  var tableRef = document.getElementById("taskEntryTable");
-  const startDay = 2;                                                                                   //Aid code readability
-  const bcDurCol = 3;
-  const mlDurCol = 4;
-  const wcDurCol = 5;
-  const bcDateCol = 6;
-  const mlDateCol = 7;
-  const wcDateCol = 8;
+  const startDay = 1;                                                                          
 
-
-  for (var currentRow = startDay; currentRow < tableRef.rows.length; currentRow++) {          //start at currentRow = 2 because the first two rows of the HTML task table have no task data
+  for (var currentRow = startDay; currentRow < TABLEREF.rows.length; currentRow++) {          //start at currentRow = 1 because the first two rows of the HTML task table have no task data
 
     if (currentRow > startDay) {                                                              //only do if more than one task has been entered
       loadNextStartDate(currentRow);                                                          // update the row start date from previous worst case date
     }
 
-    let bcDuration = parseInt(tableRef.rows[currentRow].cells[bcDurCol].children[0].value);
+    let bcDuration = parseInt(TABLEREF.rows[currentRow].cells[BCDURCOL].children[0].value);
     if (bcDuration >= 1) {                                                                    //Test best case duration value entered in task table
       let bcDate = calcWorkingDays(getStartDate(currentRow), bcDuration).toLocaleDateString("en-GB");
       if (bcDate != "Invalid Date") {
-        tableRef.rows[currentRow].cells[bcDateCol].innerText = bcDate;                        //Enter best case date into table
+        TABLEREF.rows[currentRow].cells[BCDATECOL].innerText = bcDate;                        //Enter best case date into table
       } else {
-        tableRef.rows[currentRow].cells[bcDateCol].innerText = "No start date";               //Display error message
+        TABLEREF.rows[currentRow].cells[BCDATECOL].innerText = "No start date";               //Display error message
       }
     } else {
-      tableRef.rows[currentRow].cells[bcDateCol].innerText = "";                              //No duration value entered yet so make best case date ""
+      TABLEREF.rows[currentRow].cells[BCDATECOL].innerText = "";                              //No duration value entered yet so make best case date ""
     }
-    
-    let mlDuration = parseInt(tableRef.rows[currentRow].cells[mlDurCol].children[0].value);
+
+    let mlDuration = parseInt(TABLEREF.rows[currentRow].cells[MLDURCOL].children[0].value);
     if (mlDuration >= 1) {                                                                    //Test most likely case duration value entered in task table
       let mlDate = calcWorkingDays(getStartDate(currentRow), mlDuration).toLocaleDateString("en-GB");
       if (mlDate != "Invalid Date") {
-        tableRef.rows[currentRow].cells[mlDateCol].innerText = mlDate;
+        TABLEREF.rows[currentRow].cells[MLDATECOL].innerText = mlDate;
       } else {
-        tableRef.rows[currentRow].cells[mlDateCol].innerText = "No start date";                //Test failed clear most likely case date
+        TABLEREF.rows[currentRow].cells[MLDATECOL].innerText = "No start date";                //Test failed clear most likely case date
       }
     } else {
-      tableRef.rows[currentRow].cells[mlDateCol].innerText = "";                               //No duration value entered yet so make best case date ""
+      TABLEREF.rows[currentRow].cells[MLDATECOL].innerText = "";                               //No duration value entered yet so make best case date ""
     }
-    
-    let wcDuration = parseInt(tableRef.rows[currentRow].cells[wcDurCol].children[0].value);
+
+    let wcDuration = parseInt(TABLEREF.rows[currentRow].cells[WCDURCOL].children[0].value);
     if (wcDuration >= 1) {                                                                     //Test worst case duration value entered in task table 
       let wcDate = calcWorkingDays(getStartDate(currentRow), wcDuration).toLocaleDateString("en-GB");
       if (wcDate != "Invalid Date") {                                                          //Test worst case duration value entered in task table
-        tableRef.rows[currentRow].cells[wcDateCol].innerText = wcDate;
+        TABLEREF.rows[currentRow].cells[WCDATECOL].innerText = wcDate;
       } else {
-        tableRef.rows[currentRow].cells[wcDateCol].innerText = "No start date";                 //Test failed clear worst case date
+        TABLEREF.rows[currentRow].cells[WCDATECOL].innerText = "No start date";                 //Test failed clear worst case date
       }
     } else {
-      tableRef.rows[currentRow].cells[wcDateCol].innerText = "";                                 //No duration value entered yet so make worst case date ""
+      TABLEREF.rows[currentRow].cells[WCDATECOL].innerText = "";                                 //No duration value entered yet so make worst case date ""
     }
-
-  }
-  if ((tableRef.rows[tableRef.rows.length - 1].cells[wcDateCol].innerText != "") && (errorCheckRow(currentRow - 1))) { //check that a worst case date has been calculated and that there are no errors in the task entry 
-    addTableRow();                                                                             // Add a new task table row
-    loadNextStartDate(tableRef.rows.length - 1);                                               // Load a start date into the new task table row from worst case date of previous task row
-    //enStart();                                                                                 //Enable the simualtion start button
-  }
-  if(tableRef.rows.length > 1){
-    enStart();                                                                                 //Enable the simualtion start button if more than 1 table row
   }
 
+  if (TABLEREF.rows[TABLEREF.rows.length - 1].cells[WCDATECOL].innerText.length > 0) {             //check if a worst case date has been calculated 
+    if (errorCheckRow(TABLEREF.rows.length - 1)) {                                                //check that there are no errors in the task data entered 
+      addTableRow();                                                                             // Add a new task table row
+      loadNextStartDate(TABLEREF.rows.length - 1);                                               // Load a start date into the new task table row from worst case date of previous task row
+    }
+  }
+  if (TABLEREF.rows.length > 2) {
+    enStart();                                                                                 //Enable the simualtion start button if more than 1 table row entered (table length = 2)
+  }
 }
 
 function loadNextStartDate(currentRow) {
   //Determines the next working day omitting the non working days selected by the user
 
-  let tableRef = document.getElementById("taskEntryTable");
-  let lastwc = new Date(revDateStr(tableRef.rows[currentRow - 1].cells[8].innerText));          //Get the worst case date from the task table reverse the sting and convert to date object
-  tableRef.rows[currentRow].cells[2].innerText = calcWorkingDays(lastwc, 1).toLocaleDateString("en-GB");  // Add one working day to the worst case date and convert back to a string
+  let lastwc = new Date(revDateStr(TABLEREF.rows[currentRow - 1].cells[8].innerText));          //Get the worst case date from the task table reverse the sting and convert to date object
+  TABLEREF.rows[currentRow].cells[2].innerText = calcWorkingDays(lastwc, 1).toLocaleDateString("en-GB");  // Add one working day to the worst case date and convert back to a string
 }                                                                                                         // defect fix "en-GB" option required for IE browser                          
 
 function errorCheckRow(curRow) {
   // Error checks the current row of task entry data
-  const taskDescCol = 1;
-  const bcDurCol = 3;
-  const mlDurCol = 4;
-  const wcDurCol = 5;
 
-  let tableRef = document.getElementById("taskEntryTable");
-  let bcDur = parseInt(tableRef.rows[curRow].cells[bcDurCol].children[0].value);
-  let mlDur = parseInt(tableRef.rows[curRow].cells[mlDurCol].children[0].value);
-  let wcDur = parseInt(tableRef.rows[curRow].cells[wcDurCol].children[0].value);
+  let bcDur = Number(TABLEREF.rows[curRow].cells[BCDURCOL].children[0].value);
+  let mlDur = Number(TABLEREF.rows[curRow].cells[MLDURCOL].children[0].value);
+  let wcDur = Number(TABLEREF.rows[curRow].cells[WCDURCOL].children[0].value);
+  let taskDes = TABLEREF.rows[curRow].cells[TASKDESCOL].children[0].value;
 
-  if (tableRef.rows[curRow].cells[taskDescCol].children[0].value == "") { //check task description available
+  if (taskDes.length === 0) {                                                                      //check for empty task description input
     errorHandler(4);
     return false;
-  } else if ((bcDur <= 1) || (mlDur <= 1) || (wcDur <= 1)) { //check duration days greater or equal to 1
+  } else if (taskDes[0].match(/^[0-9a-zA-Z]+$/) === null) {                                       //check task description for 1st alphanumerical char credit code https://www.w3resource.com/javascript/form/letters-numbers-field.php
+    errorHandler(7);
+    return false;
+  } else if ((Math.sign(bcDur) === -1) || (Math.sign(mlDur) === -1) || (Math.sign(wcDur) === -1)) {
+    errorHandler(9);
+    return false;
+  } else if ((bcDur < 1) || (mlDur < 1) || (wcDur < 1)) {                               //check duration days greater or equal to 1
     errorHandler(5);
     return false;
-  } else if ((bcDur >= mlDur) || (mlDur >= wcDur) || (bcDur >= wcDur)) { // check best case < most likely case < worst case days
+  } else if ((Number.isInteger((bcDur)) == false) || (Number.isInteger((mlDur)) == false) || (Number.isInteger((wcDur)) == false)) {               // check if duration days are integer values
+    errorHandler(8);
+    return false;
+  } else if ((bcDur >= mlDur) || (mlDur >= wcDur) || (bcDur >= wcDur)) {                   // check best case < most likely case < worst case days
     errorHandler(2);
     return false;
-  } else if (!Date.parse(getStartDate(curRow))) { // check task start date present
+  } else if (!Date.parse(getStartDate(curRow))) {                                          // check task start date present
     errorHandler(0);
     return false;
   } else {
@@ -218,16 +237,14 @@ function errorCheckRow(curRow) {
   }
 }
 
-
 function checkAllData() {
   // checks the complete task entry table for errors. Returns true for no error found, false if error found
 
-  let tableRef = document.getElementById("taskEntryTable");
-  let curRow = 2;  // task entry table starts on row 2
+  let curRow = 1;  // task entry table starts on row 1
   var errorState = true;
 
-  while (curRow < tableRef.rows.length - 1) {
-    if(errorCheckRow(curRow) == true){
+  while (curRow < TABLEREF.rows.length - 1) {
+    if (errorCheckRow(curRow) == true) {
       errorState = true;
       curRow++;
     } else {
@@ -241,11 +258,10 @@ function checkAllData() {
 function getStartDate(rowNumber) {
   // start date in first row of task table is input box, subsequent rows are just table cells so reference differently
 
-  let tableRef = document.getElementById("taskEntryTable");
-  if (rowNumber === 2) {
-    return new Date(tableRef.rows[rowNumber].cells[2].children[0].value);
-  } else if (rowNumber > 2) {
-    return new Date(revDateStr(tableRef.rows[rowNumber].cells[2].textContent));
+  if (rowNumber === 1) {
+    return new Date(TABLEREF.rows[rowNumber].cells[STARTDAYCOL].children[0].value);
+  } else if (rowNumber > 1) {
+    return new Date(revDateStr(TABLEREF.rows[rowNumber].cells[STARTDAYCOL].textContent));
   }
 }
 
@@ -256,6 +272,7 @@ function revDateStr(Sdate) {
 }
 
 function calcWorkingDays(fromDate, days) {
+
   // This function returns a completion date based on a Start Date and an array holding days of the week deemed
   // working and non working.
   // The function also catches the condition where the Start Date is a non working day and calculates the next working day.
@@ -264,27 +281,12 @@ function calcWorkingDays(fromDate, days) {
   var nonWorkingDays = [];
   var workingDay = 0;
 
-  //Check each non project day button and push a numeric to array nonWorkingDays
-  if ($("#monDay").data("clicked")) {
-    nonWorkingDays.push("1");
-  }
-  if ($("#tuesDay").data("clicked")) {
-    nonWorkingDays.push("2");
-  }
-  if ($("#wednesDay").data("clicked")) {
-    nonWorkingDays.push("3");
-  }
-  if ($("#thursDay").data("clicked")) {
-    nonWorkingDays.push("4");
-  }
-  if ($("#friDay").data("clicked")) {
-    nonWorkingDays.push("5");
-  }
-  if ($("#saturDay").data("clicked")) {
-    nonWorkingDays.push("6");
-  }
-  if ($("#sunDay").data("clicked")) {
-    nonWorkingDays.push("0");
+  let SimButtonArray = ["#sunDay", "#monDay", "#tuesDay", "#wednesDay", "#thursDay","#friDay","#saturDay"];
+  SimButtonArray.forEach(getDayValue);
+  function getDayValue(item, index) {                                      // Get the day of the week from the DOM 
+    if ($(item).data("clicked")) {
+      nonWorkingDays.push(index.toString());                               //Load numeric equivelent into array nonWorkingDay
+    }
   }
 
   // Error check. Checks the condition where the user has selected every day of the week as a Non Project Day  
@@ -301,65 +303,49 @@ function calcWorkingDays(fromDate, days) {
       workingDay++;
     }
   }
-
   return fromDate;
 }
 
 function addTableRow() {
   //function adds a new row into the task entry table
 
-  let tableRef = document.getElementById("taskEntryTable");
-  let newTaskRow = tableRef.insertRow(tableRef.rows.length);
-  const taskNumberCol = 0;
-  const bcDurCol = 3;                                                      //Aid code readability
-  const mlDurCol = 4;
-  const wcDurCol = 5;
+  let newTaskRow = TABLEREF.insertRow(TABLEREF.rows.length);
 
-  newTaskRow.insertCell(taskNumberCol).classList.add("taskNo");
-  tableRef.rows[tableRef.rows.length - 1].cells[taskNumberCol].innerHTML = (tableRef.rows.length - 2);
-  newTaskRow.insertCell(1).innerHTML = '<input type="text" class="taskDescriptionBox taskDes" />';
-  newTaskRow.insertCell(2).classList.add("sDate");
-  newTaskRow.insertCell(bcDurCol).innerHTML = '<input type= "number" min="1" class="bctaskDurationBox bCase"/>';
-  newTaskRow.insertCell(mlDurCol).innerHTML = '<input type= "number" min="1" class="mltaskDurationBox mlCase"/>';
-  newTaskRow.insertCell(wcDurCol).innerHTML = '<input type= "number" min="1" class="wctaskDurationBox wCase"/>';
-  newTaskRow.insertCell(6).classList.add("bctaskDate");
-  newTaskRow.insertCell(7).classList.add("mltaskDate");
-  newTaskRow.insertCell(8).classList.add("wctaskDate");
+  newTaskRow.insertCell(TASKNUMCOL).classList.add("taskNo");
+  TABLEREF.rows[TABLEREF.rows.length - 1].cells[TASKNUMCOL].innerHTML = (TABLEREF.rows.length - 1);
+  newTaskRow.insertCell(TASKDESCOL).innerHTML = '<input type="text" class="taskDescriptionBox taskDes" />';
+  newTaskRow.insertCell(STARTDAYCOL).classList.add("sDate");
+  newTaskRow.insertCell(BCDURCOL).innerHTML = '<input type= "number" min="1" class="bctaskDurationBox bCase"/>';
+  newTaskRow.insertCell(MLDURCOL).innerHTML = '<input type= "number" min="1" class="mltaskDurationBox mlCase"/>';
+  newTaskRow.insertCell(WCDURCOL).innerHTML = '<input type= "number" min="1" class="wctaskDurationBox wCase"/>';
+  newTaskRow.insertCell(BCDATECOL).classList.add("bctaskDate");
+  newTaskRow.insertCell(MLDATECOL).classList.add("mltaskDate");
+  newTaskRow.insertCell(WCDATECOL).classList.add("wctaskDate");
 
 }
 
 function runSimulation() {
   //Runs the Monte Carlo simulation in response to the start button clicked
 
-  let tableRef = document.getElementById("taskEntryTable");
   let simRunsArray = [];
   let runDuration = 0;                                                    // initialise the sum of random variates for each simulation run
-  let simRuns;
-  const bcDurCol = 3;                                                      //Aid code readability
-  const mlDurCol = 4;
-  const wcDurCol = 5;
+  var simRuns;
 
-  if ($("#oneT").data("clicked")) {                                       // get the number of simulation runs from the DOM 
-    simRuns = 500;
+  let SimButtonArray = ["#oneT", "#twoT", "#threeT", "#fourT", "#fiveT"];
+  let simValueArray = [500, 1000, 5000, 7000, 10000];
+  SimButtonArray.forEach(getSimValue)
+  function getSimValue(item, index) {                                      // get the number of simulation runs from the DOM 
+    if ($(item).data("clicked")) {
+      simRuns = simValueArray[index];
+    }
   }
-  if ($("#twoT").data("clicked")) {
-    simRuns = 1000;
-  }
-  if ($("#threeT").data("clicked")) {
-    simRuns = 5000;
-  }
-  if ($("#fourT").data("clicked")) {
-    simRuns = 7000;
-  }
-  if ($("#fiveT").data("clicked")) {
-    simRuns = 10000;
-  }                                                                      // No else required here
-  let dataTableEnd = tableRef.rows.length - 1;                           // last HTML task entry table row is always blank
+
+  let dataTableEnd = TABLEREF.rows.length - 1;                           // last HTML task entry table row is always blank
   for (let i = 0; i < simRuns; i++) {
-    for (let j = 2; j < dataTableEnd; j++) {
-      let bestCaseDuration = parseInt(tableRef.rows[j].cells[bcDurCol].children[0].value);
-      let mostLikelyCaseDuration = parseInt(tableRef.rows[j].cells[mlDurCol].children[0].value);
-      let worstCaseDuration = parseInt(tableRef.rows[j].cells[wcDurCol].children[0].value);
+    for (let j = 1; j < dataTableEnd; j++) {
+      let bestCaseDuration = parseInt(TABLEREF.rows[j].cells[BCDURCOL].children[0].value);
+      let mostLikelyCaseDuration = parseInt(TABLEREF.rows[j].cells[MLDURCOL].children[0].value);
+      let worstCaseDuration = parseInt(TABLEREF.rows[j].cells[WCDURCOL].children[0].value);
       let variat = randomVariat(bestCaseDuration, mostLikelyCaseDuration, worstCaseDuration);  //Get random variat between best case and worst case duration
       runDuration = runDuration + variat;                              // addition of task random variats is ok as all tasks are finish to start
     }
@@ -376,13 +362,13 @@ function reLoad() {
 
 function monteCarlo() {
   //This is the core simulation function and is called when the "start" button is clicked
-  
+
   disStart();                                                                  //Disable start button while in simulation
   disSimulationRuns();                                                         //disable simulation runs buttons
   disNonWorkingDays();                                                         // disable non working days buttons
 
   if (checkAllData()) {                                                        //If no task table errors plot data
-    const dataPoints = 20;                                                     //number of data points for plotting probability chart
+    const dataPoints = 100;                                                     //number of data points for plotting probability chart
 
     $("#plotPanel").css("display", "block");                                   //display HTML div for plotting charts
     google.charts.setOnLoadCallback(drawTimeLine);                             //plot timeline on call back
@@ -402,8 +388,7 @@ function addProjectDates(resultsArray, dataPoints) {
   //uses the calcWorkingDays function to determine the probable project dates and stores these in resultsArray (array of objects class Results) 
 
   for (let i = 0; i < dataPoints; i++) {
-    let tableRef = document.getElementById("taskEntryTable");
-    let startDate = new Date(tableRef.rows[2].cells[2].children[0].value);
+    let startDate = new Date(TABLEREF.rows[1].cells[STARTDAYCOL].children[0].value);
     let finishDate = calcWorkingDays(startDate, resultsArray[i].projectDays);
     resultsArray[i].projectDate = finishDate.toString();
   }
@@ -451,7 +436,7 @@ function resultProc(numbers, dataSamples) {
 function drawProbabilityChart(resultsArray, dataPoints) {
   //This fuction uses the Google scatter plot API to create  a chart of %probabilities versus project completion dates
 
-  var chart = new google.visualization.ScatterChart(document.getElementById('plot1'));
+  var chart = new google.visualization.LineChart(document.getElementById('plot1'));
 
   var dataArray = [['Date', '% Probability']];                                         //declare data array for plotting in the scatter plot
   for (let i = 0; i < dataPoints; i++) {
@@ -461,22 +446,22 @@ function drawProbabilityChart(resultsArray, dataPoints) {
 
   //add plot options
   var options = {                                                                       //define plot options 
-    hAxis: { title: 'Date', minValue: resultsArray[0].projectDate, maxValue: resultsArray[dataPoints - 1].projectDate },    //X axis range
+    hAxis: { format: 'M-d-yy', title: 'Date', minValue: resultsArray[0].projectDate, maxValue: resultsArray[dataPoints - 1].projectDate },    //X axis range
     vAxis: { title: '% Probability', minValue: 0, maxValue: 100 },                      // Y axis range
-    legend: 'none'
+    pointSize: 1,
+    legend: 'none',
+    backgroundColor: "#ffff99"
   };
   chart.draw(data, options);                                                            //Generate chart
   // Credit: see ref:3 in the README.MD
 
 }
 
-
 function drawTimeLine() {
   //plots the time lines from the HTML task entry table using the Google Timeline API
 
   var chart = new google.visualization.Timeline(document.getElementById('plot2'));
   var plotTable = new google.visualization.DataTable();
-  let tableRef = document.getElementById("taskEntryTable");
 
   // define columns in the plot data table 
   plotTable.addColumn({ type: 'string', id: 'Position' });
@@ -484,12 +469,7 @@ function drawTimeLine() {
   plotTable.addColumn({ type: 'date', id: 'Start' });
   plotTable.addColumn({ type: 'date', id: 'End' });
 
-  let dataTableLength = (((tableRef.rows.length - 3) * 3)); // the length of the plot table
-
-  const startDay = 2;
-  const bcDateCol = 6;
-  const mlDateCol = 7;
-  const wcDateCol = 8;
+  let dataTableLength = (((TABLEREF.rows.length - 2) * 3)); // the length of the plot table
 
   //set number of rows in the the plot data table from the HTML task table * 3 for Best Case, Most Likely Case and Worst Case dates
   //each task table row maps onto 3 plot table rows
@@ -497,34 +477,35 @@ function drawTimeLine() {
 
   //populate the plot data table by row and column
 
-  let taskTableCtr = 2; //indexes through the task table rows
+  let taskTableCtr = 1; //indexes through the task table rows
   //note that the 4 of the columns in each of theplot table rows requires different data so further "for" loops not practical 
   for (let plotTableRow = 0; plotTableRow < dataTableLength; plotTableRow += 3) {
-    plotTable.setCell(plotTableRow, 0, (tableRef.rows[taskTableCtr].cells[1].children[0].value));
+    plotTable.setCell(plotTableRow, 0, (TABLEREF.rows[taskTableCtr].cells[TASKDESCOL].children[0].value));
     plotTable.setCell(plotTableRow, 1, "Best Case");
     if (plotTableRow === 0) {                                      // start date in first row of task table is input box, subsequent rows are just table cells so reference differently 
-      plotTable.setCell(plotTableRow, 2, new Date(tableRef.rows[taskTableCtr].cells[startDay].children[0].value));
+      plotTable.setCell(plotTableRow, 2, new Date(TABLEREF.rows[taskTableCtr].cells[STARTDAYCOL].children[0].value));
     } else if (plotTableRow > 0) {
-      plotTable.setCell(plotTableRow, 2, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[startDay].textContent)));
+      plotTable.setCell(plotTableRow, 2, new Date(revDateStr(TABLEREF.rows[taskTableCtr].cells[STARTDAYCOL].textContent)));
     }
-    plotTable.setCell(plotTableRow, 3, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[bcDateCol].textContent)));
+    plotTable.setCell(plotTableRow, 3, new Date(revDateStr(TABLEREF.rows[taskTableCtr].cells[BCDATECOL].textContent)));
 
-    plotTable.setCell(plotTableRow + 1, 0, (tableRef.rows[taskTableCtr].cells[1].children[0].value));
+    plotTable.setCell(plotTableRow + 1, 0, (TABLEREF.rows[taskTableCtr].cells[TASKDESCOL].children[0].value));
     plotTable.setCell(plotTableRow + 1, 1, "Most Likely Case");
-    plotTable.setCell(plotTableRow + 1, 2, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[bcDateCol].textContent)));
-    plotTable.setCell(plotTableRow + 1, 3, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[mlDateCol].textContent)));
+    plotTable.setCell(plotTableRow + 1, 2, new Date(revDateStr(TABLEREF.rows[taskTableCtr].cells[BCDATECOL].textContent)));
+    plotTable.setCell(plotTableRow + 1, 3, new Date(revDateStr(TABLEREF.rows[taskTableCtr].cells[MLDATECOL].textContent)));
 
-    plotTable.setCell(plotTableRow + 2, 0, (tableRef.rows[taskTableCtr].cells[1].children[0].value));
+    plotTable.setCell(plotTableRow + 2, 0, (TABLEREF.rows[taskTableCtr].cells[TASKDESCOL].children[0].value));
     plotTable.setCell(plotTableRow + 2, 1, "Worst Case");
-    plotTable.setCell(plotTableRow + 2, 2, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[mlDateCol].textContent)));
-    plotTable.setCell(plotTableRow + 2, 3, new Date(revDateStr(tableRef.rows[taskTableCtr].cells[wcDateCol].textContent)));
+    plotTable.setCell(plotTableRow + 2, 2, new Date(revDateStr(TABLEREF.rows[taskTableCtr].cells[MLDATECOL].textContent)));
+    plotTable.setCell(plotTableRow + 2, 3, new Date(revDateStr(TABLEREF.rows[taskTableCtr].cells[WCDATECOL].textContent)));
     taskTableCtr++;
   }
 
   var options = {
-    timeline: { groupByRowLabel: true }, // set up option to display best case, most likely case and worst case timelines on one bar
-    colors: ["#90ee90", "#ffa500", "#ff4500"],
-    //timeline: { colorByRowLabel: false },
+    timeline: { groupByRowLabel: true },                                            // Set up option to display best case, most likely case and worst case timelines on one bar
+    colors: ["#90ee90", "#ffa500", "#ff4500"],                                      // Bar colours match task table colours 
+    backgroundColor: "#ffff99"
+
   };
   chart.draw(plotTable, options);
 
@@ -571,6 +552,15 @@ function errorHandler(errorCode) {
       break;
     case (6):
       $("#alertMess").text('Unrelaible task entry table data, please reset and try again: error code 6');
+      break;
+    case (7):
+      $("#alertMess").text('The task description must start with an alphanumeric character: error code 7');
+      break;
+    case (8):
+      $("#alertMess").text('The task duration value must be an integer value. Task duration values will be rounded if value is irrational: error code 8');
+      break;
+    case (9):
+      $("#alertMess").text('The task duration values must be positive numbers: error code 9');
       break;
     default:
       $("#alertMess").text('Unkown error code');
