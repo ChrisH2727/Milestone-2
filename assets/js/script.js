@@ -12,7 +12,7 @@
 //
 const TASKNUMCOL = 0;
 const TASKDESCOL = 1;
-const STARTDAYCOL = 2;                                                                                 
+const STARTDAYCOL = 2;
 const BCDURCOL = 3;
 const MLDURCOL = 4;
 const WCDURCOL = 5;
@@ -140,7 +140,7 @@ function setSimulationRuns(elem) {
 function taskUpdate() {
   //Event handler called whenever there is a change to the task table
 
-  const startDay = 1;                                                                          
+  const startDay = 1;
 
   for (var currentRow = startDay; currentRow < TABLEREF.rows.length; currentRow++) {          //start at currentRow = 1 because the first two rows of the HTML task table have no task data
 
@@ -281,7 +281,7 @@ function calcWorkingDays(fromDate, days) {
   var nonWorkingDays = [];
   var workingDay = 0;
 
-  let SimButtonArray = ["#sunDay", "#monDay", "#tuesDay", "#wednesDay", "#thursDay","#friDay","#saturDay"];
+  let SimButtonArray = ["#sunDay", "#monDay", "#tuesDay", "#wednesDay", "#thursDay", "#friDay", "#saturDay"];
   SimButtonArray.forEach(getDayValue);
   function getDayValue(item, index) {                                      // Get the day of the week from the DOM 
     if ($(item).data("clicked")) {
@@ -333,7 +333,7 @@ function runSimulation() {
 
   let SimButtonArray = ["#oneT", "#twoT", "#threeT", "#fourT", "#fiveT"];
   let simValueArray = [500, 1000, 5000, 7000, 10000];
-  SimButtonArray.forEach(getSimValue)
+  SimButtonArray.forEach(getSimValue);
   function getSimValue(item, index) {                                      // get the number of simulation runs from the DOM 
     if ($(item).data("clicked")) {
       simRuns = simValueArray[index];
@@ -373,26 +373,26 @@ function monteCarlo() {
     $("#plotPanel").css("display", "block");                                   //display HTML div for plotting charts
     google.charts.setOnLoadCallback(drawTimeLine);                             //plot timeline on call back
     let simRunsArray = runSimulation();                                        //run core simulation
-    let results = resultProc(simRunsArray, dataPoints);                        // process simulation runs into frequency buckets and determine project durations 
-    let resultsProj = addProjectDates(results, dataPoints);                    // assign dates to project duration dates 
-    google.charts.setOnLoadCallback(drawProbabilityChart(resultsProj, dataPoints)); //plot probability chart
+    let frequencyBins = resultProc(simRunsArray, dataPoints);                           // process simulation runs into frequency bins and determine project durations 
+    frequencyBins = addProjectDates(frequencyBins, dataPoints);                         // assign dates to project duration dates 
+    google.charts.setOnLoadCallback(drawProbabilityChart(frequencyBins, dataPoints));    //plot probability chart
     enStart();                                                                   //Enable start button
     enSimulationRuns();                                                          //enable simulation runs buttons
     enNonWorkingDays();                                                          // enable non working days buttons
   } else {
-    errorHandler(6);                                                           // Do not plot data report error
+    errorHandler(6);                                                           // Do not plot data and report error
   }
 }
 
-function addProjectDates(resultsArray, dataPoints) {
+function addProjectDates(frequencyBins, dataPoints) {
   //uses the calcWorkingDays function to determine the probable project dates and stores these in resultsArray (array of objects class Results) 
 
   for (let i = 0; i < dataPoints; i++) {
     let startDate = new Date(TABLEREF.rows[1].cells[STARTDAYCOL].children[0].value);
-    let finishDate = calcWorkingDays(startDate, resultsArray[i].projectDays);
-    resultsArray[i].projectDate = finishDate.toString();
+    let finishDate = calcWorkingDays(startDate, frequencyBins[i].projectDays);
+    frequencyBins[i].projectDate = finishDate.toString();
   }
-  return resultsArray;
+  return frequencyBins;
 }
 
 function resultProc(numbers, dataSamples) {
@@ -421,12 +421,12 @@ function resultProc(numbers, dataSamples) {
     histoArray.push(new Results());
     histoArray[j - 1].freqCount = fCount;
     histoArray[j - 1].percentage = fCount / popSize;                      //Calc frequency count as % of total possible project outcomes
-    histoArray[j - 1].projectDays = Math.round(minDuration + (binWidth * j)); //integer number of project days only
+    histoArray[j - 1].projectDays = Math.round(minDuration + (binWidth * j)); //Integer number of project days only
     fCount = 0;
   }
 
   histoArray.push(new Results());
-  histoArray[dataSamples - 1].freqCount = popSize;                        // hard code the 100% entry to include the entire population
+  histoArray[dataSamples - 1].freqCount = popSize;                        //Code the 100% entry to include the entire population
   histoArray[dataSamples - 1].percentage = 1;                             //100% expressed as a decimal
   histoArray[dataSamples - 1].projectDays = maxDuration;
 
@@ -434,27 +434,35 @@ function resultProc(numbers, dataSamples) {
 }
 
 function drawProbabilityChart(resultsArray, dataPoints) {
-  //This fuction uses the Google scatter plot API to create  a chart of %probabilities versus project completion dates
+  //This function uses the Google scatter plot API to create  a chart of %probabilities versus project completion dates
 
   var chart = new google.visualization.LineChart(document.getElementById('plot1'));
 
-  var dataArray = [['Date', '% Probability']];                                         //declare data array for plotting in the scatter plot
+  var dataArray = [['Date', '% Probability']];                                            //declare data array for plotting in the line plot
   for (let i = 0; i < dataPoints; i++) {
-    dataArray.push([resultsArray[i].projectDate, resultsArray[i].percentage * 100]);   //Push the dates and probability into plotting array
-  }
+    let thisYear = (new Date(resultsArray[i].projectDate)).getFullYear();                 //Get numeric Year, Month and Day values from the Date object
+    let thisMonth = (new Date(resultsArray[i].projectDate)).getMonth();
+    let thisDay = (new Date(resultsArray[i].projectDate)).getDate();
+    dataArray.push([new Date(thisYear, thisMonth, thisDay), resultsArray[i].percentage * 100]);   //Push the dates and probability into plotting array 
+  }                                                                                       // The creation of a new date object appears necessary for this API
   var data = google.visualization.arrayToDataTable(dataArray);
 
-  //add plot options
+  let thisYear = (new Date(resultsArray[0].projectDate)).getFullYear();                       //Get the first date values to be plotted to set x axis min value
+  let thisMonth = (new Date(resultsArray[0].projectDate)).getMonth();
+  let thisDay = (new Date(resultsArray[0].projectDate)).getDate();
+  let lastYear = (new Date(resultsArray[dataPoints - 1].projectDate)).getFullYear();      //Get the last date values to be plotted to set x axis max value
+  let lastMonth = (new Date(resultsArray[dataPoints - 1].projectDate)).getMonth();
+  let lastDay = (new Date(resultsArray[dataPoints - 1].projectDate)).getDate();
+
   var options = {                                                                       //define plot options 
-    hAxis: { format: 'M-d-yy', title: 'Date', minValue: resultsArray[0].projectDate, maxValue: resultsArray[dataPoints - 1].projectDate },    //X axis range
+    hAxis: { title: 'Date', minValue: new Date(thisYear, thisMonth, thisDay), maxValue: new Date(lastYear, lastMonth, lastDay), format: "dd/MM/yy" },
     vAxis: { title: '% Probability', minValue: 0, maxValue: 100 },                      // Y axis range
     pointSize: 1,
     legend: 'none',
-    backgroundColor: "#ffff99"
+    backgroundColor: "#ffff99",
   };
   chart.draw(data, options);                                                            //Generate chart
   // Credit: see ref:3 in the README.MD
-
 }
 
 function drawTimeLine() {
@@ -477,35 +485,35 @@ function drawTimeLine() {
 
   //populate the plot data table by row and column
 
-  let taskTableCtr = 1; //indexes through the task table rows
+  let taskTableCtr = 1;                                                                                                       //indexes through the task table rows
   //note that the 4 of the columns in each of theplot table rows requires different data so further "for" loops not practical 
-  for (let plotTableRow = 0; plotTableRow < dataTableLength; plotTableRow += 3) {
+  for (let plotTableRow = 0; plotTableRow < dataTableLength; plotTableRow += 3) {                                             //Loop through the plot data table 3 increments at a time
     plotTable.setCell(plotTableRow, 0, (TABLEREF.rows[taskTableCtr].cells[TASKDESCOL].children[0].value));
     plotTable.setCell(plotTableRow, 1, "Best Case");
     if (plotTableRow === 0) {                                      // start date in first row of task table is input box, subsequent rows are just table cells so reference differently 
-      plotTable.setCell(plotTableRow, 2, new Date(TABLEREF.rows[taskTableCtr].cells[STARTDAYCOL].children[0].value));
+      plotTable.setCell(plotTableRow, 2, new Date(TABLEREF.rows[taskTableCtr].cells[STARTDAYCOL].children[0].value));           // Add best case dates to the plot data table
     } else if (plotTableRow > 0) {
       plotTable.setCell(plotTableRow, 2, new Date(revDateStr(TABLEREF.rows[taskTableCtr].cells[STARTDAYCOL].textContent)));
     }
     plotTable.setCell(plotTableRow, 3, new Date(revDateStr(TABLEREF.rows[taskTableCtr].cells[BCDATECOL].textContent)));
 
-    plotTable.setCell(plotTableRow + 1, 0, (TABLEREF.rows[taskTableCtr].cells[TASKDESCOL].children[0].value));
+    plotTable.setCell(plotTableRow + 1, 0, (TABLEREF.rows[taskTableCtr].cells[TASKDESCOL].children[0].value));                 // Add most likely case dates to the plot data table
     plotTable.setCell(plotTableRow + 1, 1, "Most Likely Case");
     plotTable.setCell(plotTableRow + 1, 2, new Date(revDateStr(TABLEREF.rows[taskTableCtr].cells[BCDATECOL].textContent)));
     plotTable.setCell(plotTableRow + 1, 3, new Date(revDateStr(TABLEREF.rows[taskTableCtr].cells[MLDATECOL].textContent)));
 
-    plotTable.setCell(plotTableRow + 2, 0, (TABLEREF.rows[taskTableCtr].cells[TASKDESCOL].children[0].value));
+    plotTable.setCell(plotTableRow + 2, 0, (TABLEREF.rows[taskTableCtr].cells[TASKDESCOL].children[0].value));                 // Add the worst case dates to the plot data table
     plotTable.setCell(plotTableRow + 2, 1, "Worst Case");
     plotTable.setCell(plotTableRow + 2, 2, new Date(revDateStr(TABLEREF.rows[taskTableCtr].cells[MLDATECOL].textContent)));
     plotTable.setCell(plotTableRow + 2, 3, new Date(revDateStr(TABLEREF.rows[taskTableCtr].cells[WCDATECOL].textContent)));
-    taskTableCtr++;
+    taskTableCtr++;                                                                                                            // Increment to the next task table entry    
   }
 
   var options = {
     timeline: { groupByRowLabel: true },                                            // Set up option to display best case, most likely case and worst case timelines on one bar
     colors: ["#90ee90", "#ffa500", "#ff4500"],                                      // Bar colours match task table colours 
-    backgroundColor: "#ffff99"
-
+    backgroundColor: "#ffff99",
+    hAxis: { format: 'dd/MM/yy', title: "date" }
   };
   chart.draw(plotTable, options);
 
