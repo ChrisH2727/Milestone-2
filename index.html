@@ -76,10 +76,9 @@
             <!-- Modal for the help function. See ref2. in README.MD -->
             <div id="helpModal" class="helpModal">
                 <div class="modal-content">
-                    <!--Close button for clearing the modal -->
-                    <span class="closeX" id="closeHelp">&times;</span>
                     <!--Help modal content-->
-                    <p><strong>How To Get Started</strong><br>
+                    <p><span class="closeX" id="closeHelp">&times;</span> <!--Close button for clearing the modal -->
+                        <strong>How To Get Started</strong><br> 
                         1. Enter a short <strong>Task Description</strong>.<br>
                         2. Select a <strong>Task Start Date</strong>. This may be the present day, a day in the past or
                         a day in the future.<br>
@@ -184,14 +183,14 @@
             <!--Time line plot-->
             <div class="col-lg-6">
                 <h3 class="tableHeading">Time Line Plot</h3>
-                <p>Best Case, Most Likey Case and Worst Case Task Finish Days </p>
+                <p>Best Case, Most Likey Case and Worst Case Task Finish Dates </p>
                 <div id="plot2"></div>
                 <p> Used: Google Charts library</p>
             </div>
             <!--Probability plot-->
             <div class="col-lg-6">
                 <h3 class="tableHeading">Probability Plot</h3>
-                <p>Probability of completing the project at a date</p>
+                <p>Project Completion Probability</p>
                 <div id="plot1"></div>
                 <p> Used: Google Charts Library</p>
             </div>
