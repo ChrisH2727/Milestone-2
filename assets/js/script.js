@@ -278,7 +278,7 @@ function calcWorkingDays(fromDate, days) {
   // The function also catches the condition where the Start Date is a non working day and calculates the next working day.
   //read the non working days selected by the checkboxes into the array nonWorkingdays
 
-  var nonWorkingDays = [];
+  let nonWorkingDays = [];
   var workingDay = 0;
 
   let SimButtonArray = ["#sunDay", "#monDay", "#tuesDay", "#wednesDay", "#thursDay", "#friDay", "#saturDay"];
@@ -294,7 +294,7 @@ function calcWorkingDays(fromDate, days) {
     nonWorkingDays.includes("4") && nonWorkingDays.includes("5") && nonWorkingDays.includes("6")) {                  //Detect error condition where all days of the selected as non working
     errorHandler(3);                                                                                                 //Would result in a catestrophic failure 
     nonWorkingDays = ["0", "2", "3", "4", "5", "6"];                                                                 //Make Monday a working day
-    $("#monDay").removeAttr("disabled").css("background-color", "rgb(0, 128, 0)").data('clicked', true);             //Re-enable Monday as working day  
+    $("#monDay").removeAttr("disabled").css("background-color", "rgb(0, 128, 0)").data('clicked', false);             //Re-enable Monday as working day  
   }
 
   while (workingDay < days) {                                                  //Determines the project date                                                       //Loop through the task duation days
@@ -406,31 +406,31 @@ function resultProc(numbers, dataSamples) {
       this.projectDate = projectDate;
     }
   }
-  var fCount = 0;                                                         //initialise count for frequency bin
-  var popSize = numbers.length;                                           //Get length of array with project completion date
-  var histoArray = [];                                                    //Initialise array of objects class Results
-  var maxDuration = Math.max.apply(null, numbers);
-  var minDuration = Math.min.apply(null, numbers);
-  var binWidth = ((maxDuration - minDuration) / dataSamples);             //Calculate bin width
+  let fCount = 0;                                                         //initialise count for frequency bin
+  let popSize = numbers.length;                                           //Get length of array with project completion date                                                
+  let frequencyBins =[];                                                  //Initialise array of objects class Results
+  let maxDuration = Math.max.apply(null, numbers);
+  let minDuration = Math.min.apply(null, numbers);
+  let binWidth = ((maxDuration - minDuration) / dataSamples);             //Calculate bin width
   for (let j = 1; j < dataSamples; j++) {                                 // For each element in the the project completion array
     for (let i = 0; i < popSize; i++) {                                   //For each frequency bin
       if (numbers[i] < ((binWidth * j) + minDuration)) {                  //Increment frequency count each time project completion date less than cumulative bin width 
         fCount = fCount + 1;
       }
     }
-    histoArray.push(new Results());
-    histoArray[j - 1].freqCount = fCount;
-    histoArray[j - 1].percentage = fCount / popSize;                      //Calc frequency count as % of total possible project outcomes
-    histoArray[j - 1].projectDays = Math.round(minDuration + (binWidth * j)); //Integer number of project days only
+    frequencyBins.push(new Results());
+    frequencyBins[j - 1].freqCount = fCount;
+    frequencyBins[j - 1].percentage = fCount / popSize;                      //Calc frequency count as % of total possible project outcomes
+    frequencyBins[j - 1].projectDays = Math.round(minDuration + (binWidth * j)); //Integer number of project days only
     fCount = 0;
   }
 
-  histoArray.push(new Results());
-  histoArray[dataSamples - 1].freqCount = popSize;                        //Code the 100% entry to include the entire population
-  histoArray[dataSamples - 1].percentage = 1;                             //100% expressed as a decimal
-  histoArray[dataSamples - 1].projectDays = maxDuration;
+  frequencyBins.push(new Results());
+  frequencyBins[dataSamples - 1].freqCount = popSize;                        //Code the 100% entry to include the entire population
+  frequencyBins[dataSamples - 1].percentage = 1;                             //100% expressed as a decimal
+  frequencyBins[dataSamples - 1].projectDays = maxDuration;
 
-  return histoArray;
+  return frequencyBins;
 }
 
 function drawProbabilityChart(resultsArray, dataPoints) {
