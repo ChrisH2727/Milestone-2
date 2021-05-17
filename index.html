@@ -29,7 +29,7 @@
         <div class="row">
             <div class="col-xl-8 taskPanel">
                 <!--Task entry table-->
-                <p class="tableHeading">Task Entry Table</p>
+                <p class="tableHeading">Project Task Entry Table</p>
                 <div id="overflow">
                     <!--For those difficult screen widths-->
                     <table id="taskEntryTable">
@@ -104,18 +104,18 @@
                         <br>
                         <strong>How To Read The Charts</strong><br>
                         On clicking the <strong>Start</strong> button two charts are generated.<br>
-                        The Timeline chart show the task best case, most likely case and worst case dates graphically.
+                        The Project Timeline chart show the task best case, most likely case and worst case dates graphically.
                         The worst case finish date of a task determines
                         the start date of the next task. At a project level this chart shows the Timeline for the
                         project if everything that could go wrong does go wrong.
                         In practical terms
                         this is unlikely to be the case. Some project risks will mature into problems and others will
                         become obsolete over the duration of the project.<br>
-                        The probability chart takes this a stage further and provides a statistical analysis of the task
+                        The Project Risk rofile chart takes this a stage further and provides a statistical analysis of the task
                         best case, most likely case and worst case durations
                         and then provides probability of completing a project by a given date. The final date provided
-                        by the probability plot is always earlier or the same as
-                        the final date given by the Timeline chart.<br>
+                        by the risk profile is always earlier or the same as
+                        the final date given by the Project Timeline chart.<br>
                         In a project <strong>not everything that can go wrong will go wrong.</strong>.<br>
                     </p>
                 </div>
@@ -182,15 +182,15 @@
         <div class="row" id="plotPanel">
             <!--Time line plot-->
             <div class="col-lg-6">
-                <h3 class="tableHeading">Time Line Plot</h3>
+                <h3 class="tableHeading">Project Time Line</h3>
                 <p>Best Case, Most Likey Case and Worst Case Task Finish Dates </p>
                 <div id="plot2"></div>
                 <p> Used: Google Charts library</p>
             </div>
             <!--Probability plot-->
             <div class="col-lg-6">
-                <h3 class="tableHeading">Probability Plot</h3>
-                <p>Project Completion Probability</p>
+                <h3 class="tableHeading">Project Risk Profile</h3>
+                <p>Probability of completing the Project</p>
                 <div id="plot1"></div>
                 <p> Used: Google Charts Library</p>
             </div>
