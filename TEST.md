@@ -12,7 +12,7 @@
 
 - **Tested Outcome**
 
-  ![JShint](screenshots/JShintOut.JPG){width=80%}
+  ![JShint](screenshots/jShintOut.JPG){width=80%}
 
   "google" was identified as an unknown variable. Further internet searches revealed this to be a known issue.
 
@@ -29,7 +29,7 @@
 - **Test Outcome**
 
   No errors identified.
-  ![JShint](screenshots/htmlOut.JPG){width=80%}
+  ![JShint](screenshots/HTMLOut.JPG){width=80%}
 
 ## 5.3 CSS shall pass validation checks using W3C with no errors
 
@@ -44,7 +44,7 @@
 - **Test Outcome**
 
   No errors reported
-  ![JShint](screenshots/CSSOut.JPG){width=80%}
+  ![JShint](screenshots/CSSOut.jpg){width=80%}
 
 ## 5.4 The web page shall render identically in Chrome, IE and Firefox browsers. 
 
@@ -85,11 +85,11 @@ Note that since testing some titles have been changed to provide greater clarity
 
 ## 5.5 The web page must be readable at screen widths of 1206px 768px and 320px.
 
-   ![1206px](screenshots/w1206.jpg){width=60%}
+   ![1206px](screenshots/W1206.jpg){width=60%}
 
-   ![868px](screenshots/w768.jpg){width=60%}
+   ![868px](screenshots/W768.jpg){width=60%}
 
-   ![320px](screenshots/w320.jpg){width=60%}
+   ![320px](screenshots/W320.jpg){width=60%}
 
 Note that:
 
@@ -315,11 +315,11 @@ The Expected outcomes are confirmed.
 4. Project completion date 
 
 
-   ![ninthRender](screenshots/ninethRender.png){width=60%} 
-  *fig:10 task entered with a past day as the start day*
+   ![ninthRender](screenshots/ninthRender.png){width=60%} 
+  *fig:10 tasks entered with a past day as the start day*
 
    ![tenthRender](screenshots/tenthRender.png){width=60%} 
-  *fig:20 taskw entered with a past day as the start day*
+  *fig:20 tasks entered with a past day as the start day*
 
 
 
