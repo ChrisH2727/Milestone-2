@@ -561,8 +561,8 @@ Non functional testing will be based on the non functional requirements set out 
 
 ### 7.2 Defects Fixed
 
-| **No.**| **Defect**                                                                                                                                                                                                           |**Solution**                                                                                                                                                                                                             |
-| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **No.**| **Defect**|**Solution**   |
+| ------- | ------ |------|
 | 1. | Even thought the HTML input returns a date string format dd/mm/yyyy, JavaScript new Date fails to return a date object.                                                                                              |Write a short functions that converts a date string format dd/mm/yy to format yyyy-mm-dd                                                                                                                                 |
 | 2. | The Task Description field in the Task Entry Table accepted space characters as valid input. While space characters are acceptable in the Task Description Field, the first character should always be alphanumeric. |Introduce check using the regex (/^[0-9a-zA-Z]+$/) to confirm that the 1st character is always numeric and raise error.                                                                                                  |
 | 3.| The Task Duration fields accepted non integer values.                                                                                                                                                                |Introduce check on the Task Duration values entered by the user  and raise error if not integer.                                                                                                                         |
@@ -581,7 +581,9 @@ Non functional testing will be based on the non functional requirements set out 
 
 - No check is performed to ensure that unique task descriptions are entered against each task.
 
-- When running Google developer tools over a local source of the project no console errors appear. When running Google developer tools with the source in GitHub Pages, a number of console errors appear with reference to Google. This will need to be investigated. Also noted that when running in GitHub Pages, reloading the page causes errors to be removed.
+- When running Google developer tools over a local source of the project no console errors appear. When running Google developer tools with the source in GitHub Pages, a number of console errors appear with reference to Google. This will need to be investigated. Also noted that when running in GitHub Pages, reloading the page causes errors to disappear!
+
+- Further improvements could be made to the use of Bootstrap to render the page. While the current HTML code provides what is required, this could be improved upon. 
 
 ## 8.0 Deployment
 
@@ -634,7 +636,7 @@ If project is to be deployed locally, then the following folder structure is ass
 
 2. Help modal inspiration taken from [Help Window](https://www.w3schools.com/howto/howto_css_modals.asp). The behaviour was however modified such that the behaviour close button is via a Jquirey function rather than CSS.
 
-3. The timeline and scatter chart APIs were sourced from  [Google Charts](https://developers.google.com/chart/interactive/docs/gallery/timeline) as was the code for interfacing to them.
+3. The timeline and line chart APIs were sourced from  [Google Timeline Charts](https://developers.google.com/chart/interactive/docs/gallery/timeline) [Google Line Charts](https://developers.google.com/chart/interactive/docs/gallery/linechart) as was the code for interfacing to them.
 
 4. Assistance provided on how to detected alphanumeric characters.  [Alphanumeric](https://www.w3resource.com/javascript/form/letters-numbers-field.php)
 
@@ -659,7 +661,7 @@ As the correct functioning of the triangular probability distribution is crucial
 
 ![Triangular Distribution](screenshots/triangCode.jpg){width=100%}
 
-The above code snip generated the following 2 plots. The right hand plot show the distribution of Javascript's native random number generator between the values of 5 and 20 and the left hand plot shows the same number range with the triangular probability distribution applied. As may be seen this is clearly "triangular" in shape. Both plots used a sample size of 10,000. Note that had the linear probability distribution shown some bias, then it would not have been possible this method of generating the triangular probability distribution.
+The above code snip generated the following 2 plots. The right hand plot shows the distribution of Javascript's native random number generator between the values of 5 and 20 and the left hand plot shows the same number range with the triangular probability distribution applied. As may be seen this is clearly "triangular" in shape. Both plots used a sample size of 10,000. Note, that had the linear probability distribution shown significant bias, then it would not have been possible to use this method of generating the triangular probability distribution.
 
 ![Triangular Distribution](screenshots/capture.jpg){width=100%}
 *fig: Linear probability distribution vs triangular probability distribution*
