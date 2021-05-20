@@ -2,7 +2,7 @@
 
 [[toc]]
 
-### Non Fuctional Testing
+### Non Functional Testing
 
 Each non functional requirement to be tested is referenced back to the README document.
 
@@ -18,7 +18,7 @@ Each non functional requirement to be tested is referenced back to the README do
 
 - **Tested Outcome**
 
-  ![JShint](screenshots/jShintOut.jpg){width=80%}
+  ![JShint](screenshots/jshintout.jpg){width=80%}
 
   "google" was identified as an unknown variable. Further internet searches revealed this to be a known issue.
 
@@ -501,7 +501,7 @@ The Expected outcomes are confirmed.
 
   *fig (above) Only one non project day selected*
 
-#### 2.1.8.1 Help to enter task data will will be available on request at any time
+#### 2.1.8.1 Help to enter task data will be available on request at any time
 
 #### 2.1.8.2 Help to interpret charts will be available on request at any time
 
@@ -657,7 +657,7 @@ Step 2. Enter the task data in the table below:
 
   It is assumed that all remaining error conditions are handled in the same way, therefore for the remaining error checks, only one scenario will be tested. 
 
-#### 2.1.10.2 The task description must start with an alphanumeric character Subsequent non alphanumeric charaters are permitted
+#### 2.1.10.2 The task description must start with an alphanumeric character Subsequent non alphanumeric characters are permitted
 
 #### 2.1.10.3 Negative value task duration values are not permitted
 
