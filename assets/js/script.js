@@ -36,7 +36,7 @@ $(document).ready(function () {
   disStart();                                                      // disable simuation start button
   enReset();                                                       // enable reset button
   enhelp();                                                        // Enables Help button
-  google.charts.load('current', { 'packages': ['corechart'] });   //Load Google charting package
+  google.charts.load('current', { 'packages': ['corechart', "line"] });   //Load Google charting package
   google.charts.load("current", { "packages": ["timeline"] });    //Load Google charting package
 });
 
@@ -216,6 +216,7 @@ function errorCheckRow(curRow) {
   if (taskDes.length === 0) {                                                                      //check for empty task description input
     errorHandler(4);
     return false;
+    // code credit https://www.w3resource.com/javascript/form/letters-numbers-field.php
   } else if (taskDes[0].match(/^[0-9a-zA-Z]+$/) === null) {                                       //check task description for 1st alphanumerical char see code credit ref.4  https://www.w3resource.com/javascript/form/letters-numbers-field.php
     errorHandler(7);
     return false;
@@ -333,9 +334,9 @@ function runSimulation() {
   let simRunsArray = [];
   let runDuration = 0;                                                    // initialise the sum of random variates for each simulation run
   var simRuns;
-
   let SimButtonArray = ["#oneT", "#twoT", "#threeT", "#fourT", "#fiveT"];
   let simValueArray = [500, 1000, 5000, 7000, 10000];
+  
   SimButtonArray.forEach(getSimValue);
   function getSimValue(item, index) {                                      // get the number of simulation runs from the DOM 
     if ($(item).data("clicked")) {
@@ -371,9 +372,8 @@ function monteCarlo() {
   disNonWorkingDays();                                                         // disable non working days buttons
 
   if (checkAllData()) {                                                        //If no task table errors start simulation and plot data
-
     $("#plotPanel").css("display", "block");                                   //display HTML div for plotting charts
-    google.charts.setOnLoadCallback(drawTimeLine);                             //plot timeline on call back
+    google.charts.setOnLoadCallback(drawTimeLine);                             //plot timeline on call back see code credits ref 2
     let simRunsArray = runSimulation();                                        //run core simulation
     let frequencyBins = resultProc(simRunsArray, DATAPOINTS);                           // process simulation runs into frequency bins and determine project durations 
     frequencyBins = addProjectDates(frequencyBins, DATAPOINTS);                         // assign dates to project duration dates 
@@ -395,11 +395,12 @@ function addProjectDates(frequencyBins, DATAPOINTS) {
   return frequencyBins;
 }
 
+
 function resultProc(numbers, dataSamples) {
   //This function inputs the Monte Carlo simulation results and processes the results into percentage frequency bins.
   //the output is stored in the form of a array of objects of class Results
   class Results {
-    constructor(percentage, freqCount, projectDays, projectDate) {
+    constructor(percentage, freqCount, projectDays, projectDate) {      // Class Results holds data for risk profile plot 
       this.percentage = percentage;
       this.freqCount = freqCount;
       this.projectDays = projectDays;
@@ -434,7 +435,8 @@ function resultProc(numbers, dataSamples) {
 }
 
 function drawProbabilityChart(resultsArray, DATAPOINTS) {
-  //This function uses the Google scatter plot API to create  a chart of %probabilities versus project completion dates
+  //This function uses the Google line plot API to create  a chart of %probabilities versus project completion dates
+  //The code below builds on the example provided by https://developers.google.com/chart/interactive/docs/gallery/linechart. See README ref 3 
 
   var chart = new google.visualization.LineChart(document.getElementById('plot1'));
 
@@ -467,21 +469,22 @@ function drawProbabilityChart(resultsArray, DATAPOINTS) {
 
 function drawTimeLine() {
   //plots the time lines from the HTML task entry table using the Google Timeline API
+  //The code below builds on the example provided by https://developers.google.com/chart/interactive/docs/gallery/timeline. See README ref 3
 
   let chart = new google.visualization.Timeline(document.getElementById('plot2'));
   let plotTable = new google.visualization.DataTable();
 
-  // define columns in the plot data table 
-  plotTable.addColumn({ type: 'string', id: 'Position' });
+  plotTable.addColumn({ type: 'string', id: 'Position' });                                                // define columns in the plot data table 
   plotTable.addColumn({ type: 'string', id: 'Name' });
   plotTable.addColumn({ type: 'date', id: 'Start' });
   plotTable.addColumn({ type: 'date', id: 'End' });
 
-  let dataTableLength = (((TABLEREF.rows.length - 2) * 3)); // the length of the plot table
+  let dataTableLength = (((TABLEREF.rows.length - 2) * 3));                                              // the length of the plot table
 
   //set number of rows in the the plot data table from the HTML task table * 3 for Best Case, Most Likely Case and Worst Case dates
   //each task table row maps onto 3 plot table rows
-  plotTable.addRows(dataTableLength);
+
+  plotTable.addRows(dataTableLength);                                        //Add a row to the plot table
 
   //populate the plot data table by row and column
 
@@ -518,34 +521,25 @@ function drawTimeLine() {
   chart.draw(plotTable, options);
 
   // Credit: see ref:3 in the README.MD
-
 }
 
 function randomVariat(bestCase, mostLikelyCase, worstCase) {
   // This function returns a triangular distributed random variat from the Best Case, Most Likely Case and Worst Case
-  // estimates passed to it. Returns integer values only
+  // estimates passed to it. Returns integer values only. Refer to README Annex 1 for further details
 
   let sample = Math.random();
   if (sample <= ((mostLikelyCase - bestCase) / (worstCase - bestCase))) {
     return Math.round(bestCase + Math.sqrt((worstCase - bestCase) * (mostLikelyCase - bestCase) * sample));
   } else if (sample > ((mostLikelyCase - bestCase) / (worstCase - bestCase))) {
     return Math.round(worstCase - Math.sqrt((worstCase - bestCase) * (worstCase - mostLikelyCase) * (1 - sample)));
-  } else {
-    errorHandler(1); //Catastrophic error!
-  }
+  } 
 }
 
 function errorHandler(errorCode) {
   //displays an alert to the user when a date input or other error is detected
 
-  $("#alertBox").css("display", "block"); //bring up the alert modal
-  switch (errorCode) { //display the alert message
-    case 0:
-      $("#alertMess").text('No start date entered: error code 0');
-      break;
-    case (1):
-      $("#alertMess").text("A catastrophic error has occured, please reload the page and start again: error code 1");
-      break;
+  $("#alertBox").css("display", "block");                                                      //bring up the alert modal
+  switch (errorCode) {                                                                          //display the alert message
     case (2):
       $("#alertMess").text('Best case duration musts be less that most likely case duration and most likely case duration must be less than worst case duration : error code 2');
       break;
@@ -573,7 +567,7 @@ function errorHandler(errorCode) {
     default:
       $("#alertMess").text('Unkown error code');
   }
-  $("#disAlert").click(function () { hideAlert(); });
+  $("#disAlert").click(function () { hideAlert(); });                                                                //Event listener for alert close button
 }
 
 function hideAlert() {
@@ -595,12 +589,14 @@ function hideHelp() {
 }
 
 function hiLightButton(elem) {
-  //Highlights button background when hovered over 
+  //Highlights button background when hovered over
+
   $(elem).css("filter", "brightness(115%)");
 }
 
 function loLighteButton(elem) {
   //Low lights button when mouse pointer moves away
+
   $(elem).css("filter", "brightness(100%)");
 }
 
@@ -620,12 +616,12 @@ buttonsArray.forEach(function (elem) {
   $(elem).hover(function () { hiLightButton(elem); }, function () { loLighteButton(elem); });  //Refer to acknowledgement ref. 1 in Readme.md 
 });
 
-let SimButtonArray = ["#oneT", "#twoT", "#threeT", "#fourT", "#fiveT"];
+let SimButtonArray = ["#oneT", "#twoT", "#threeT", "#fourT", "#fiveT"];                         // Event listener for simulation runs buttons
 SimButtonArray.forEach(function (elem) {
   $(elem).click(function () { setSimulationRuns(elem); });
 });
 
-let nonProjectDayArray = ["#monDay", "#tuesDay", "#wednesDay", "#thursDay", "#friDay", "#saturDay", "#sunDay"];
+let nonProjectDayArray = ["#monDay", "#tuesDay", "#wednesDay", "#thursDay", "#friDay", "#saturDay", "#sunDay"];   //Event listener for Non project day buttons
 nonProjectDayArray.forEach(function (elem) {
   $(elem).click(function () { setNonWorkingDays(elem); });
 });
