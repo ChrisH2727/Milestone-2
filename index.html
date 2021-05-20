@@ -8,8 +8,6 @@
     <link rel="stylesheet" href="assets/css/style.css" type="text/css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
         type="text/css" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-        type="text/css" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css"
         integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous" />
 </head>
@@ -37,9 +35,9 @@
                             <th class="taskNo">Task No</th>
                             <th class="taskDes">Task Description</th>
                             <th class="sDate">Task Start Date</th>
-                            <th class="bCase">Task Best Case Duration</th>
-                            <th class="mlCase">Task Most Likely Duration</th>
-                            <th class="wCase">Task Worst Case Duration</th>
+                            <th class="bCase">Task Best Case Duration (Days)</th>
+                            <th class="mlCase">Task Most Likely Duration (Days)</th>
+                            <th class="wCase">Task Worst Case Duration (Days)</th>
                             <th class="bCase">Task Best Case Finish Date</th>
                             <th class="mlCase">Task Most Likely Case Finish Date</th>
                             <th class="wCase">Task Worst Case Finish Date</th>
@@ -76,8 +74,9 @@
             <div id="helpModal" class="helpModal">
                 <div class="modal-content">
                     <!--Help modal content-->
-                    <p><span class="closeX" id="closeHelp">&times;</span> <!--Close button for clearing the modal -->
-                        <strong>How To Get Started</strong><br> 
+                    <p><span class="closeX" id="closeHelp">&times;</span>
+                        <!--Close button for clearing the modal -->
+                        <strong>How To Get Started</strong><br>
                         1. Enter a short <strong>Task Description</strong>.<br>
                         2. Select a <strong>Task Start Date</strong>. This may be the present day, a day in the past or
                         a day in the future.<br>
@@ -103,14 +102,16 @@
                         <br>
                         <strong>How To Read The Charts</strong><br>
                         On clicking the <strong>Start</strong> button two charts are generated.<br>
-                        The Project Timeline chart show the task best case, most likely case and worst case dates graphically.
+                        The Project Timeline chart show the task best case, most likely case and worst case dates
+                        graphically.
                         The worst case finish date of a task determines
                         the start date of the next task. At a project level this chart shows the Timeline for the
                         project if everything that could go wrong does go wrong.
                         In practical terms
                         this is unlikely to be the case. Some project risks will mature into problems and others will
                         become obsolete over the duration of the project.<br>
-                        The Project Risk profile chart takes this a stage further and provides a statistical analysis of the task
+                        The Project Risk profile chart takes this a stage further and provides a statistical analysis of
+                        the task
                         best case, most likely case and worst case durations
                         and then provides probability of completing a project by a given date. The final date provided
                         by the risk profile is always earlier or the same as
@@ -179,19 +180,26 @@
     <section class="container-fluid">
         <!--Plot section -->
         <div class="row" id="plotPanel">
-            <!--Time line plot-->
-            <div class="col-lg-6">
-                <h3 class="tableHeading">Project Time Line</h3>
-                <p>Best Case, Most Likey Case and Worst Case Task Finish Dates </p>
-                <div id="plot2"></div>
-                <p> Used: Google Charts library</p>
-            </div>
-            <!--Probability plot-->
-            <div class="col-lg-6">
-                <h3 class="tableHeading">Project Risk Profile</h3>
-                <p>Probability of completing the Project</p>
-                <div id="plot1"></div>
-                <p> Used: Google Charts Library</p>
+            <!--Plots would not render side by side as required--> 
+            <!--Added a further column and row wrapper as suggested by the post to overcome the problem--> 
+            <!--https://stackoverflow.com/questions/50995780/bootstrap-4-grid-not-staying-side-by-side-->
+            <div class="col-12">
+                <div class="row">
+                    <!--Time line plot-->
+                    <div class="col-lg-6 col-md-12">
+                        <h3 class="tableHeading">Project Time Line</h3>
+                        <p>Best Case, Most Likey Case and Worst Case Task Finish Dates </p>
+                        <div id="plot2"></div>
+                        <p> Used: Google Charts library</p>
+                    </div>
+                    <!--Probability plot-->
+                    <div class="col-lg-6 col-md-12">
+                        <h3 class="tableHeading">Project Risk Profile</h3>
+                        <p>Probability of completing the Project</p>
+                        <div id="plot1"></div>
+                        <p> Used: Google Charts Library</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -231,9 +239,9 @@
         </div>
 
     </footer>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript" src="assets/js/jquery-3.6.0.js"></script>
-    <script type="text/javascript" src="assets/js/script.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="assets/js/jquery-3.6.0.js"></script>
+    <script src="assets/js/script.js"></script>
 
 </body>
 
