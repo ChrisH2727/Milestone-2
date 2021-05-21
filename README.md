@@ -321,6 +321,8 @@ Since preparing the wireframes described above a footer has been introduced to t
 
 6. Provide task relationships other than finish to start.
 
+7. Use Googles cumulative histogram plot for the risk profile plot in place of the line plot currently used. The cumulative binning function could then be removed from the code as it is provided by the cumulative histogram plot. The use of the cumulative histogram plot was investigated, however it appeared not possible use dates on the x axis.
+
 ## 4.0 Technologies Used
 
 - [JQuery](http://jquery.com)
@@ -582,9 +584,13 @@ Non functional testing will be based on the non functional requirements set out 
 
 - No check is performed to ensure that unique task descriptions are entered against each task.
 
-- When running Google developer tools over a local source of the project no console errors appear. When running Google developer tools with the source in GitHub Pages, a number of console errors appear with reference to Google. This will need to be investigated. Also noted that when running in GitHub Pages, reloading the page causes errors to disappear!
+- When running Google developer tools over a local source of the project no console errors appear. When running Google developer tools running from GitHub Pages, a number of console errors appear with reference to Google. This will need to be investigated. Google developer tools also displayed `Failed to load resource:/favicon.ico the server responded with a status of 404 ()` when running from GitHub Pages. Reloading the page causes this error to be removed!
 
-- The width of the task entry table makes operation on small screen widths difficult. Further work is needed to optimise this.
+- The width of the task entry table makes operation on small screen widths difficult. Using the standard scaling command `<meta name="viewport" content="width=device-width, initial-scale=1.0">` resulted in the task entry table togther with the plots not being viewable on small screen sizes. Further work is needed to optimise this.
+
+- When viewing the timeline plot, the tooltips box display an incorrect task duration although dates are correct. Firstly the task duration includes non project days and secondly it would be more informative if the durations were cumulative. This will need further investigation.
+
+- The tooltips for both the timeline plot and the risk profile plot show dates in a different to that used by the x axis. This will need further investigation.  
 
 ## 8.0 Deployment
 
