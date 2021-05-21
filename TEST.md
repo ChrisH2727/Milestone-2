@@ -107,6 +107,8 @@ Note that:
 
 - Since preparing the wireframes described above a footer has been introduced to the page showing the authors contact details. The screenshots throughout the remainder of this document will depict the footer.
 
+- While the page is readable at smaller screen width and display information correctly, it may not be scalled correctlly.
+
 ### Functional Testing
 
 Each requirement to be tested is referenced back to the user strory found in the README from which it originated.
