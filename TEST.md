@@ -109,6 +109,12 @@ Note that:
 
 - While the page is readable at smaller screen width and display information correctly, it may not be scalled correctlly.
 
+#### 5.6 Google Lighthouse Report
+
+![lighthouse](screenshots/lighthouse.png){width=60%}
+
+Google Lighthouse was run to analyse the web page. Results indicate that while performance is good, there are clearly some issues to address.
+
 ### Functional Testing
 
 Each requirement to be tested is referenced back to the user strory found in the README from which it originated.
