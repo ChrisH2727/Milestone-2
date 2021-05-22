@@ -590,7 +590,9 @@ Non functional testing will be based on the non functional requirements set out 
 
 - When viewing the timeline plot, the tooltips box display an incorrect task duration although dates are correct. Firstly the task duration includes non project days and secondly it would be more informative if the durations were cumulative. This will need further investigation.
 
-- The tooltips for both the timeline plot and the risk profile plot show dates in a different to that used by the x axis. This will need further investigation.  
+- The tooltips for both the timeline plot and the risk profile plot show dates in a different to that used by the x axis. This will need further investigation. 
+
+- Running Google Lighthouse over the code showed that while performance was good, there are clearly some problem  that would need to be addressed.
 
 ## 8.0 Deployment
 
